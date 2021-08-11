@@ -1,11 +1,11 @@
 let modInfo = {
-	name: "The ??? Tree",
-	id: "mymod",
-	author: "nobody",
-	pointsName: "points",
+	name: "The Dirt Clean Tree",
+	id: "armemodtreelol",
+	author: "Arme",
+	pointsName: "dirt cleaned",
 	modFiles: ["layers.js", "tree.js"],
 
-	discordName: "",
+	discordName: "ArmeKnockedOut",
 	discordLink: "",
 	initialStartPoints: new Decimal (10), // Used for hard resets and new players
 	offlineLimit: 1,  // In hours
@@ -13,14 +13,13 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
-	name: "Literally nothing",
+	num: "0.1",
+	name: "The Alpha Stage",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.0</h3><br>
-		- Added things.<br>
-		- Added stuff.`
+	<h3>v0.1</h3><br>
+		- This mod was just made lol no changes.<br>`
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
 
@@ -43,6 +42,10 @@ function getPointGen() {
 		return new Decimal(0)
 
 	let gain = new Decimal(1)
+	if (hasUpgrade('d', 11)) gain = gain.times(upgradeEffect('d', 11))
+	if (hasUpgrade('d', 12)) gain = gain.times(3)
+	if (hasUpgrade('d', 13)) gain = gain.times(upgradeEffect('d', 13))
+	if (hasUpgrade('m', 11)) gain = gain.times(upgradeEffect('m', 11))
 	return gain
 }
 
