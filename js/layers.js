@@ -15,6 +15,8 @@ addLayer("d", {
     exponent: 0.5, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
+        if (hasUpgrade('d', 14)) mult = mult.times(upgradeEffect('d', 14))
+        if (hasUpgrade('m', 12)) mult = mult.times(upgradeEffect('m', 12))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -45,7 +47,7 @@ addLayer("d", {
         13: {
             name: "Dirt slides down",
             description: "Get more dirt cleaned based on dirt cleaned.",
-            cost: new Decimal(100),
+            cost: new Decimal(50),
             effect() {
                 return player.points.add(1).pow(0.15)
             },
@@ -55,6 +57,24 @@ addLayer("d", {
                 if (hasUpgrade('d', 13)) mult = mult.times(upgradeEffect('d', 13))
                 return mult
             },
+        },
+        14: {
+            name: "Famous",
+            description: "Get more dirt washers based on dirt cleaned",
+            cost: new Decimal(100),
+            effect() {
+                return player.points.add(1).pow(0.20)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
+        },
+        15: {
+            name: "Work harder",
+            description: "Get even more dirt cleaned based on dirt washers.",
+            cost: new Decimal(300),
+            effect() {
+                return player[this.layer].points.add(1).pow(0.18)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
         }
    },   
 })
@@ -67,7 +87,7 @@ addLayer("m", {
        points: new Decimal(0)
    }},
    color: "Gray",
-   requires: new Decimal(15000),
+   requires: new Decimal(25000),
    resource: "Machines",
    baseResource: "dirt cleaned",
    baseAmount() {return player.points},
@@ -75,6 +95,7 @@ addLayer("m", {
     exponent: 0.5, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
+        if (hasUpgrade('m', 13)) mult = mult.times(upgradeEffect('m', 13))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -91,13 +112,31 @@ addLayer("m", {
             description: "Machines boosts dirt cleaned production",
             cost: new Decimal(1),
             effect() {
-                return player[this.layer].points.add(1).pow(0.69)
+                return player[this.layer].points.add(1).pow(0.5)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
         },
-
-            
-
+        12: {
+            name: "Machine help 2",
+            description: "Machines boost dirt washer production",
+            cost: new Decimal(15),
+            effect() {
+                return player[this.layer].points.add(1).pow(0.15)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, 
         
+            
+        },
+        13: {
+            name: "Learning",
+            description: "Points boost machine gain.",
+            cost: new Decimal(100),
+            effect() {
+                return player.points.add(1).pow(0.05)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
+        }
+
     },
-})      
+          
+})  
