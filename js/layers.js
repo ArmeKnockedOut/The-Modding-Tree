@@ -117,6 +117,7 @@ addLayer("m", {
         {key: "m", description: "M: Reset for Machines", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     layerShown(){return true},
+    branches: ["d"],
     upgrades: {
         11: {
             name: "Machine help",
@@ -181,6 +182,7 @@ addLayer("s", {
         {key: "s", description: "S: Reset for Sponges", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     layerShown(){return true},
+    branches: ["d"],
     upgrades: {
         11: {
             name: "Clean method",
@@ -231,6 +233,7 @@ addLayer("c", {
         {key: "c", description: "C: Reset for Cleaner Water", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     layerShown(){return true},
+    branches: ["m","s"],
     upgrades: {
         11: {
             name: "Insane Boost",
