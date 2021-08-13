@@ -2,7 +2,10 @@ addLayer("d", {
     name: "prestige", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "DW", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 0,
-    branches: true, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    branches: true,
+    passiveGeneration() {
+        if (hasUpgrade('c', 15)) return 100
+        else return 0},
     startData() { return {
         unlocked: true,
 		points: new Decimal(0)
@@ -30,6 +33,22 @@ addLayer("d", {
         {key: "d", description: "D: Reset for Dirt Washers", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     layerShown(){return true},
+    doReset(resettingLayer) {
+        if (layers[resettingLayer].row > layers[this.layer].row) {
+            savedUpgrades = []
+            if (hasUpgrade('c', 15) && ['c', 's', 'm'].includes(resettingLayer)) {
+                if (hasUpgrade(this.layer, 11)) {savedUpgrades.push(11)}
+                if (hasUpgrade(this.layer, 12)) {savedUpgrades.push(12)}
+                if (hasUpgrade(this.layer, 13)) {savedUpgrades.push(13)}
+                if (hasUpgrade(this.layer, 14)) {savedUpgrades.push(14)}
+                if (hasUpgrade(this.layer, 15)) {savedUpgrades.push(15)}
+                if (hasUpgrade(this.layer, 16)) {savedUpgrades.push(16)}
+                if (hasUpgrade(this.layer, 17)) {savedUpgrades.push(17)}
+            }
+            layerDataReset(this.layer, [])
+            player[this.layer].upgrades = savedUpgrades
+        }
+    },
     upgrades: {
         11: {
             name: "Getting help",
@@ -49,7 +68,7 @@ addLayer("d", {
 
         13: {
             name: "Dirt slides down",
-            description: "Get more dirt cleaned based on dirt cleaned.",
+            description: "Get more dirt cleaned based on the amount of dirt cleaned.",
             cost: new Decimal(50),
             effect() {
                 return player.points.add(1).pow(0.15)
@@ -63,7 +82,7 @@ addLayer("d", {
         },
         14: {
             name: "Famous",
-            description: "Get more dirt washers based on dirt cleaned",
+            description: "Get more dirt washers based on the amount of dirt cleaned.",
             cost: new Decimal(100),
             effect() {
                 return player.points.add(1).pow(0.20)
@@ -72,7 +91,7 @@ addLayer("d", {
         },
         15: {
             name: "Work harder",
-            description: "Get even more dirt cleaned based on dirt washers.",
+            description: "Get even more dirt cleaned based on the amount of dirt washers.",
             cost: new Decimal(300),
             effect() {
                 return player[this.layer].points.add(1).pow(0.18)
@@ -83,7 +102,13 @@ addLayer("d", {
             name: "Power",
             description: "Get 5x more machines and sponges",
             cost: new Decimal(320000000)
-    },
+        },
+        17: {
+            name: "This should have been earlier...",
+            description: "Get more dirt washers based on the amount of dirt washers.",
+            cost: new Decimal('1e7000'),
+            unlocked() {return hasUpgrade('o', 11)}
+        }
         
    },   
 })
@@ -91,6 +116,9 @@ addLayer("m", {
    name: "machine",
    symbol: "M",
    position: 1,
+   passiveGeneration() {
+    if (hasMilestone('o', 1)) return 3
+    else return 0},
    startData() { return {
        unlocked: false,
        points: new Decimal(0)
@@ -118,10 +146,22 @@ addLayer("m", {
     ],
     layerShown(){return true},
     branches: ["d"],
+    doReset(resettingLayer) {
+        if (layers[resettingLayer].row > layers[this.layer].row) {
+            savedUpgrades = []
+            if (hasMilestone('o', 1) && ['c', 'o'].includes(resettingLayer)) {
+                if (hasUpgrade(this.layer, 11)) {savedUpgrades.push(11)}
+                if (hasUpgrade(this.layer, 12)) {savedUpgrades.push(12)}
+                if (hasUpgrade(this.layer, 13)) {savedUpgrades.push(13)}
+            }
+            layerDataReset(this.layer, [])
+            player[this.layer].upgrades = savedUpgrades
+        }
+    },
     upgrades: {
         11: {
             name: "Machine help",
-            description: "Machines boosts dirt cleaned production",
+            description: "Machines boosts dirt cleaned production.",
             cost: new Decimal(1),
             effect() {
                 return player[this.layer].points.add(1).pow(0.3)
@@ -130,7 +170,7 @@ addLayer("m", {
         },
         12: {
             name: "Machine help 2",
-            description: "Machines boost dirt washer production",
+            description: "Machines boost dirt washer production.",
             cost: new Decimal(15),
             effect() {
                 return player[this.layer].points.add(1).pow(0.15)
@@ -156,7 +196,10 @@ addLayer("m", {
 addLayer("s", {
     name: "spong", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "S", // This appears on the layer's node. Default is the id with the first letter capitalized
-    position: 2, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    position: 2,
+    passiveGeneration() {
+        if (hasMilestone('o', 1)) return 3
+        else return 0}, 
     startData() { return {
         unlocked: false,
 		points: new Decimal(0)
@@ -183,6 +226,19 @@ addLayer("s", {
     ],
     layerShown(){return true},
     branches: ["d"],
+    doReset(resettingLayer) {
+        if (layers[resettingLayer].row > layers[this.layer].row) {
+            savedUpgrades = []
+            if (hasMilestone('o', 1) && ['c', 'o'].includes(resettingLayer)) {
+                if (hasUpgrade(this.layer, 11)) {savedUpgrades.push(11)}
+                if (hasUpgrade(this.layer, 12)) {savedUpgrades.push(12)}
+                if (hasUpgrade(this.layer, 13)) {savedUpgrades.push(13)}
+                if (hasUpgrade(this.layer, 14)) {savedUpgrades.push(14)}
+            }
+            layerDataReset(this.layer, [])
+            player[this.layer].upgrades = savedUpgrades
+        }
+    },
     upgrades: {
         11: {
             name: "Clean method",
@@ -202,14 +258,30 @@ addLayer("s", {
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
         },
+        13: {
+            name: "More mops",
+            description: "Get more mops based on the amount of sponges.",
+            cost: new Decimal('e8614200'),
+            unlocked() {return hasUpgrade('o', 11)},
+            effect() {
+                return player[this.layer].points.add(1).pow(0.0000001)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
+        },
+        14: {
+            name: "Beyond",
+            description: "Unlock a new layer (next time), mop gain 100x and dirt cleaned gain 1e1000x",
+            cost: new Decimal('e8614300')
+        }
 
         
-    }
+    },
 })
 addLayer("c", {
     name: "cleanew", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "CW", // This appears on the layer's node. Default is the id with the first letter capitalized
-    position: 1, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    position: 1,
+    canBuyMax() {return hasUpgrade('c', 16)},
     startData() { return {
         unlocked: false,
 		points: new Decimal(0)
@@ -232,12 +304,27 @@ addLayer("c", {
     hotkeys: [
         {key: "c", description: "C: Reset for Cleaner Water", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown(){return true},
+    layerShown(){return player.points.gte(1e50)},
     branches: ["m","s"],
+    doReset(resettingLayer) {
+        if (layers[resettingLayer].row > layers[this.layer].row) {
+            savedUpgrades = []
+            if (hasMilestone('o', 1) && ['o'].includes(resettingLayer)) {
+                if (hasUpgrade(this.layer, 11)) {savedUpgrades.push(11)}
+                if (hasUpgrade(this.layer, 12)) {savedUpgrades.push(12)}
+                if (hasUpgrade(this.layer, 13)) {savedUpgrades.push(13)}
+                if (hasUpgrade(this.layer, 14)) {savedUpgrades.push(14)}
+                if (hasUpgrade(this.layer, 15)) {savedUpgrades.push(15)}
+                if (hasUpgrade(this.layer, 16)) {savedUpgrades.push(16)}
+            }
+            layerDataReset(this.layer, [])
+            player[this.layer].upgrades = savedUpgrades
+        }
+    },
     upgrades: {
         11: {
             name: "Insane Boost",
-            description: "Point gain 100x",
+            description: "Dirt cleaned gain 100x",
             cost: new Decimal(1)
         },
 
@@ -262,9 +349,75 @@ addLayer("c", {
         },
         14: {
             name: "Insane Boost 4",
-            description: "Point gain 10000x",
+            description: "Dirt cleaned gain 10000x",
             cost: new Decimal(5),
             
+        },
+        15: {
+            name: "Passive Generation",
+            description: "You get 10000% of dirt washers every second, and keep dirt washer upgrades on ALL resets.",
+            cost: new Decimal(5),
+        },
+        16: {
+            name: "finally",
+            description: "You can buy max cleaner water.",
+            cost: new Decimal(55)
+        }
+    }
+
+})
+
+addLayer("o", {
+    name: "mo", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "O", // This appears on the layer's node. Default is the id with the first letter capitalized
+    position: 1, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    startData() { return {
+        unlocked: false,
+		points: new Decimal(0)
+    }},
+    color: "White",
+    requires: new Decimal(6), // Can be a function that takes requirement increases into account
+    resource: "Mops", // Name of prestige currency
+    baseResource: "cleaner water", // Name of resource prestige is based on
+    baseAmount() {return player.c.points}, // Get the current amount of baseResource
+    type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+    exponent: 0.5, // Prestige currency exponent
+    gainMult() { // Calculate the multiplier for main currency from bonuses
+        mult = new Decimal(1)
+        if (hasUpgrade('s', 13)) mult = mult.times(upgradeEffect('s', 13))
+        if (hasUpgrade('s', 14)) mult = mult.times(100)
+        return mult
+    },
+    gainExp() { // Calculate the exponent on main currency from bonuses
+        return new Decimal(1)
+    },
+    row: 3, // Row the layer is in on the tree (0 is the first row)
+    hotkeys: [
+        {key: "o", description: "O: Reset for Mops", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+    ],
+    layerShown(){return player.c.points.gte(1)},
+    branches: ["c"],
+    upgrades: {
+        11: {
+            name: "Secret revealed",
+            description: "Unlock more dirt washer and sponge upgrades.",
+            cost: new Decimal(1)
+        },
+        12: {
+            name: "Giant boost",
+            description: "Get more dirt cleaned based on the amount of mops.",
+            cost: new Decimal(4),
+            effect() {
+                return player[this.layer].points.add(1).pow(1.34)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
+        }
+    },
+    milestones: {
+        1: {
+            requirementDescription: "1 Mop",
+        effectDescription: "Gain 300% of machine and sponges gain and keep clearer water, sponges and machines upgrades on ALL resets. (kinda buggy when u get the milestone but afterwards it works)",
+        done() { return player.o.points.gte(1) }
         }
     }
 })
