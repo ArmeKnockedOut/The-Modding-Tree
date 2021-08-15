@@ -24,6 +24,7 @@ addLayer("d", {
         if (hasUpgrade('s', 11)) mult = mult.times(upgradeEffect('s', 11))
         if (hasUpgrade('s', 12)) mult = mult.times(upgradeEffect('s', 12))
         if (hasUpgrade('sdw', 11)) mult = mult.times(upgradeEffect('sdw', 11))
+        if (hasUpgrade('d', 21)) mult = mult.times(upgradeEffect('d', 21))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -46,6 +47,8 @@ addLayer("d", {
                 if (hasUpgrade(this.layer, 16)) {savedUpgrades.push(16)}
                 if (hasUpgrade(this.layer, 17)) {savedUpgrades.push(17)}
                 if (hasUpgrade(this.layer, 18)) {savedUpgrades.push(18)}
+                if (hasUpgrade(this.layer, 19)) {savedUpgrades.push(19)}
+                if (hasUpgrade(this.layer, 21)) {savedUpgrades.push(21)}
             }
             layerDataReset(this.layer, [])
             player[this.layer].upgrades = savedUpgrades
@@ -116,6 +119,26 @@ addLayer("d", {
             description: "Unlock acid upgrades",
             cost: new Decimal('e117000000'),
             unlocked() {return hasUpgrade('o', 11)}
+        },
+        19: {
+            name: "what",
+            description: "Gain more dirt washers based on the amount of acid and acid gain 100% per second.",
+            cost: new Decimal('e150676000'),
+            unlocked() {return hasMilestone('v', 3)},
+            effect() {
+                return player.a.points.add(1).pow(300)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
+        },
+        21: {
+            name: "what",
+            description: "Gain more dirt washers based on the amount of fire.",
+            cost: new Decimal('e150676100'),
+            unlocked() {return hasMilestone('v', 3)},
+            effect() {
+                return player.f.points.add(1).pow(0.0001)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
         }
         
    },   
@@ -515,6 +538,9 @@ addLayer("a", {
     symbol: "A", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 3,
     branches: true,
+    passiveGeneration() {
+        if (hasUpgrade('d', 19)) return 1
+        else return 0}, 
     startData() { return {
         unlocked: false,
 		points: new Decimal(0)
@@ -572,6 +598,9 @@ addLayer("v", {
     symbol: "VC", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 2,
     branches: true,
+    passiveGeneration() {
+        if (hasMilestone('v', 2)) return 1
+        else return 0}, 
     startData() { return {
         unlocked: false,
 		points: new Decimal(0)
@@ -585,6 +614,10 @@ addLayer("v", {
     exponent: 0.00000000000000000000001, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
+        if (hasUpgrade('v', 12)) mult = mult.times(upgradeEffect('v', 12))
+        if (hasUpgrade('v', 13)) mult = mult.times(upgradeEffect('v', 13))
+        if (hasUpgrade('v', 14)) mult = mult.times(upgradeEffect('v', 14))
+        if (hasUpgrade('v', 15)) mult = mult.times(upgradeEffect('v', 15))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -602,7 +635,43 @@ addLayer("v", {
             description: "Gain more dirt cleaned based on the amount of vacuum cleaners.",
             cost: (1),
             effect() {
-                return player[this.layer].points.add(1.1).pow(7)
+                return player[this.layer].points.add(1.1).pow(50)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
+        },
+        12: {
+            name: "Self boost",
+            description: "Get more vacuum cleaners based on the amount of vacuum cleaners.",
+            cost: new Decimal(100),
+            effect() {
+                return player[this.layer].points.add(1).pow(0.6)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
+        },
+        13: {
+            name: "reverting time",
+            description: "Gain more vacuum cleaners based on the amount of super sponges.",
+            cost: new Decimal(25000),
+            effect() {
+                return player.ss.points.add(1).pow(0.00000001)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
+        },
+        14: {
+            name: "reverting time 2",
+            description: "Gain more vacuum cleaners based on the amount of super machines.",
+            cost: new Decimal(69420),
+            effect() {
+                return player.sm.points.add(1).pow(0.0000001)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
+        },
+        15: {
+            name: "reverting time 3",
+            description: "Gain more vacuum cleaners based on the amount of super dirt washers.",
+            cost: new Decimal(1e13),
+            effect() {
+                return player.sdw.points.add(1).pow(0.0000001)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         }
@@ -612,6 +681,16 @@ addLayer("v", {
             requirementDescription: "1 Vacuum Cleaner",
             effectDescription: "Get 100% of super dirt washers, super machines and super sponges every second, and 1000x dirt cleaned gain.",
             done() { return player.v.points.gte(1) }
+        },
+        2: {
+            requirementDescription: "3 Vacuum Cleaners",
+            effectDescription: "Gain 100% of vacuum cleaners every second",
+            done() { return player.v.points.gte(3) }
+        },
+        3: {
+            requirementDescription: "1e20 Vacuum Cleaners",
+            effectDescription: "Unlock more super dirt washer and dirt washer upgrades.",
+            done() { return player.v.points.gte(1e20) }
         }
     }
 })
@@ -714,6 +793,7 @@ addLayer("sdw", {
         mult = new Decimal(1)
         if (hasUpgrade('sm', 12)) mult = mult.times(upgradeEffect('sm', 12))
         if (hasUpgrade('sdw', 13)) mult = mult.times(upgradeEffect('sdw', 13))
+        if (hasUpgrade('sdw', 15)) mult = mult.times(upgradeEffect('sdw', 15))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -760,6 +840,16 @@ addLayer("sdw", {
             unlocked() {return hasUpgrade('ss', 13)},
             effect() {
                 return player[this.layer].points.add(1).pow(0.9)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
+        },
+        15: {
+            name: "how many ideas do i not know. what",
+            description: "Gain more super dirt washers based on the amount of fire.",
+            cost: new Decimal('e33350000'),
+            unlocked() {return hasMilestone('v', 3)},
+            effect() {
+                return player.f.points.add(1).pow(0.0001)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         }
