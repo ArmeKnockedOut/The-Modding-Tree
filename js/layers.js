@@ -114,7 +114,7 @@ addLayer("d", {
         18: {
             name: "no ideas",
             description: "Unlock acid upgrades",
-            cost: new Decimal('e460000000'),
+            cost: new Decimal('e117000000'),
             unlocked() {return hasUpgrade('o', 11)}
         }
         
@@ -203,7 +203,7 @@ addLayer("m", {
         14: {
             name: "again?",
             description: "Unlock a layer",
-            cost: new Decimal('e378730000')
+            cost: new Decimal('e96500000')
         }
 
     },
@@ -543,17 +543,17 @@ addLayer("a", {
         11: {
             name: "Old layer boost",
             description: "Get more machines and sponges based on the amount of acid",
-            cost: new Decimal(2e23),
+            cost: new Decimal(1e11),
             unlocked() {return hasUpgrade('d', 18)},
             effect() {
-                return player[this.layer].points.add(1).pow(1.3)
+                return player[this.layer].points.add(1).pow(0.9)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         12: {
             name: "Beyond... A new row...",
             description: "Unlock a new layer",
-            cost: new Decimal('e2e16'),
+            cost: new Decimal('1e13'),
             unlocked() {return hasUpgrade('d', 18)},
         }
         
@@ -577,7 +577,7 @@ addLayer("v", {
 		points: new Decimal(0)
     }},
     color: "#1b1b1b",
-    requires: new Decimal('e2.6e24'), // Can be a function that takes requirement increases into account
+    requires: new Decimal('e263420000'), // Can be a function that takes requirement increases into account
     resource: "Vacuum cleaners", // Name of prestige currency
     baseResource: "dirt cleaned", // Name of resource prestige is based on
     baseAmount() {return player.points}, // Get the current amount of baseResource
@@ -602,7 +602,7 @@ addLayer("v", {
             description: "Gain more dirt cleaned based on the amount of vacuum cleaners.",
             cost: (1),
             effect() {
-                return player[this.layer].points.add(2).pow(12)
+                return player[this.layer].points.add(1.1).pow(7)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         }
@@ -610,7 +610,7 @@ addLayer("v", {
     milestones: {
         1: {
             requirementDescription: "1 Vacuum Cleaner",
-            effectDescription: "Get 10,000% of super dirt washers, super machines and super sponges every second, and 1000x dirt cleaned gain.",
+            effectDescription: "Get 100% of super dirt washers, super machines and super sponges every second, and 1000x dirt cleaned gain.",
             done() { return player.v.points.gte(1) }
         }
     }
@@ -622,7 +622,7 @@ addLayer("sm", {
     position: 1,
     branches: true,
     passiveGeneration() {
-        if (hasMilestone('v', 1)) return 100
+        if (hasMilestone('v', 1)) return 1
         else return 0}, 
     startData() { return {
         unlocked: false,
@@ -653,10 +653,10 @@ addLayer("sm", {
     upgrades: {
         11: {
             name: "This was expected...",
-            description: "Gain WAY more machines based on the amount of super machines.",
+            description: "Gain more machines based on the amount of super machines.",
             cost: (1),
             effect() {
-                return player[this.layer].points.add(7).pow(7)
+                return player[this.layer].points.add(1).pow(0.8)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
@@ -681,10 +681,10 @@ addLayer("sm", {
         14: {
             name: "Crossxproduction",
             description: "Gain more super sponges based on the amount of super machines.",
-            cost: new Decimal('e33400000'),
+            cost: new Decimal('e33348000'),
             unlocked() {return hasUpgrade('ss', 13)},
             effect() {
-                return player[this.layer].points.add(1).pow(2.3)
+                return player[this.layer].points.add(1).pow(0.6)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         }
@@ -697,7 +697,7 @@ addLayer("sdw", {
     position: 4,
     branches: true,
     passiveGeneration() {
-        if (hasMilestone('v', 1)) return 100
+        if (hasMilestone('v', 1)) return 1
         else return 0}, 
     startData() { return {
         unlocked: false,
@@ -728,10 +728,10 @@ addLayer("sdw", {
     upgrades: {
         11: {
             name: "This was expected...",
-            description: "Gain WAY more dirt washers based on the amount of super dirt washers.",
+            description: "Gain more dirt washers based on the amount of super dirt washers.",
             cost: (1),
             effect() {
-                return player[this.layer].points.add(7).pow(7)
+                return player[this.layer].points.add(7).pow(0.9)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
@@ -756,10 +756,10 @@ addLayer("sdw", {
         14: {
             name: "Crossxproduction",
             description: "Gain more super sponges based on the amount of super dirt washers.",
-            cost: new Decimal('e33400000'),
+            cost: new Decimal('e33348000'),
             unlocked() {return hasUpgrade('ss', 13)},
             effect() {
-                return player[this.layer].points.add(1).pow(2.3)
+                return player[this.layer].points.add(1).pow(0.9)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         }
@@ -772,14 +772,14 @@ addLayer("ss", {
     position: 5,
     branches: true,
     passiveGeneration() {
-        if (hasMilestone('v', 1)) return 100
+        if (hasMilestone('v', 1)) return 1
         else return 0}, 
     startData() { return {
         unlocked: false,
 		points: new Decimal(0)
     }},
     color: "Yellow",
-    requires: new Decimal('e243850000'), // Can be a function that takes requirement increases into account
+    requires: new Decimal('e78070000'), // Can be a function that takes requirement increases into account
     resource: "Super Sponges", // Name of prestige currency
     baseResource: "sponges", // Name of resource prestige is based on
     baseAmount() {return player.s.points}, // Get the current amount of baseResource
@@ -807,7 +807,7 @@ addLayer("ss", {
             description: "Get more sponges based on the amount of super sponges.",
             cost: new Decimal(245),
             effect() {
-                return player[this.layer].points.add(100).pow(356)
+                return player[this.layer].points.add(1).pow(0.99)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
@@ -816,21 +816,21 @@ addLayer("ss", {
             description: "Gain more super dirt washers and super machines based on the amount of super sponges.",
             cost: new Decimal(400),
             effect() {
-                return player[this.layer].points.add(100).pow(600)
+                return player[this.layer].points.add(100).pow(0.9)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         13: {
             name: "unlocked",
             description: "Unlock more super dirt washer and super machine upgrades.",
-            cost: new Decimal(800000)
+            cost: new Decimal(15000)
         },
         14: {
             name: "Selboost",
             description: "Gain more super sponges based on the amount of super sponges.",
-            cost: new Decimal('e86420069'),
+            cost: new Decimal('e30013000'),
             effect() {
-                return player[this.layer].points.add(1).pow(10)
+                return player[this.layer].points.add(1).pow(0.9)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         }
