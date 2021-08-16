@@ -56,7 +56,7 @@ addLayer("d", {
     },
     upgrades: {
         11: {
-            name: "Getting help",
+            title: "Getting help",
             description: "Get more dirt cleaned based on the amount of dirt washers.",
             cost: new Decimal(3),
             effect() {
@@ -66,13 +66,13 @@ addLayer("d", {
         },
            
         12: {
-            name: "Motivation",
+            title: "Motivation",
             description: "Triple the dirt cleaned gain.",
             cost: new Decimal(8),
           },
 
         13: {
-            name: "Dirt slides down",
+            title: "Dirt slides down",
             description: "Get more dirt cleaned based on the amount of dirt cleaned.",
             cost: new Decimal(50),
             effect() {
@@ -86,7 +86,7 @@ addLayer("d", {
             },
         },
         14: {
-            name: "Famous",
+            title: "Famous",
             description: "Get more dirt washers based on the amount of dirt cleaned.",
             cost: new Decimal(100),
             effect() {
@@ -95,7 +95,7 @@ addLayer("d", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         15: {
-            name: "Work harder",
+            title: "Work harder",
             description: "Get even more dirt cleaned based on the amount of dirt washers.",
             cost: new Decimal(300),
             effect() {
@@ -104,24 +104,24 @@ addLayer("d", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
         },
         16: {
-            name: "Power",
+            title: "Power",
             description: "Get 5x more machines and sponges",
             cost: new Decimal(320000000)
         },
         17: {
-            name: "This should have been earlier...",
+            title: "This should have been earlier...",
             description: "Get more dirt washers based on the amount of dirt washers.",
             cost: new Decimal('1e7000'),
             unlocked() {return hasUpgrade('o', 11)}
         },
         18: {
-            name: "no ideas",
+            title: "Discovery",
             description: "Unlock acid upgrades",
             cost: new Decimal('e117000000'),
             unlocked() {return hasUpgrade('o', 11)}
         },
         19: {
-            name: "what",
+            title: "This REALLY should have been earlier",
             description: "Gain more dirt washers based on the amount of acid and acid gain 100% per second.",
             cost: new Decimal('e150676000'),
             unlocked() {return hasMilestone('v', 3)},
@@ -131,7 +131,7 @@ addLayer("d", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
         },
         21: {
-            name: "what",
+            title: "No logic",
             description: "Gain more dirt washers based on the amount of fire.",
             cost: new Decimal('e150676100'),
             unlocked() {return hasMilestone('v', 3)},
@@ -195,7 +195,7 @@ addLayer("m", {
     },
     upgrades: {
         11: {
-            name: "Machine help",
+            title: "Machine help",
             description: "Machines boosts dirt cleaned production.",
             cost: new Decimal(1),
             effect() {
@@ -204,7 +204,7 @@ addLayer("m", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
         },
         12: {
-            name: "Machine help 2",
+            title: "Machine help 2",
             description: "Machines boost dirt washer production.",
             cost: new Decimal(15),
             effect() {
@@ -215,7 +215,7 @@ addLayer("m", {
             
         },
         13: {
-            name: "Learning",
+            title: "Learning",
             description: "Points boost machine gain.",
             cost: new Decimal(100),
             effect() {
@@ -224,7 +224,7 @@ addLayer("m", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         14: {
-            name: "again?",
+            title: "again?",
             description: "Unlock a layer",
             cost: new Decimal('e96500000')
         }
@@ -284,8 +284,8 @@ addLayer("s", {
     },
     upgrades: {
         11: {
-            name: "Clean method",
-            description: "Machines use sponges instead of their bare hands. (makes machines stronger)",
+            title: "Different Cleaning Method",
+            description: "Dirt washers use sponges instead of their bare hands. (get more dirt washers)",
             cost: new Decimal(1),
             effect() {
                 return player[this.layer].points.add(1).pow(0.28)
@@ -293,7 +293,7 @@ addLayer("s", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
         },
         12: {
-            name: "what...",
+            title: "Crossxproduction",
             description: "Sponges boost dirt washers gain.",
             cost: new Decimal(35),
             effect() {
@@ -302,7 +302,7 @@ addLayer("s", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
         },
         13: {
-            name: "More mops",
+            title: "More mops",
             description: "Get more mops based on the amount of sponges.",
             cost: new Decimal('e8614200'),
             unlocked() {return hasUpgrade('o', 11)},
@@ -312,7 +312,7 @@ addLayer("s", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
         },
         14: {
-            name: "Beyond",
+            title: "Beyond",
             description: "Unlock a new layer, mop gain 100x and dirt cleaned gain 1e200x",
             cost: new Decimal('e8614270'),
             unlocked() {return hasUpgrade('o', 11)}
@@ -370,13 +370,13 @@ addLayer("c", {
     },
     upgrades: {
         11: {
-            name: "Insane Boost",
+            title: "Insane Boost",
             description: "Dirt cleaned gain 100x",
             cost: new Decimal(1)
         },
 
         12: {
-            name: "Insane Boost 2",
+            title: "Insane Boost 2",
             description: "Get an insane boost each cleaner water you buy.",
             cost: new Decimal(2),
             effect() {
@@ -386,7 +386,7 @@ addLayer("c", {
         },
 
         13: {
-            name: "Insane Boost 3",
+            title: "Insane Boost 3",
             description: "Get more machines and sponges based on cleaner water.",
             cost: new Decimal(3),
             effect() {
@@ -395,18 +395,18 @@ addLayer("c", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
         },
         14: {
-            name: "Insane Boost 4",
+            title: "Insane Boost 4",
             description: "Dirt cleaned gain 10000x",
             cost: new Decimal(5),
             
         },
         15: {
-            name: "Passive Generation",
+            title: "Passive Generation",
             description: "You get 10000% of dirt washers every second, and keep dirt washer upgrades on ALL resets.",
             cost: new Decimal(5),
         },
         16: {
-            name: "finally",
+            title: "finally",
             description: "You can buy max cleaner water.",
             cost: new Decimal(55)
         }
@@ -449,12 +449,12 @@ addLayer("o", {
     branches: ["c"],
     upgrades: {
         11: {
-            name: "Secret revealed",
+            title: "Secret revealed",
             description: "Unlock more dirt washer and sponge upgrades.",
             cost: new Decimal(1)
         },
         12: {
-            name: "Giant boost",
+            title: "Giant boost",
             description: "Get more dirt cleaned based on the amount of mops.",
             cost: new Decimal(4),
             effect() {
@@ -506,7 +506,7 @@ addLayer("f", {
     branches: ['o'],
     upgrades: {
         11: {
-            name: "logic -1000",
+            title: "logic -1000",
             description: "Get more machines based on the amount of fire.",
             cost: new Decimal(5),
             effect() {
@@ -515,7 +515,7 @@ addLayer("f", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
         },
         12: {
-            name: "logic -2000",
+            title: "logic -2000",
             description: "Get more sponges and dirt cleaned based on the amount of fire.",
             cost: new Decimal(235),
             effect() {
@@ -567,7 +567,7 @@ addLayer("a", {
     branches: ['f'],
     upgrades: {
         11: {
-            name: "Old layer boost",
+            title: "Old layer boost",
             description: "Get more machines and sponges based on the amount of acid",
             cost: new Decimal(1e11),
             unlocked() {return hasUpgrade('d', 18)},
@@ -577,7 +577,7 @@ addLayer("a", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         12: {
-            name: "Beyond... A new row...",
+            title: "Beyond... A new row...",
             description: "Unlock a new layer",
             cost: new Decimal('1e13'),
             unlocked() {return hasUpgrade('d', 18)},
@@ -631,7 +631,7 @@ addLayer("v", {
     branches: ['o', 'f'],
     upgrades: {
         11: {
-            name: "im running out of ideas",
+            title: "That makes sense...",
             description: "Gain more dirt cleaned based on the amount of vacuum cleaners.",
             cost: (1),
             effect() {
@@ -640,7 +640,7 @@ addLayer("v", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         12: {
-            name: "Self boost",
+            title: "Self boost",
             description: "Get more vacuum cleaners based on the amount of vacuum cleaners.",
             cost: new Decimal(100),
             effect() {
@@ -649,7 +649,7 @@ addLayer("v", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         13: {
-            name: "reverting time",
+            title: "Revert",
             description: "Gain more vacuum cleaners based on the amount of super sponges.",
             cost: new Decimal(25000),
             effect() {
@@ -658,7 +658,7 @@ addLayer("v", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         14: {
-            name: "reverting time 2",
+            title: "Revert 2",
             description: "Gain more vacuum cleaners based on the amount of super machines.",
             cost: new Decimal(69420),
             effect() {
@@ -667,7 +667,7 @@ addLayer("v", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         15: {
-            name: "reverting time 3",
+            title: "Revert 3",
             description: "Gain more vacuum cleaners based on the amount of super dirt washers.",
             cost: new Decimal(1e13),
             effect() {
@@ -731,7 +731,7 @@ addLayer("sm", {
     branches: ['m'],
     upgrades: {
         11: {
-            name: "This was expected...",
+            title: "This was expected...",
             description: "Gain more machines based on the amount of super machines.",
             cost: (1),
             effect() {
@@ -740,7 +740,7 @@ addLayer("sm", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         12: {
-            name: "Crossxproduction",
+            title: "Crossxproduction",
             description: "Get more super dirt washers based on the amount of super machines.",
             cost: new Decimal(25),
             effect() {
@@ -749,7 +749,7 @@ addLayer("sm", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         13: {
-            name: "Selfboost",
+            title: "Selfboost",
             description: "Get more super machines based on the amount of super machines.",
             cost: new Decimal(1e10),
             effect() {
@@ -758,7 +758,7 @@ addLayer("sm", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         14: {
-            name: "Crossxproduction",
+            title: "Crossxproduction",
             description: "Gain more super sponges based on the amount of super machines.",
             cost: new Decimal('e33348000'),
             unlocked() {return hasUpgrade('ss', 13)},
@@ -807,7 +807,7 @@ addLayer("sdw", {
     branches: ['d'],
     upgrades: {
         11: {
-            name: "This was expected...",
+            title: "This was expected...",
             description: "Gain more dirt washers based on the amount of super dirt washers.",
             cost: (1),
             effect() {
@@ -816,7 +816,7 @@ addLayer("sdw", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         12: {
-            name: "Crossxproduction",
+            title: "Crossxproduction",
             description: "Get more super machines based on the amount of super dirt washers.",
             cost: (25),
             effect() {
@@ -825,7 +825,7 @@ addLayer("sdw", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         13: {
-            name: "Selfboost",
+            title: "Selfboost",
             description: "Get more super dirt washers based on the amount of super dirt washers.",
             cost: new Decimal(1e10),
             effect() {
@@ -834,7 +834,7 @@ addLayer("sdw", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         14: {
-            name: "Crossxproduction",
+            title: "Crossxproduction",
             description: "Gain more super sponges based on the amount of super dirt washers.",
             cost: new Decimal('e33348000'),
             unlocked() {return hasUpgrade('ss', 13)},
@@ -844,7 +844,7 @@ addLayer("sdw", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         15: {
-            name: "how many ideas do i not know. what",
+            title: "Even more logic",
             description: "Gain more super dirt washers based on the amount of fire.",
             cost: new Decimal('e33350000'),
             unlocked() {return hasMilestone('v', 3)},
@@ -893,7 +893,7 @@ addLayer("ss", {
     branches: ['s'],
     upgrades: {
         11: {
-            name: "This was expected... I mean, really.",
+            title: "This was expected... I mean, really.",
             description: "Get more sponges based on the amount of super sponges.",
             cost: new Decimal(245),
             effect() {
@@ -902,7 +902,7 @@ addLayer("ss", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         12: {
-            name: "Crossxproduction",
+            title: "Crossxproduction",
             description: "Gain more super dirt washers and super machines based on the amount of super sponges.",
             cost: new Decimal(400),
             effect() {
@@ -911,12 +911,12 @@ addLayer("ss", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
         13: {
-            name: "unlocked",
+            title: "Unlocked",
             description: "Unlock more super dirt washer and super machine upgrades.",
             cost: new Decimal(15000)
         },
         14: {
-            name: "Selboost",
+            title: "Selboost",
             description: "Gain more super sponges based on the amount of super sponges.",
             cost: new Decimal('e30013000'),
             effect() {
@@ -925,4 +925,66 @@ addLayer("ss", {
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         }
     }
+})
+
+addLayer("g", {
+    name: "glove", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "G", // This appears on the layer's node. Default is the id with the first letter capitalized
+    position: 1,
+    branches: true,
+    startData() { return {
+        unlocked: false,
+		points: new Decimal(0)
+    }},
+    color: "Red",
+    requires: new Decimal('1e24'), // Can be a function that takes requirement increases into account
+    resource: "Gloves", // Name of prestige currency
+    baseResource: "Vacuum Cleaners", // Name of resource prestige is based on
+    baseAmount() {return player.v.points}, // Get the current amount of baseResource
+    type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+    exponent: 0.005, // Prestige currency exponent
+    gainMult() { // Calculate the multiplier for main currency from bonuses
+        mult = new Decimal(1)
+        return mult
+    },
+    gainExp() { // Calculate the exponent on main currency from bonuses
+        return new Decimal(1)
+    },
+    row: 5, // Row the layer is in on the tree (0 is the first row)
+    hotkeys: [
+        {key: "g", description: "G: Reset for Gloves", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+    ],
+    layerShown(){return false},
+    branches: ['v'],
+})
+
+addLayer("ha", {
+    name: "hoa", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "HA", // This appears on the layer's node. Default is the id with the first letter capitalized
+    position: 2,
+    branches: true,
+    startData() { return {
+        unlocked: false,
+		points: new Decimal(0)
+    }},
+    color: "White",
+    requires: new Decimal('1e24'), // Can be a function that takes requirement increases into account
+    resource: "Hot air", // Name of prestige currency
+    baseResource: "Vacuum Cleaners", // Name of resource prestige is based on
+    baseAmount() {return player.v.points}, // Get the current amount of baseResource
+    type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+    exponent: 0.005, // Prestige currency exponent
+    gainMult() { // Calculate the multiplier for main currency from bonuses
+        mult = new Decimal(1)
+        return mult
+    },
+    gainExp() { // Calculate the exponent on main currency from bonuses
+        return new Decimal(1)
+    },
+    row: 5, // Row the layer is in on the tree (0 is the first row)
+    hotkeys: [
+        {key: "h", description: "H: Reset for Hot Air", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+    ],
+    layerShown(){return false},
+    branches: ['v'],
 })
