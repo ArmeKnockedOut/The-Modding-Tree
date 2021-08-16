@@ -22,7 +22,6 @@ addLayer("d", {
         if (hasUpgrade('d', 14)) mult = mult.times(upgradeEffect('d', 14))
         if (hasUpgrade('m', 12)) mult = mult.times(upgradeEffect('m', 12))
         if (hasUpgrade('s', 11)) mult = mult.times(upgradeEffect('s', 11))
-        if (hasUpgrade('s', 12)) mult = mult.times(upgradeEffect('s', 12))
         if (hasUpgrade('sdw', 11)) mult = mult.times(upgradeEffect('sdw', 11))
         if (hasUpgrade('d', 21)) mult = mult.times(upgradeEffect('d', 21))
         return mult
@@ -294,7 +293,7 @@ addLayer("s", {
         },
         12: {
             title: "Crossxproduction",
-            description: "Sponges boost dirt washers gain.",
+            description: "Sponges boost dirt cleaned gain.",
             cost: new Decimal(35),
             effect() {
                 return player[this.layer].points.add(1).pow(0.20)
