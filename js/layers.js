@@ -198,7 +198,7 @@ addLayer("m", {
             description: "Machines boosts dirt cleaned production.",
             cost: new Decimal(1),
             effect() {
-                return player[this.layer].points.add(2).pow(0.3)
+                return player[this.layer].points.add(1.2).pow(0.3)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
         },
@@ -207,7 +207,7 @@ addLayer("m", {
             description: "Machines boost dirt washer production.",
             cost: new Decimal(15),
             effect() {
-                return player[this.layer].points.add(2).pow(0.15)
+                return player[this.layer].points.add(1.2).pow(0.15)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, 
         
@@ -218,7 +218,7 @@ addLayer("m", {
             description: "Points boost machine gain.",
             cost: new Decimal(100),
             effect() {
-                return player.points.add(2).pow(0.05)
+                return player.points.add(1.2).pow(0.05)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
@@ -287,7 +287,7 @@ addLayer("s", {
             description: "Dirt washers use sponges instead of their bare hands. (get more dirt washers)",
             cost: new Decimal(1),
             effect() {
-                return player[this.layer].points.add(2).pow(0.28)
+                return player[this.layer].points.add(1.2).pow(0.28)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
         },
@@ -296,7 +296,7 @@ addLayer("s", {
             description: "Sponges boost dirt cleaned gain.",
             cost: new Decimal(35),
             effect() {
-                return player[this.layer].points.add(2).pow(0.20)
+                return player[this.layer].points.add(1.2).pow(0.20)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
         },
@@ -306,7 +306,7 @@ addLayer("s", {
             cost: new Decimal('e8614200'),
             unlocked() {return hasUpgrade('o', 11)},
             effect() {
-                return player[this.layer].points.add(2).pow(0.0000001)
+                return player[this.layer].points.add(1.2).pow(0.0000001)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
         },
@@ -457,7 +457,7 @@ addLayer("o", {
             description: "Get more dirt cleaned based on the amount of mops.",
             cost: new Decimal(4),
             effect() {
-                return player[this.layer].points.add(2).pow(1.34)
+                return player[this.layer].points.add(1.2).pow(1.34)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
         }
@@ -509,7 +509,7 @@ addLayer("f", {
             description: "Get more machines based on the amount of fire.",
             cost: new Decimal(5),
             effect() {
-                return player[this.layer].points.add(5).pow(5)
+                return player[this.layer].points.add(1.2).pow(5)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
         },
@@ -518,7 +518,7 @@ addLayer("f", {
             description: "Get more sponges and dirt cleaned based on the amount of fire.",
             cost: new Decimal(235),
             effect() {
-                return player[this.layer].points.add(5).pow(5)
+                return player[this.layer].points.add(1.2).pow(5)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
         }
@@ -634,7 +634,7 @@ addLayer("v", {
             description: "Gain more dirt cleaned based on the amount of vacuum cleaners.",
             cost: (1),
             effect() {
-                return player[this.layer].points.add(1.1).pow(50)
+                return player[this.layer].points.add(1.2).pow(50)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
@@ -643,7 +643,7 @@ addLayer("v", {
             description: "Get more vacuum cleaners based on the amount of vacuum cleaners.",
             cost: new Decimal(100),
             effect() {
-                return player[this.layer].points.add(2).pow(0.6)
+                return player[this.layer].points.add(1.2).pow(0.6)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
@@ -652,7 +652,7 @@ addLayer("v", {
             description: "Gain more vacuum cleaners based on the amount of super sponges.",
             cost: new Decimal(25000),
             effect() {
-                return player.ss.points.add(2).pow(0.00000001)
+                return player.ss.points.add(1.2).pow(0.00000001)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
@@ -661,7 +661,7 @@ addLayer("v", {
             description: "Gain more vacuum cleaners based on the amount of super machines.",
             cost: new Decimal(69420),
             effect() {
-                return player.sm.points.add(2).pow(0.0000001)
+                return player.sm.points.add(1.2).pow(0.0000001)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
@@ -670,7 +670,7 @@ addLayer("v", {
             description: "Gain more vacuum cleaners based on the amount of super dirt washers.",
             cost: new Decimal(1e13),
             effect() {
-                return player.sdw.points.add(2).pow(0.0000001)
+                return player.sdw.points.add(1.2).pow(0.0000001)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         }
@@ -734,7 +734,7 @@ addLayer("sm", {
             description: "Gain more machines based on the amount of super machines.",
             cost: (1),
             effect() {
-                return player[this.layer].points.add(2).pow(0.8)
+                return player[this.layer].points.add(1.2).pow(0.8)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
@@ -743,7 +743,7 @@ addLayer("sm", {
             description: "Get more super dirt washers based on the amount of super machines.",
             cost: new Decimal(25),
             effect() {
-                return player[this.layer].points.add(2).pow(0.9)
+                return player[this.layer].points.add(1.2).pow(0.9)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
@@ -752,7 +752,7 @@ addLayer("sm", {
             description: "Get more super machines based on the amount of super machines.",
             cost: new Decimal(1e10),
             effect() {
-                return player[this.layer].points.add(2).pow(0.8)
+                return player[this.layer].points.add(1.2).pow(0.8)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
@@ -762,7 +762,7 @@ addLayer("sm", {
             cost: new Decimal('e33348000'),
             unlocked() {return hasUpgrade('ss', 13)},
             effect() {
-                return player[this.layer].points.add(2).pow(0.6)
+                return player[this.layer].points.add(1.2).pow(0.6)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         }
@@ -819,7 +819,7 @@ addLayer("sdw", {
             description: "Get more super machines based on the amount of super dirt washers.",
             cost: (25),
             effect() {
-                return player[this.layer].points.add(2).pow(0.9)
+                return player[this.layer].points.add(1.2).pow(0.9)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
@@ -828,7 +828,7 @@ addLayer("sdw", {
             description: "Get more super dirt washers based on the amount of super dirt washers.",
             cost: new Decimal(1e10),
             effect() {
-                return player[this.layer].points.add(2).pow(0.8)
+                return player[this.layer].points.add(1.2).pow(0.8)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
@@ -838,7 +838,7 @@ addLayer("sdw", {
             cost: new Decimal('e33348000'),
             unlocked() {return hasUpgrade('ss', 13)},
             effect() {
-                return player[this.layer].points.add(2).pow(0.9)
+                return player[this.layer].points.add(1.2).pow(0.9)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
@@ -848,7 +848,7 @@ addLayer("sdw", {
             cost: new Decimal('e33350000'),
             unlocked() {return hasMilestone('v', 3)},
             effect() {
-                return player.f.points.add(2).pow(0.0001)
+                return player.f.points.add(1.2).pow(0.0001)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         }
@@ -896,7 +896,7 @@ addLayer("ss", {
             description: "Get more sponges based on the amount of super sponges.",
             cost: new Decimal(245),
             effect() {
-                return player[this.layer].points.add(2).pow(0.99)
+                return player[this.layer].points.add(1.2).pow(0.99)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         },
@@ -919,7 +919,7 @@ addLayer("ss", {
             description: "Gain more super sponges based on the amount of super sponges.",
             cost: new Decimal('e30013000'),
             effect() {
-                return player[this.layer].points.add(2).pow(0.9)
+                return player[this.layer].points.add(1.2).pow(0.9)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }
         }
