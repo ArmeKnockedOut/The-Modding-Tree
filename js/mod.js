@@ -20,7 +20,11 @@ let VERSION = {
 let changelog = `<h1>Changelog:</h1><br>
 	<h3>v0.1</h3><br>
 		- Mod released.<br>
-		- Added everything.`
+		- Added row 1-4.<br>
+	<h3>v0.2</h3><br>
+		- Finished row 4.<br>
+		- Added additional layers onto row 3 later in the game.<br>
+		- Added row 5-6.`
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
 
@@ -46,6 +50,9 @@ function getPointGen() {
 	if (hasUpgrade('d', 11)) gain = gain.times(upgradeEffect('d', 11))
 	if (hasUpgrade('d', 13)) gain = gain.times(upgradeEffect('d', 13))
 	if (hasMilestone('st', 5)) gain = gain.times(5)
+	if (hasMilestone('l', 1)) gain = gain.times(15000)
+	if (inChallenge('t', 12)) gain = gain.log10()
+	if (inChallenge('t', 13)) gain = gain.div(player.points.add(1))
 	return gain
 }
 
