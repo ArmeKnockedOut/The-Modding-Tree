@@ -1418,8 +1418,8 @@ addLayer("t", {
     startData() { return {
         unlocked: false,
 		points: new Decimal(0),
-        cold: new Decimal(1),
-        heat: new Decimal(1)
+        cold: new Decimal(10),
+        heat: new Decimal(10)
     }},
     tabFormat: [
         "main-display",
