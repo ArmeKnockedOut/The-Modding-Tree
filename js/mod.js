@@ -13,7 +13,7 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.1",
+	num: "0.22",
 	name: "Alpha Stage",
 }
 
@@ -24,7 +24,11 @@ let changelog = `<h1>Changelog:</h1><br>
 	<h3>v0.2</h3><br>
 		- Finished row 4.<br>
 		- Added additional layers onto row 3 later in the game.<br>
-		- Added row 5-6.`
+		- Added row 5-6.<br>
+	<h3>v0.21</h3><br>
+		- Fixed the bug where you couldn't buy water.<br>
+	<h3>v0.22</h3><br>
+		- Fixed the bug where the version was displayed wrong.`
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
 
