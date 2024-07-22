@@ -38,7 +38,7 @@ addLayer("w", {
         {key: "w", description: "W: Reset for Wood", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     branches: ['s', 't'],
-    layerShown(){return player.t.total.gte(1) || player.w.total.gte(1) || player.sa.total(1)},
+    layerShown(){return player.t.total.gte(1) || player.w.total.gte(1) || player.sa.total.gte(1)},
  //   doReset(resettingLayer) {
  //       if (layers[resettingLayer].row > layers[this.layer].row) {
  //           savedUpgrades = []
