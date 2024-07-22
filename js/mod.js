@@ -1,13 +1,13 @@
 let modInfo = {
-	name: "The Dirt Clean Tree",
-	id: "armemodtreelol",
+	name: "The Universe Tree",
+	id: "armeuniversemodtreelolimsuchacatboy",
 	author: "Arme",
-	pointsName: "dirt cleaned",
-	modFiles: ["layers.js", "tree.js"],
+	pointsName: "power",
+	modFiles: ["dirt.js", "tree.js", "achievements.js", "grass.js", "rocks.js", "moss.js", "flowers.js", "seeds.js", "trees.js", "sand.js", "wood.js"],
 
 	discordName: "ArmeKnockedOut",
 	discordLink: "",
-	initialStartPoints: new Decimal (10), // Used for hard resets and new players
+	initialStartPoints: new Decimal (0), // Used for hard resets and new players
 	offlineLimit: 1,  // In hours
 }
 
@@ -18,8 +18,8 @@ let VERSION = {
 }
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.1</h3><br>
-		- This mod was just made lol no changes.<br>`
+	<h3>v1.0</h3><br>
+		- Created.<br>`
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
 
@@ -42,21 +42,35 @@ function getPointGen() {
 		return new Decimal(0)
 
 	let gain = new Decimal('1')
-	if (hasUpgrade('d', 11)) gain = gain.times(upgradeEffect('d', 11))
-	if (hasUpgrade('s', 12)) gain = gain.times(upgradeEffect('s', 12))
-	if (hasUpgrade('d', 12)) gain = gain.times(3)
-	if (hasUpgrade('d', 13)) gain = gain.times(upgradeEffect('d', 13))
-	if (hasUpgrade('m', 11)) gain = gain.times(upgradeEffect('m', 11))
-	if (hasUpgrade('d', 15)) gain = gain.times(upgradeEffect('d', 15))
-	if (hasUpgrade('s', 11)) gain = gain.times(upgradeEffect('s', 11))
-	if (hasUpgrade('c', 11)) gain = gain.times(100)
-	if (hasUpgrade('c', 12)) gain = gain.times(upgradeEffect('c', 12))
-	if (hasUpgrade('c', 14)) gain = gain.times(10000)
-	if (hasUpgrade('o', 12)) gain = gain.times(upgradeEffect('o', 12))
-	if (hasUpgrade('s', 14)) gain = gain.times(1e200)
-	if (hasUpgrade('f', 12)) gain = gain.times(upgradeEffect('f', 12))
-	if (hasUpgrade('v', 11)) gain = gain.times(upgradeEffect('v', 11))
-	if (hasMilestone('v', 1)) gain = gain.times(1000)
+	gain = gain.times(player.g.plantedgrass.log10().plus(1))
+	gain = gain.times(tmp.r.effect)
+	gain = gain.times(tmp.ach.effect)
+	gain = gain.times(player.f.redflowers.log2().plus(1))
+	gain = gain.times(player.t.treebranches.log2().plus(1))
+	if (hasAchievement('ach', 17)) gain = gain.times(1.1)
+	if (hasAchievement('ach', 27)) gain = gain.times(2)
+	if (hasUpgrade('d', 11)) gain = gain.times(softcap((upgradeEffect('d', 11)), player.d.upgradeonesoftcap , player.d.upgradeonesoftcappower))
+	if (hasUpgrade('d', 13)) gain = gain.times(softcap((upgradeEffect('d', 13)), new Decimal(650) , 0.215))
+	if (hasUpgrade('d', 14)) gain = gain.times(upgradeEffect('d', 14))
+	if (hasUpgrade('d', 23)) gain = gain.times(upgradeEffect('d', 23))
+	if (hasUpgrade('d', 103)) gain = gain.times(player.f.purpleflowers.log10().plus(1))
+	if (hasUpgrade('d', 104)) gain = gain.times(player.f.blueflowers.log10().plus(1))
+	if (hasUpgrade('g', 11)) gain = gain.times(softcap((upgradeEffect('g', 11)), new Decimal(1500) , 0.1))
+	if (hasUpgrade('r', 11)) gain = gain.times(1.5)
+	if (hasUpgrade('r', 14)) gain = gain.times(1.3)
+	if (hasUpgrade('r', 15)) gain = gain.times(0.9)
+	if (hasUpgrade('m', 21)) gain = gain.times(softcap((upgradeEffect('m', 21)), new Decimal(1000) , 0.109))
+	if (hasUpgrade('m', 22)) gain = gain.times(softcap((upgradeEffect('m', 22)), new Decimal(750) , 0.104))
+	if (hasUpgrade('m', 23)) gain = gain.times(softcap((upgradeEffect('m', 23)), new Decimal(100) , 0.107))
+	gain = gain.times(player.s.farmedricemultiplier)
+	gain = gain.pow(player.s.farmedwheatexponent)
+	if (player.s.farmedwheattemp.gte(1)) gain = new Decimal(0)
+	if (player.s.farmedcarrotstemp.gte(1)) gain = new Decimal(0)
+	if (player.s.farmedpotatoestemp.gte(1)) gain = new Decimal(0)
+	if (player.s.farmedbeetroottemp.gte(1)) gain = new Decimal(0)
+	if (player.s.farmedsugarcanetemp.gte(1)) gain = new Decimal(0)
+	if (player.s.farmedcorntemp.gte(1)) gain = new Decimal(0)
+	if (player.s.farmedricetemp.gte(1)) gain = new Decimal(0)
 	return gain
 }
 
