@@ -10,6 +10,7 @@ addLayer("d", {
       unlocked: true,
 		  points: new Decimal(0),
       upgradeonesoftcap: new Decimal(1500),
+      upgradeonesoftcapr: new Decimal(0),
       upgradeonesoftcapincrease: new Decimal(1500),
       upgradeonesoftcapcurrentincrease: new Decimal(0),
       upgradeonesoftcappower: new Decimal(0.125),
@@ -52,6 +53,8 @@ addLayer("d", {
             { "color": "white", "font-size": "15px" }],
           "blank",
           "blank",
+          ["clickable", 12],
+          "blank",
           ["display-text",
             function() { return 'You have ' + format(player.d.refineddirtcurrency) + ' Refined Dirt' },
             { "color": "white", "font-size": "16.5px" }],
@@ -70,7 +73,7 @@ addLayer("d", {
           ["row", [
             ["upgrade", 141], ["upgrade", 142], ["upgrade", 143], ["upgrade", 144], ["upgrade", 145]]],
         ],
-      unlocked() {return (hasMilestone('s', 4))}
+      unlocked() {return hasMilestone('s', 4) || hasAchievement('ach', 32)}
       },
     },
     color: "#A87950",
@@ -93,7 +96,10 @@ addLayer("d", {
         mult = mult.times(player.m.mossspread.log2().plus(1))
         mult = mult.times(player.f.orangeflowers.log2().plus(1))
         mult = mult.times(player.s.farmedcarrotsmultiplier)
+        mult = mult.times(player.s.farmedmushroommultiplier)
         mult = mult.times(player.t.apples.plus(1).log2().plus(1))
+        mult = mult.times(Decimal.pow(1.5, player.w.woodplanks))
+        mult = mult.times(Decimal.pow(2, player.sa.beacheslevels).times(player.sa.beaches.plus(1).log10().plus(1)))
         if (hasAchievement('ach', 27)) mult = mult.times(2)
         if (hasAchievement('ach', 25)) player.d.upgradeonesoftcappower = new Decimal(0.15)
         if (hasUpgrade('d', 105)) player.d.upgradesixmulti = player.d.oldupgradesixmulti.plus(0.0625)
@@ -101,6 +107,15 @@ addLayer("d", {
         if (hasUpgrade('d', 125)) player.d.upgradesixmulti = player.d.oldupgradesixmulti.plus(0.1875)
         if (hasUpgrade('d', 135)) player.d.upgradefourmulti = player.d.oldupgradefourmulti.plus(0.06)
         if (hasUpgrade('d', 145)) player.d.upgradefourmulti = player.d.oldupgradefourmulti.plus(0.11)
+        if (hasUpgrade('r', 23)) player.d.upgradeonesoftcapr = new Decimal(250000)
+        player.d.upgradeonesoftcap = player.d.upgradeonesoftcapr.plus(player.d.upgradeonesoftcapcurrentincrease.plus(1500))
+        if (getBuyableAmount('w', 13).gte(3)) mult = mult.times(player.f.magentaflowers.pow(0.4).log10().plus(1))
+        if (hasAchievement('ach', 32)) mult = mult.times(2)
+        if (getBuyableAmount('w', 15).gte(1)) mult = mult.times(buyableEffect('w', 15))
+        if (hasUpgrade('wa', 12)) mult = mult.times(player.wa.potamogeton.plus(1).pow(9).log(6).plus(1))
+        if (hasUpgrade('upgtree', 21)) mult = mult.times(upgradeEffect('upgtree', 21))
+        if (hasUpgrade('upgtree', 23)) mult = mult.times(upgradeEffect('upgtree', 23))
+        if (hasUpgrade('wa', 11) && player.d.points.gte(player.d.refineddirtcost)) player.d.refineddirt = player.d.refineddirt.plus(1), player.d.refineddirtcost = player.d.refineddirtcost.times(10), player.d.upgradeonesoftcap = player.d.upgradeonesoftcap.plus(player.d.upgradeonesoftcapincrease), player.d.upgradeonesoftcapcurrentincrease = player.d.upgradeonesoftcapcurrentincrease.plus(player.d.upgradeonesoftcapincrease), player.d.upgradeonesoftcapincrease = player.d.upgradeonesoftcapincrease.plus(250), player.d.refineddirtcurrency = player.d.refineddirtcurrency.plus(1)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -114,7 +129,7 @@ addLayer("d", {
     doReset(resettingLayer) {
         if (layers[resettingLayer].row > layers[this.layer].row) {
             savedUpgrades = []
-            if (hasMilestone('g', 1) && ['g', 'r', 'm', 'f', 's', 't'].includes(resettingLayer)) {
+            if (hasMilestone('g', 1) && ['g', 'r', 'm', 'f', 's', 't', 'sa', 'w', 'wa'].includes(resettingLayer)) {
               if (hasUpgrade(this.layer, 11)) {savedUpgrades.push(11)}
               if (hasUpgrade(this.layer, 12)) {savedUpgrades.push(12)}
               if (hasUpgrade(this.layer, 13)) {savedUpgrades.push(13)}
@@ -133,7 +148,9 @@ addLayer("d", {
     clickables: {
       11: {
           display() {return "Refine Dirt"},
-          canClick() {return player.d.points.gte(player.d.refineddirtcost)},
+          canClick() { if (hasUpgrade('wa', 11)) return false
+            else if (player.d.points.gte(player.d.refineddirtcost)) return true
+            else return false },
           onClick() {return player.d.points = player.d.points.minus(player.d.refineddirtcost),
           player.d.refineddirt = player.d.refineddirt.plus(1),
           player.d.refineddirtcost = player.d.refineddirtcost.times(10),
@@ -142,12 +159,20 @@ addLayer("d", {
           player.d.upgradeonesoftcapincrease = player.d.upgradeonesoftcapincrease.plus(250),
           player.d.refineddirtcurrency = player.d.refineddirtcurrency.plus(1)}
       },
+      12: {
+        display() {return "Respec Upgrades"},
+        canClick() {return true},
+        onClick() {return player.d.upgrades = [],
+        player.d.refineddirtcurrency = player.d.refineddirt},
+        unlocked() {return player.nu.destroyedgalaxies.gte(1)}
+      }
   },
     upgrades: {
       11: {
         title: "The Beginning",
         description: "Unspent Dirt boosts power gain.",
-        cost: new Decimal(1),
+        cost() {if (hasAchievement('ach', 35)) return new Decimal(1e72)
+          else return new Decimal(1)},
         effect() {
           if (hasUpgrade('g', 14)) return player[this.layer].points.add(2).pow(0.45)
           else return player[this.layer].points.add(2).pow(0.35)
@@ -157,7 +182,8 @@ addLayer("d", {
       12: {
         title: "Don't let the power consume you.",
         description: "Power boosts Dirt gain.",
-        cost: new Decimal(1),
+        cost() {if (hasAchievement('ach', 35)) return new Decimal(1e88)
+          else return new Decimal(1)},
         unlocked() {return hasUpgrade('d', 11)},
         effect() {
           if (hasUpgrade('m', 12)) return player.points.add(1).pow(0.13)
@@ -169,7 +195,8 @@ addLayer("d", {
     13: {
       title: "You're not alone,",
       description: "Power boosts power gain.",
-      cost: new Decimal(2),
+      cost() {if (hasAchievement('ach', 35)) return new Decimal(1e93)
+          else return new Decimal(2)},
       unlocked() {return hasUpgrade('d', 12)},
       effect() {
         if (hasUpgrade('m', 13)) return player.points.add(1).pow(0.1511)
@@ -179,11 +206,12 @@ addLayer("d", {
     effectDisplay() { return format(softcap((upgradeEffect(this.layer, this.id)), new Decimal(650) , 0.215))+"x" },
     },
     14: {
-      title: "yet this is the most alone you've been.",
+      title: "yet this is the most alone you've ever been.",
       description() {if (hasUpgrade('d', 145)) return "Each Dirt upgrade bought multiplies power gain by x1.285"
       else if (hasUpgrade('d', 135)) return "Each Dirt upgrade bought multiplies power gain by x1.235"
       else return "Each Dirt upgrade bought multiplies power gain by x1.175"},
-      cost: new Decimal(2),
+      cost() {if (hasAchievement('ach', 35)) return new Decimal(1e101)
+          else return new Decimal(2)},
       unlocked() {return hasUpgrade('d', 13)},
       effect() {
         return new Decimal.pow(player.d.upgradefourmulti, player.d.upgrades.length)
@@ -193,7 +221,8 @@ addLayer("d", {
     15: {
       title: "Don't hide your emotions. No one will hear you.",
       description: "Unspent Dirt boosts Dirt gain.",
-      cost: new Decimal(4),
+      cost() {if (hasAchievement('ach', 35)) return new Decimal(2e107)
+          else return new Decimal(4)},
       unlocked() {return hasUpgrade('d', 14)},
       effect() {
         if (hasUpgrade('d', 25)) return player[this.layer].points.add(2).pow(0.1145)
@@ -207,7 +236,8 @@ addLayer("d", {
     else if (hasUpgrade('d', 115)) return "Each Dirt upgrade bought multiplies Dirt gain by x1.175"
     else if (hasUpgrade('d', 105)) return "Each Dirt upgrade bought multiplies Dirt gain by x1.125"
     else return "Each Dirt upgrade bought multiplies Dirt gain by x1.0625"},
-      cost: new Decimal(10),
+    cost() {if (hasAchievement('ach', 35)) return new Decimal(1e112)
+    else return new Decimal(10)},
       unlocked() {return hasUpgrade('d', 15)},
       effect() {
         return new Decimal.pow(player.d.upgradesixmulti, player.d.upgrades.length)
@@ -217,14 +247,16 @@ addLayer("d", {
     22: {
       title: "Shoot higher than the stars.",
       description: "'Don't let the power consume you.' formula power 0.07 -> 0.095",
-      cost: new Decimal(20),
+      cost() {if (hasAchievement('ach', 35)) return new Decimal(1e115)
+          else return new Decimal(20)},
       unlocked() {return hasUpgrade('d', 21)},
     },
     23: {
       title: "Maybe you're just mastering the wrong skill.",
       description() { if (hasMilestone('s', 4)) return "Time played boosts power gain based on log2."
       else return "Time played boosts power gain based on log10."},
-      cost: new Decimal(35),
+      cost() {if (hasAchievement('ach', 35)) return new Decimal(5e115)
+          else return new Decimal(35)},
       unlocked() {return hasUpgrade('d', 22)},
       effect() { if (hasMilestone('s', 4)) return Math.log(player.timePlayed) / Math.log(2) 
       else return Math.log(player.timePlayed) / Math.log(10)
@@ -234,13 +266,15 @@ addLayer("d", {
     24: {
       title: "No one is around to help.",
       description: "'You're not alone,' formula power 0.0978 -> 0.1111",
-      cost: new Decimal(100),
+      cost() {if (hasAchievement('ach', 35)) return new Decimal(2e120)
+          else return new Decimal(100)},
       unlocked() {return hasUpgrade('d', 23)},
     },
     25: {
       title: "Don't let the lack of progress discourage you.",
       description: "Dirt Upgrade Five formula power 0.1 -> 0.1145",
-      cost: new Decimal(300),
+      cost() {if (hasAchievement('ach', 35)) return new Decimal(1e121)
+          else return new Decimal(300)},
       unlocked() {return hasUpgrade('d', 24)},
     },
 

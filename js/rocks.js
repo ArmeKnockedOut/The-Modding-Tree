@@ -1,12 +1,12 @@
 addLayer("r", {
     name: "rocks", // This is optional, only used in a few places, If absent it just uses the layer id.
-    symbol: "R", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 1,
     branches: true,
     resetsNothing() {return (hasMilestone('s', 1))},
     canBuyMax() {return (hasMilestone('s', 1))},
     autoPrestige() {return (hasMilestone('s', 1))},
-    autoUpgrade() {return (hasMilestone('f', 2))},
+    automate() {if (hasMilestone('f', 2)) buyUpgrade('r', 11), buyUpgrade('r', 12), buyUpgrade('r', 13), buyUpgrade('r', 14), buyUpgrade('r', 15)},
+   // autoUpgrade() {return (hasMilestone('f', 2))},
   //  passiveGeneration() {
   //      if (hasUpgrade('c', 15)) return 100
   //      else return 0},
@@ -36,24 +36,30 @@ addLayer("r", {
         "blank",
         "upgrades"
     ],
-    effect(){
-        return Decimal.pow(player.d.rockmultiplier, player[this.layer].total)
+    effect(){ if (player.sa.sandplanetslevels == 4 && player.nu.annihilatednemesis.lte(0)) return new Decimal(1)
+        else return Decimal.pow(player.d.rockmultiplier, player[this.layer].total)
         /*
           you should use this.layer instead of <layerID>
           Decimal.pow(num1, num2) is an easier way to do
           num1.pow(num2)
         */
       },
-    color: "#8C9387",
-    requires: new Decimal(250000), // Can be a function that takes requirement increases into account
-    resource: "Rocks", // Name of prestige currency
+    color() { if (player.sa.sandplanetslevels == 4 && player.nu.annihilatednemesis.lte(0)) return "#bf8f8f"
+         else return "#8C9387"},
+    requires() {if (player.sa.sandplanetslevels == 4 && player.nu.annihilatednemesis.lte(0)) return new Decimal(1e10000)
+        else return new Decimal(250000)}, // Can be a function that takes requirement increases into account
+    resource() {if (player.sa.sandplanetslevels == 4 && player.nu.annihilatednemesis.lte(0)) return "X"
+    else return "Rocks"}, // Name of prestige currency
     baseResource: "power", // Name of resource prestige is based on
     baseAmount() {return player.points}, // Get the current amount of baseResource
-    type: "static", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-    exponent: 2.71, // Prestige currency exponent
+    type() {if (player.sa.sandplanetslevels == 4 && player.nu.annihilatednemesis.lte(0)) return "none"
+    else return "static"}, // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+    exponent: 2.71,
+    deactivated() {return player.sa.sandplanetslevels == 4 && player.nu.annihilatednemesis.lte(0)},
+    symbol() {if (player.sa.sandplanetslevels == 4 && player.nu.annihilatednemesis.lte(0)) return "X"
+else return "R"},
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
-        if (player.r.total.gte(30)) mult = mult.times(player.r.total.pow(1.25))
         if (player.r.total.gte(1200)) mult = mult.times(player.r.total.pow(20))
         if (player.r.total.gte(2500)) mult = mult.times(player.r.total.pow(35))
         if (hasUpgrade('d', 102)) player.d.rockmultiplier = player.r.oldrockmultiplier.plus(0.065)
@@ -61,6 +67,10 @@ addLayer("r", {
         if (hasUpgrade('d', 122)) player.d.rockmultiplier = player.r.oldrockmultiplier.plus(0.165)
         if (hasUpgrade('d', 132)) player.d.rockmultiplier = player.r.oldrockmultiplier.plus(0.215)
         if (hasUpgrade('d', 142)) player.d.rockmultiplier = player.r.oldrockmultiplier.plus(0.315)
+        if (hasUpgrade('upgtree', 11)) mult = mult.div(upgradeEffect('upgtree', 11))
+        if (getBuyableAmount('w', 13).gte(1)) mult = mult.div(player.f.greenflowers.pow(0.45).log10().plus(1))
+        if (hasUpgrade('r', 22)) mult = mult.div(1e6)
+        mult = mult.div(player.s.farmedendivemultiplier)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -71,7 +81,7 @@ addLayer("r", {
         {key: "r", description: "R: Reset for Rocks", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     branches: ['d'],
-    layerShown(){return hasUpgrade('g', 15) || player.r.total.gte(1) || player.m.total.gte(1)},
+    layerShown(){return hasUpgrade('g', 15) || player.r.total.gte(1) || player.m.total.gte(1) || player.sa.total.gte(1) || player.w.total.gte(1)},
  //   doReset(resettingLayer) {
  //       if (layers[resettingLayer].row > layers[this.layer].row) {
  //           savedUpgrades = []
@@ -94,28 +104,30 @@ addLayer("r", {
     clickables: {
         11: {
             display() {return "Respec Upgrades"},
-            canClick() {if (hasMilestone('f', 2)) return false
-            else return true},
+            canClick() {return true},
             onClick() {return player.r.points = player.r.total,
-                   player.r.upgrades = []}
+                   player.r.upgrades = [],
+                    player.d.upgradeonesoftcapr = new Decimal(0),
+                    player.g.upgradeonesoftcapr = new Decimal(0),
+                    player.m.upgradesixsoftcapr = new Decimal(0)}
          }
     },
     upgrades: {
         11: {
           title: "You seem off.",
-          description: "You get 50% more power.",
+          description: "You gain 50% more power.",
           cost() {if (hasMilestone('f', 2)) return new Decimal(1)
           else return new Decimal(1).times(player.r.upgrades.length).plus(1)}
         },
         12: {
             title: "Is something bothering you?",
-            description: "You get 40% more Dirt.",
+            description: "You gain 40% more Dirt.",
             cost() {if (hasMilestone('f', 2)) return new Decimal(2)
             else return new Decimal(1).times(player.r.upgrades.length).plus(1)}
         },
         13: {
             title: "Please talk to me.",
-            description: "You get 15% more Grass Blades.",
+            description: "You gain 15% more Grass Blades.",
             cost() {if (hasMilestone('f', 2)) return new Decimal(3)
             else return new Decimal(1).times(player.r.upgrades.length).plus(1)}
         },
@@ -132,6 +144,41 @@ addLayer("r", {
             unlocked() {return (hasUpgrade('g', 22))},
             cost() {if (hasMilestone('f', 2)) return new Decimal(5)
             else return new Decimal(1).times(player.r.upgrades.length).plus(1)}
+        },
+        21: {
+            title: "why are you back",
+            description: "You gain 25% more Moss, Flowers, and Seeds.",
+            unlocked() {return getBuyableAmount('w', 11).gte(1)},
+            canAfford() {return (hasUpgrade('r', 11)) && (hasUpgrade('r', 12)) && (hasUpgrade('r', 13)) && (hasUpgrade('r', 14)) && (hasUpgrade('r', 15))},
+            cost() { return new Decimal(1).times(player.r.upgrades.length).plus(1)}
+        },
+        22: {
+            title: "you weren't supposed to progress further",
+            description: "The Rock Requirement is divided by x1.00e6.",
+            unlocked() {return getBuyableAmount('w', 11).gte(2)},
+            canAfford() {return (hasUpgrade('r', 11)) && (hasUpgrade('r', 12)) && (hasUpgrade('r', 13)) && (hasUpgrade('r', 14)) && (hasUpgrade('r', 15))},
+            cost() { return new Decimal(1).times(player.r.upgrades.length).plus(1)}
+        },
+        23: {
+            title: "now what?",
+            description: "Dirt Upgrade One's softcap starts another 250,000 later.",
+            unlocked() {return getBuyableAmount('w', 11).gte(3)},
+            canAfford() {return (hasUpgrade('r', 11)) && (hasUpgrade('r', 12)) && (hasUpgrade('r', 13)) && (hasUpgrade('r', 14)) && (hasUpgrade('r', 15))},
+            cost() { return new Decimal(1).times(player.r.upgrades.length).plus(1)}
+        },
+        24: {
+            title: "we are all letting her down..",
+            description: "Grass Upgrade One's softcap starts 50,000 later.",
+            unlocked() {return getBuyableAmount('w', 11).gte(4)},
+            canAfford() {return (hasUpgrade('r', 11)) && (hasUpgrade('r', 12)) && (hasUpgrade('r', 13)) && (hasUpgrade('r', 14)) && (hasUpgrade('r', 15))},
+            cost() { return new Decimal(1).times(player.r.upgrades.length).plus(1)}
+        },
+        25: {
+            title: "don't you realize what she'll do to us?",
+            description: "Moss Upgrade Six's softcap starts 24,900 later.",
+            unlocked() {return getBuyableAmount('w', 11).gte(5)},
+            canAfford() {return (hasUpgrade('r', 11)) && (hasUpgrade('r', 12)) && (hasUpgrade('r', 13)) && (hasUpgrade('r', 14)) && (hasUpgrade('r', 15))},
+            cost() { return new Decimal(1).times(player.r.upgrades.length).plus(1)}
         },
     }
 })

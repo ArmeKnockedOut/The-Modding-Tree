@@ -6,43 +6,53 @@ addLayer("t", {
   //  passiveGeneration() {
   //      if (hasUpgrade('c', 15)) return 100
   //      else return 0},
+    resetsNothing() {return (hasUpgrade('wa', 15))},
+    canBuyMax() {return (hasUpgrade('wa', 15))},
+    autoPrestige() {return (hasUpgrade('wa', 15))},
     startData() { return {
         unlocked: false,
 		points: new Decimal(0),
         disposabletrees: new Decimal(0),
+        totaldisposabletrees: new Decimal(0),
         treesize: new Decimal(1),
         treebranches: new Decimal(1),
         treeroots: new Decimal(1),
         apples: new Decimal(0),
         allocatedtreesapples: new Decimal(0),
         allocatedtreesapplesmax: new Decimal(5),
+        allocatedtreesapplesoldmax: new Decimal(5),
         grownapplestime: new Decimal(0),
         grownapplesoldreqtime: new Decimal(60),
         grownapplesreqtime: new Decimal(60),
         pears: new Decimal(0),
         allocatedtreespears: new Decimal(0),
         allocatedtreespearsmax: new Decimal(5),
+        allocatedtreespearsoldmax: new Decimal(5),
         grownpearstime: new Decimal(0),
         grownpearsoldreqtime: new Decimal(60),
         grownpearsreqtime: new Decimal(60),
         bananas: new Decimal(0),
         allocatedtreesbananas: new Decimal(0),
         allocatedtreesbananasmax: new Decimal(5),
+        allocatedtreesbananasoldmax: new Decimal(5),
         grownbananastime: new Decimal(0),
         grownbananasoldreqtime: new Decimal(60),
         grownbananasreqtime: new Decimal(60),
         oranges: new Decimal(0),
         allocatedtreesoranges: new Decimal(0),
         allocatedtreesorangesmax: new Decimal(5),
+        allocatedtreesorangesoldmax: new Decimal(5),
         grownorangestime: new Decimal(0),
         grownorangesoldreqtime: new Decimal(60),
         grownorangesreqtime: new Decimal(60),
         cherries: new Decimal(0),
         allocatedtreescherries: new Decimal(0),
         allocatedtreescherriesmax: new Decimal(5),
+        allocatedtreescherriesoldmax: new Decimal(5),
         growncherriestime: new Decimal(0),
         growncherriesoldreqtime: new Decimal(60),
         growncherriesreqtime: new Decimal(60),
+        fruitsauto: new Decimal(0),
         
     }},
     tabFormat: [
@@ -50,7 +60,7 @@ addLayer("t", {
         "prestige-button",
         "resource-display",
         ["display-text",
-            function() { return 'Your trees grow passively at a rate of 1 meter per tree. Your trees grow more branches at a rate of the tree size log2`d. Your trees grow more roots at a rate of the tree size log10`d.'},
+            function() { return 'Your trees grow passively at a rate of 5^trees meters per second. Your trees grow more branches at a rate of 100^(treesize log2`d) per second. Your trees grow more roots at a rate of 75^(treesize log10`d) per second.'},
             { "color": "gray", "font-size": "12px" }],
         "blank",
         ["display-text",
@@ -62,28 +72,28 @@ addLayer("t", {
             { "color": "white", "font-size": "15px" }],
         ["blank", "5px"],
         ["display-text",
-            function() { return 'Your trees have ' + format(player.t.treeroots, 2) + ' roots each, which are diving Seed farm time by ' + format(player.t.treeroots.log10().plus(1)) + 'x'},
+            function() { return 'Your trees have ' + format(player.t.treeroots, 2) + ' roots each, which are diving crop farm time by ' + format(player.t.treeroots.log10().plus(1)) + 'x'},
             { "color": "white", "font-size": "15px" }],
         "blank",
         ["display-text",
-            function() { return 'You can allocate a disposable tree(s) into any of the five fruits below. Each single allocated tree into a fruit increases the fruits gains by x2.'},
+            function() { return 'You can allocate a Disposable Tree(s) into any of the five fruits below. Each single allocated tree into a fruit increases the fruits gains by x2.'},
             { "color": "gray", "font-size": "12px" }],
         "blank",
         ["clickable", 11],
         "blank",
         ["display-text",
-            function() { return 'You have ' + format(player.t.disposabletrees, 0) + ' Disposable Trees'},
+            function() { return 'You have ' + format(player.t.disposabletrees) + ' Disposable Trees'},
             { "color": "white", "font-size": "16.5px" }],
         ["display-text",
             function() { return 'All fruits give a boost based on log2.'},
             { "color": "gray", "font-size": "12px" }],
         "blank",
         ["display-text",
-            function() { return 'You have ' + format(player.t.apples, 0) + ' Apples, which are boosting Dirt gain by ' + format(player.t.apples.plus(1).log2().plus(1)) + 'x'},
+            function() { return 'You have ' + format(player.t.apples) + ' Apples, which are boosting Dirt gain by ' + format(player.t.apples.plus(1).log2().plus(1)) + 'x'},
             { "color": "white", "font-size": "16px" }],
         ["blank", "5px"],
         ["display-text",
-            function() { return 'You have allocated ' + format(player.t.allocatedtreesapples, 0) + ' Trees into Apples (Cap: ' + format(player.t.allocatedtreesapplesmax, 0) + '), which will gain you +' + format(Decimal.pow(2, player.t.allocatedtreesapples.minus(1)), 0) + ' Apples'},
+            function() { return 'You have allocated ' + format(player.t.allocatedtreesapples) + ' Trees into Apples (Cap: ' + format(player.t.allocatedtreesapplesmax) + '), which will gain you +' + format(Decimal.pow(2, player.t.allocatedtreesapples.minus(1))) + ' Apples'},
             { "color": "gray", "font-size": "15px" }],
         ["blank", "10px"],
         ["bar", "theBar"],
@@ -92,11 +102,11 @@ addLayer("t", {
         "blank",
         "blank",
         ["display-text",
-            function() { return 'You have ' + format(player.t.pears, 0) + ' Pears, which are boosting Grass Blade gain by ' + format(player.t.pears.plus(1).log2().plus(1)) + 'x'},
+            function() { return 'You have ' + format(player.t.pears) + ' Pears, which are boosting Grass Blade gain by ' + format(player.t.pears.plus(1).log2().plus(1)) + 'x'},
             { "color": "white", "font-size": "16px" }],
         ["blank", "5px"],
         ["display-text",
-            function() { return 'You have allocated ' + format(player.t.allocatedtreespears, 0) + ' Trees into Pears (Cap: ' + format(player.t.allocatedtreespearsmax, 0) + '), which will gain you +' + format(Decimal.pow(2, player.t.allocatedtreespears.minus(1)), 0) + ' Pears'},
+            function() { return 'You have allocated ' + format(player.t.allocatedtreespears) + ' Trees into Pears (Cap: ' + format(player.t.allocatedtreespearsmax) + '), which will gain you +' + format(Decimal.pow(2, player.t.allocatedtreespears.minus(1))) + ' Pears'},
             { "color": "gray", "font-size": "15px" }],
         ["blank", "10px"],
         ["bar", "theBartwo"],
@@ -105,11 +115,11 @@ addLayer("t", {
         "blank",
         "blank",
         ["display-text",
-            function() { return 'You have ' + format(player.t.bananas, 0) + ' Bananas, which are boosting Moss gain by ' + format(player.t.bananas.plus(1).log2().plus(1)) + 'x'},
+            function() { return 'You have ' + format(player.t.bananas) + ' Bananas, which are boosting Moss gain by ' + format(player.t.bananas.plus(1).log2().plus(1)) + 'x'},
             { "color": "white", "font-size": "16px" }],
         ["blank", "5px"],
         ["display-text",
-            function() { return 'You have allocated ' + format(player.t.allocatedtreesbananas, 0) + ' Trees into Bananas (Cap: ' + format(player.t.allocatedtreesbananasmax, 0) + '), which will gain you +' + format(Decimal.pow(2, player.t.allocatedtreesbananas.minus(1)), 0) + ' Bananas'},
+            function() { return 'You have allocated ' + format(player.t.allocatedtreesbananas) + ' Trees into Bananas (Cap: ' + format(player.t.allocatedtreesbananasmax) + '), which will gain you +' + format(Decimal.pow(2, player.t.allocatedtreesbananas.minus(1))) + ' Bananas'},
             { "color": "gray", "font-size": "15px" }],
         ["blank", "10px"],
         ["bar", "theBarthree"],
@@ -118,11 +128,11 @@ addLayer("t", {
         "blank",
         "blank",
         ["display-text",
-            function() { return 'You have ' + format(player.t.oranges, 0) + ' Oranges, which are boosting Flower gain by ' + format(player.t.oranges.plus(1).log2().plus(1)) + 'x'},
+            function() { return 'You have ' + format(player.t.oranges) + ' Oranges, which are boosting Flower gain by ' + format(player.t.oranges.plus(1).log2().plus(1)) + 'x'},
             { "color": "white", "font-size": "16px" }],
         ["blank", "5px"],
         ["display-text",
-            function() { return 'You have allocated ' + format(player.t.allocatedtreesoranges, 0) + ' Trees into Oranges (Cap: ' + format(player.t.allocatedtreesorangesmax, 0) + '), which will gain you +' + format(Decimal.pow(2, player.t.allocatedtreesoranges.minus(1)), 0) + ' Oranges'},
+            function() { return 'You have allocated ' + format(player.t.allocatedtreesoranges) + ' Trees into Oranges (Cap: ' + format(player.t.allocatedtreesorangesmax) + '), which will gain you +' + format(Decimal.pow(2, player.t.allocatedtreesoranges.minus(1))) + ' Oranges'},
             { "color": "gray", "font-size": "15px" }],
         ["blank", "10px"],
         ["bar", "theBarfour"],
@@ -131,18 +141,18 @@ addLayer("t", {
         "blank",
         "blank",
         ["display-text",
-            function() { return 'You have ' + format(player.t.cherries, 0) + ' Cherries, which are boosting Seed gain by ' + format(player.t.cherries.plus(1).log2().plus(1)) + 'x'},
+            function() { return 'You have ' + format(player.t.cherries) + ' Cherries, which are boosting Seed gain by ' + format(player.t.cherries.plus(1).log2().plus(1)) + 'x'},
             { "color": "white", "font-size": "16px" }],
         ["blank", "5px"],
         ["display-text",
-            function() { return 'You have allocated ' + format(player.t.allocatedtreescherries, 0) + ' Trees into Cherries (Cap: ' + format(player.t.allocatedtreescherriesmax, 0) + '), which will gain you +' + format(Decimal.pow(2, player.t.allocatedtreescherries.minus(1)), 0) + ' Cherries'},
+            function() { return 'You have allocated ' + format(player.t.allocatedtreescherries) + ' Trees into Cherries (Cap: ' + format(player.t.allocatedtreescherriesmax) + '), which will gain you +' + format(Decimal.pow(2, player.t.allocatedtreescherries.minus(1))) + ' Cherries'},
             { "color": "gray", "font-size": "15px" }],
         ["blank", "10px"],
         ["bar", "theBarfive"],
         "blank",
         ["clickable", 25]
     ],
-    onPrestige() {return player.m.mossspread = new Decimal(1), player.t.disposabletrees = player.t.disposabletrees.plus(1)},
+    onPrestige() {return player.m.mossspread = new Decimal(1), player.t.disposabletrees = player.t.disposabletrees.plus(1), player.t.totaldisposabletrees = player.t.totaldisposabletrees.plus(1), player.m.upgradesixsoftcap = new Decimal(100), player.m.upgradesixsoftcapr = new Decimal(0)},
     color: "#3B4F26",
     requires: new Decimal(1e33), // Can be a function that takes requirement increases into account
     resource: "Trees", // Name of prestige currency
@@ -152,9 +162,10 @@ addLayer("t", {
     exponent: 1.9, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
-        if (player.t.total.gte(1)) player.t.treesize = player.t.treesize.plus(player.t.total.div(20))
-        if (player.t.total.gte(1)) player.t.treebranches = player.t.treebranches.plus(player.t.treesize.log2().plus(1).div(20))
-        if (player.t.total.gte(1)) player.t.treeroots = player.t.treeroots.plus(player.t.treesize.log10().plus(1).div(20))
+        if (player.t.total.gte(1)) player.t.treesize = player.t.treesize.plus(Decimal.pow(5, player.t.total).div(20))
+       // if (player.t.total.gte(1)) player.t.treebranches = player.t.treebranches.plus(player.t.treesize.log2().plus(1).div(20))
+        if (player.t.total.gte(1)) player.t.treebranches = player.t.treebranches.plus(Decimal.pow(100, player.t.treesize.log2().plus(1).div(20)))
+        if (player.t.total.gte(1)) player.t.treeroots = player.t.treeroots.plus(Decimal.pow(75, player.t.treesize.log10().plus(1).div(20)))
         player.t.grownapplesreqtime = player.t.grownapplesoldreqtime.div(player.t.treesize.log10().plus(1))
         player.t.grownpearsreqtime = player.t.grownpearsoldreqtime.div(player.t.treesize.log10().plus(1))
         player.t.grownbananasreqtime = player.t.grownbananasoldreqtime.div(player.t.treesize.log10().plus(1))
@@ -175,6 +186,33 @@ addLayer("t", {
         if (player.t.allocatedtreescherries.gte(1)) player.t.growncherriestime = player.t.growncherriestime.plus(0.05)
         if (player.t.growncherriestime.gte(player.t.growncherriesreqtime)) player.t.cherries = player.t.cherries.plus(Decimal.pow(2, player.t.allocatedtreescherries.minus(1)))
         if (player.t.growncherriestime.gte(player.t.growncherriesreqtime)) player.t.growncherriestime = new Decimal(0)
+        if (getBuyableAmount('w', 12).gte(1)) player.t.allocatedtreesapplesmax = player.t.allocatedtreesapplesoldmax.plus(buyableEffect('w', 12))
+        if (getBuyableAmount('w', 12).gte(1)) player.t.allocatedtreespearsmax = player.t.allocatedtreespearsoldmax.plus(buyableEffect('w', 12))
+        if (getBuyableAmount('w', 12).gte(1)) player.t.allocatedtreesbananasmax = player.t.allocatedtreesbananasoldmax.plus(buyableEffect('w', 12))
+        if (getBuyableAmount('w', 12).gte(1)) player.t.allocatedtreesorangesmax = player.t.allocatedtreesorangesoldmax.plus(buyableEffect('w', 12))
+        if (getBuyableAmount('w', 12).gte(1)) player.t.allocatedtreescherriesmax = player.t.allocatedtreescherriesoldmax.plus(buyableEffect('w', 12))
+        if (hasUpgrade('upgtree', 14)) mult = mult.div(upgradeEffect('upgtree', 14))
+        if (hasUpgrade('upgtree', 15)) mult = mult.div(upgradeEffect('upgtree', 15))
+        if (hasUpgrade('upgtree', 16)) mult = mult.div(upgradeEffect('upgtree', 16))
+        if (getBuyableAmount('w', 13).gte(2)) mult = mult.div(player.f.cyanflowers.pow(0.6).log10().plus(1))
+        mult = mult.div(player.s.farmedstrawberrymultiplier)
+        if (hasUpgrade('wa', 21)) player.t.fruitsauto = new Decimal(1)
+        if (hasUpgrade('wa', 21)) player.t.grownapplestime = player.t.grownapplestime.plus(0.05)
+        if (hasUpgrade('wa', 21)) player.t.grownpearstime = player.t.grownpearstime.plus(0.05)
+        if (hasUpgrade('wa', 21)) player.t.grownbananastime = player.t.grownbananastime.plus(0.05)
+        if (hasUpgrade('wa', 21)) player.t.grownorangestime = player.t.grownorangestime.plus(0.05)
+        if (hasUpgrade('wa', 21)) player.t.growncherriestime = player.t.growncherriestime.plus(0.05)
+        if (hasUpgrade('wa', 21)) player.t.allocatedtreesapples = player.t.total
+        if (hasUpgrade('wa', 21)) player.t.allocatedtreespears = player.t.total
+        if (hasUpgrade('wa', 21)) player.t.allocatedtreesoranges = player.t.total
+        if (hasUpgrade('wa', 21)) player.t.allocatedtreesbananas = player.t.total
+        if (hasUpgrade('wa', 21)) player.t.allocatedtreescherries = player.t.total
+        if (hasUpgrade('wa', 21) && player.t.allocatedtreesapples.gt(player.t.allocatedtreesapplesmax)) player.t.allocatedtreesapples = player.t.allocatedtreesapplesmax
+        if (hasUpgrade('wa', 21) && player.t.allocatedtreespears.gt(player.t.allocatedtreespearsmax)) player.t.allocatedtreespears = player.t.allocatedtreespearsmax
+        if (hasUpgrade('wa', 21) && player.t.allocatedtreesbananas.gt(player.t.allocatedtreesbananasmax)) player.t.allocatedtreesbananas = player.t.allocatedtreesbananasmax
+        if (hasUpgrade('wa', 21) && player.t.allocatedtreesoranges.gt(player.t.allocatedtreesorangesmax)) player.t.allocatedtreesoranges = player.t.allocatedtreesorangesmax
+        if (hasUpgrade('wa', 21) && player.t.allocatedtreescherries.gt(player.t.allocatedtreescherriesmax)) player.t.allocatedtreescherries = player.t.allocatedtreescherriesmax
+        if (hasUpgrade('wa', 15) && player.t.totaldisposabletrees.lt(player.t.total)) player.t.totaldisposabletrees = player.t.total, player.t.disposabletrees = player.t.totaldisposabletrees.minus(player.t.allocatedtreesapples).minus(player.t.allocatedtreespears).minus(player.t.allocatedtreesbananas).minus(player.t.allocatedtreesoranges).minus(player.t.allocatedtreescherries)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -185,7 +223,7 @@ addLayer("t", {
         {key: "t", description: "T: Reset for Trees", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     branches: ['g', 'r'],
-    layerShown(){return hasMilestone('s', 3) || player.t.total.gte(1)},
+    layerShown(){return hasMilestone('s', 3) || player.t.total.gte(1) || player.sa.total.gte(1) || player.w.total.gte(1)},
  //   doReset(resettingLayer) {
  //       if (layers[resettingLayer].row > layers[this.layer].row) {
  //           savedUpgrades = []
@@ -220,31 +258,31 @@ addLayer("t", {
         },
         21: {
             display() {return "Allocate to Apples"},
-            canClick() {return player.t.disposabletrees.gte(1) && player.t.allocatedtreesapples.lte(player.t.allocatedtreesapplesmax)},
+            canClick() {return player.t.fruitsauto.lte(0) && player.t.disposabletrees.gte(1) && player.t.allocatedtreesapples.lt(player.t.allocatedtreesapplesmax)},
             onClick() {return player.t.disposabletrees = player.t.disposabletrees.minus(1),
             player.t.allocatedtreesapples = player.t.allocatedtreesapples.plus(1)}
         },
         22: {
             display() {return "Allocate to Pears"},
-            canClick() {return player.t.disposabletrees.gte(1) && player.t.allocatedtreespears.lte(player.t.allocatedtreespearsmax)},
+            canClick() {return player.t.fruitsauto.lte(0) && player.t.disposabletrees.gte(1) && player.t.allocatedtreespears.lt(player.t.allocatedtreespearsmax)},
             onClick() {return player.t.disposabletrees = player.t.disposabletrees.minus(1),
             player.t.allocatedtreespears = player.t.allocatedtreespears.plus(1)}
         },
         23: {
             display() {return "Allocate to Bananas"},
-            canClick() {return player.t.disposabletrees.gte(1) && player.t.allocatedtreesbananas.lte(player.t.allocatedtreesbananasmax)},
+            canClick() {return player.t.fruitsauto.lte(0) && player.t.disposabletrees.gte(1) && player.t.allocatedtreesbananas.lt(player.t.allocatedtreesbananasmax)},
             onClick() {return player.t.disposabletrees = player.t.disposabletrees.minus(1),
             player.t.allocatedtreesbananas = player.t.allocatedtreesbananas.plus(1)}
         },
         24: {
             display() {return "Allocate to Oranges"},
-            canClick() {return player.t.disposabletrees.gte(1) && player.t.allocatedtreesoranges.lte(player.t.allocatedtreesorangesmax)},
+            canClick() {return player.t.fruitsauto.lte(0) && player.t.disposabletrees.gte(1) && player.t.allocatedtreesoranges.lt(player.t.allocatedtreesorangesmax)},
             onClick() {return player.t.disposabletrees = player.t.disposabletrees.minus(1),
             player.t.allocatedtreesoranges = player.t.allocatedtreesoranges.plus(1)}
         },
         25: {
             display() {return "Allocate to Cherries"},
-            canClick() {return player.t.disposabletrees.gte(1) && player.t.allocatedtreescherries.lte(player.t.allocatedtreescherriesmax)},
+            canClick() {return player.t.fruitsauto.lte(0) && player.t.disposabletrees.gte(1) && player.t.allocatedtreescherries.lt(player.t.allocatedtreescherriesmax)},
             onClick() {return player.t.disposabletrees = player.t.disposabletrees.minus(1),
             player.t.allocatedtreescherries = player.t.allocatedtreescherries.plus(1)}
         },

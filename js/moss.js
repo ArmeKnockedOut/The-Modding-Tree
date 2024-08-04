@@ -1,17 +1,18 @@
 addLayer("m", {
     name: "moss", // This is optional, only used in a few places, If absent it just uses the layer id.
-    symbol: "M", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 0,
     branches: true,
-  //  passiveGeneration() {
-  //      if (hasUpgrade('c', 15)) return 100
-  //      else return 0},
+    passiveGeneration() {
+        if (hasMilestone('sa', 4)) return 1
+        else return 0},
     startData() { return {
         unlocked: false,
 		points: new Decimal(0),
-        mossspread: new Decimal(1)
+        mossspread: new Decimal(1),
+        upgradesixsoftcap: new Decimal(100),
+        upgradesixsoftcapr: new Decimal(0)
     }},
-    onPrestige() {return player.m.mossspread = new Decimal(1)},
+    onPrestige() {return player.m.mossspread = new Decimal(1), player.m.upgradesixsoftcap = new Decimal(100), player.m.upgradesixsoftcapr = new Decimal(0)},
     tabFormat: [
         "main-display",
         "prestige-button",
@@ -32,13 +33,19 @@ addLayer("m", {
         "blank",
         "upgrades"
     ],
-    color: "#688553",
+    color() { if (hasUpgrade('wa', 24) && player.sa.sandplanetslevels == 4 && player.nu.annihilatednemesis.lte(0)) return "#bf8f8f"
+         else return "#688553"},
     requires: new Decimal(50000), // Can be a function that takes requirement increases into account
-    resource: "Moss", // Name of prestige currency
+    resource() {if (hasUpgrade('wa', 24) && player.sa.sandplanetslevels == 4 && player.nu.annihilatednemesis.lte(0)) return "X"
+    else return "Moss"}, // Name of prestige currency
     baseResource: "Grass Blades", // Name of resource prestige is based on
     baseAmount() {return player.g.points}, // Get the current amount of baseResource
-    type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-    exponent: 0.315, // Prestige currency exponent
+    type() {if (hasUpgrade('wa', 24) && player.sa.sandplanetslevels == 4 && player.nu.annihilatednemesis.lte(0)) return "none"
+    else return "normal"}, // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+    exponent: 0.315,
+    deactivated() {return hasUpgrade('wa', 24) && player.sa.sandplanetslevels == 4 && player.nu.annihilatednemesis.lte(0)},
+    symbol() {if (hasUpgrade('wa', 24) && player.sa.sandplanetslevels == 4 && player.nu.annihilatednemesis.lte(0)) return "X"
+else return "M"},
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
         if (hasUpgrade('d', 133)) mult = mult.times(player.f.purpleflowers.log10().plus(1))
@@ -47,6 +54,14 @@ addLayer("m", {
         mult = mult.times(player.f.blueflowers.log10().plus(1))
         mult = mult.times(player.s.farmedbeetrootmultiplier)
         mult = mult.times(player.t.bananas.plus(1).log2().plus(1))
+        if (hasUpgrade('r', 21)) mult = mult.times(1.25)
+        if (getBuyableAmount('w', 13).gte(3)) mult = mult.times(player.f.magentaflowers.pow(0.4).log10().plus(1))
+        mult = mult.times(Decimal.pow(2, player.sa.desertslevels).times(player.sa.deserts.plus(1).log10().plus(1)))
+        if (hasUpgrade('r', 25)) player.m.upgradesixsoftcapr = new Decimal(24900)
+        player.m.upgradesixsoftcap = player.m.upgradesixsoftcapr.plus(100)
+        mult = mult.times(player.s.farmedmushroommultiplier)
+        if (getBuyableAmount('w', 16).gte(1)) mult = mult.times(buyableEffect('w', 16))
+        if (hasUpgrade('wa', 14)) mult = mult.times(player.wa.utricularia_purpurea.plus(1).pow(7).log(8).plus(1))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -57,31 +72,30 @@ addLayer("m", {
         {key: "m", description: "M: Reset for Moss", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     branches: ['g'],
-    layerShown(){return hasUpgrade('g', 22) || player.m.total.gte(1)},
- //   doReset(resettingLayer) {
- //       if (layers[resettingLayer].row > layers[this.layer].row) {
- //           savedUpgrades = []
- //           if (hasUpgrade('c', 15) && ['c', 's', 'm', 'f', 'o', 'a', 'v', 'sm', 'sdw', 'ss'].includes(resettingLayer)) {
-//              if (hasUpgrade(this.layer, 11)) {savedUpgrades.push(11)}
- //               if (hasUpgrade(this.layer, 12)) {savedUpgrades.push(12)}
-  //              if (hasUpgrade(this.layer, 13)) {savedUpgrades.push(13)}
-   //             if (hasUpgrade(this.layer, 14)) {savedUpgrades.push(14)}
-    //            if (hasUpgrade(this.layer, 15)) {savedUpgrades.push(15)}
-    //            if (hasUpgrade(this.layer, 16)) {savedUpgrades.push(16)}
- //               if (hasUpgrade(this.layer, 17)) {savedUpgrades.push(17)}
- //               if (hasUpgrade(this.layer, 18)) {savedUpgrades.push(18)}
- //               if (hasUpgrade(this.layer, 19)) {savedUpgrades.push(19)}
- //               if (hasUpgrade(this.layer, 21)) {savedUpgrades.push(21)}
- //           }
-//         layerDataReset(this.layer, [])
-//            player[this.layer].upgrades = savedUpgrades
-//        }
-//    },
+    layerShown(){return hasUpgrade('g', 22) || player.m.total.gte(1) || player.sa.total.gte(1) || player.w.total.gte(1)},
+    doReset(resettingLayer) {
+        if (layers[resettingLayer].row > layers[this.layer].row) {
+        savedUpgrades = []
+        if (hasUpgrade('wa', 12) && ['sa', 'w', 'wa'].includes(resettingLayer)) {
+            if (hasUpgrade(this.layer, 11)) {savedUpgrades.push(11)}
+            if (hasUpgrade(this.layer, 12)) {savedUpgrades.push(12)}
+            if (hasUpgrade(this.layer, 13)) {savedUpgrades.push(13)}
+            if (hasUpgrade(this.layer, 21)) {savedUpgrades.push(21)}
+            if (hasUpgrade(this.layer, 22)) {savedUpgrades.push(22)}
+            if (hasUpgrade(this.layer, 23)) {savedUpgrades.push(23)}
+        }
+        let keep = []
+        if (hasUpgrade('wa', 12)) keep.push('milestones')
+        layerDataReset(this.layer, keep)
+            player[this.layer].upgrades = savedUpgrades
+        }
+    },
     upgrades: {
         11: {
             title: "Oh, hey.",
             description: "Unspent Moss slightly boosts Grass Blade gain. (Remember, 0 Moss = 0 generating Moss Spread!)",
-            cost: new Decimal(1),
+            cost() {if (hasAchievement('ach', 35)) return new Decimal(1e51)
+          else return new Decimal(1)},
             effect() {
                 return player[this.layer].points.add(3).pow(0.18)
             },
@@ -90,19 +104,22 @@ addLayer("m", {
         12: {
             title: "You're new around here, aren't you?",
             description: "Dirt Upgrade Two formula power 0.095 -> 0.13",
-            cost: new Decimal(2),
+            cost() {if (hasAchievement('ach', 35)) return new Decimal(1e55)
+          else return new Decimal(2)},
             unlocked() {return (hasUpgrade('m', 11))},
         },
         13: {
             title: "I hope you enjoy your stay.",
             description: "Dirt Upgrade Three formula power 0.1111 -> 0.1511",
-            cost: new Decimal(3),
+            cost() {if (hasAchievement('ach', 35)) return new Decimal(2e55)
+          else return new Decimal(3)},
             unlocked() {return (hasUpgrade('m', 12))},
         },
         21: {
             title: "These are the steps to success.",
             description: "Unspent Seeds now boost power gain.",
-            cost: new Decimal(100),
+            cost() {if (hasAchievement('ach', 35)) return new Decimal(2e57)
+          else return new Decimal(100)},
             unlocked() {return (hasUpgrade('m', 13))},
             effect() {
                 return player.s.points.add(2).pow(0.37)
@@ -112,7 +129,8 @@ addLayer("m", {
         22: {
             title: "Follow along.",
             description: "Unspent Flowers now boost power gain.",
-            cost: new Decimal(250),
+            cost() {if (hasAchievement('ach', 35)) return new Decimal(1e59)
+          else return new Decimal(250)},
             unlocked() {return (hasUpgrade('m', 21))},
             effect() {
                 return player.f.points.add(2).pow(0.416)
@@ -122,12 +140,13 @@ addLayer("m", {
         23: {
             title: "You can have immeasurable power.",
             description: "Unspent Moss now boosts power gain.",
-            cost: new Decimal(500000),
+            cost() {if (hasAchievement('ach', 35)) return new Decimal(1e60)
+          else return new Decimal(500000)},
             unlocked() {return (hasUpgrade('m', 22))},
             effect() {
                 return player.m.points.add(2).pow(0.35)
             },
-            effectDisplay() { return format(softcap((upgradeEffect(this.layer, this.id)), new Decimal(100) , 0.107))+"x" },
+            effectDisplay() { return format(softcap((upgradeEffect(this.layer, this.id)), new Decimal(player.m.upgradesixsoftcap) , 0.107))+"x" },
         },
     },
     milestones: {
