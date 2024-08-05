@@ -126,7 +126,7 @@ addLayer("sa", {
         ["blank", "10px"],
         ["display-text",
             function() { if (player.sa.sandplanets.gte(230)) return ""
-                else if (player.sa.sandplanets.gte(229)) return 'To purchase Sand Planets past 229, you need: At least 80 purchases of Wood Buyable 2, 20 purchases of Wood Buyables 5 and 6, 25 purchases of Wood Buyables 7 and 8, 30 Sand Pile Levels, 40 Beaches & Desert Levels, and 1e47 Total Water.'
+                else if (player.sa.sandplanets.gte(229)) return 'To purchase Sand Planets past 229, you need: At least 80 purchases of Wood Buyable 2, 20 purchases of Wood Buyables 5 and 6, 25 purchases of Wood Buyable 7, 27 Purchases of Wood Buyable 8, 30 Sand Pile Levels, 40 Beaches & Desert Levels, and 1e47 Total Water.'
             else return ""},
             { "color": "gray", "font-size": "15px" }],
         ["display-text",
@@ -242,7 +242,7 @@ addLayer("sa", {
         },
         14: {
             display() {return "Distribute"},
-            canClick() { if (player.sa.sandplanets == 229 && getBuyableAmount('w', 12).gte(80) && getBuyableAmount('w', 15).gte(20) && getBuyableAmount('w', 16).gte(20) && getBuyableAmount('w', 17).gte(25) && getBuyableAmount('w', 18).gte(25) && player.sa.grainsofsandlevels.gte(30) && player.sa.beacheslevels.gte(40) && player.sa.desertslevels.gte(40) && player.wa.total.gte(1e47)) return true
+            canClick() { if (player.sa.sandplanets == 229 && getBuyableAmount('w', 12).gte(80) && getBuyableAmount('w', 15).gte(20) && getBuyableAmount('w', 16).gte(20) && getBuyableAmount('w', 17).gte(25) && getBuyableAmount('w', 18).gte(27) && player.sa.grainsofsandlevels.gte(30) && player.sa.beacheslevels.gte(40) && player.sa.desertslevels.gte(40) && player.wa.total.gte(1e47)) return true
                 else if (player.sa.sandplanets != 229 && player.sa.points.gte(player.sa.sandplanetscost)) return true
             else return false},
             onClick() {return player.sa.points = player.sa.points.minus(player.sa.sandplanetscost),
