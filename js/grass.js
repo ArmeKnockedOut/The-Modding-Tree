@@ -48,7 +48,7 @@ addLayer("g", {
     exponent: 0.425,
     deactivated() {return hasUpgrade('wa', 24) && player.sa.sandplanetslevels == 4 && player.nu.annihilatednemesis.lte(0)},
     symbol() {if (hasUpgrade('wa', 24) && player.sa.sandplanetslevels == 4 && player.nu.annihilatednemesis.lte(0)) return "X"
-else return "R"},
+else return "G"},
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
         if (hasUpgrade('g', 13)) mult = mult.times(softcap((upgradeEffect('g', 13)), new Decimal(7.5) , 0.0925))
