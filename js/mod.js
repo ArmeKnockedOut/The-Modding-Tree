@@ -1,25 +1,25 @@
 let modInfo = {
-	name: "The Dirt Clean Tree",
-	id: "armemodtreelol",
+	name: "The Element Tree",
+	id: "armeselementmodtree",
 	author: "Arme",
-	pointsName: "dirt cleaned",
-	modFiles: ["layers.js", "tree.js"],
+	pointsName: "power",
+	modFiles: ["tree.js", "quarks.js", "achievements.js", "electrons.js"],
 
 	discordName: "ArmeKnockedOut",
 	discordLink: "",
-	initialStartPoints: new Decimal (10), // Used for hard resets and new players
+	initialStartPoints: new Decimal (0.0025), // Used for hard resets and new players
 	offlineLimit: 1,  // In hours
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.1",
+	num: "1.0",
 	name: "Release",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
 	<h3>v0.1</h3><br>
-		- This mod was just made lol no changes.<br>`
+		- Release.<br>`
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
 
@@ -41,22 +41,19 @@ function getPointGen() {
 	if(!canGenPoints())
 		return new Decimal(0)
 
-	let gain = new Decimal('1')
-	if (hasUpgrade('d', 11)) gain = gain.times(upgradeEffect('d', 11))
-	if (hasUpgrade('s', 12)) gain = gain.times(upgradeEffect('s', 12))
-	if (hasUpgrade('d', 12)) gain = gain.times(3)
-	if (hasUpgrade('d', 13)) gain = gain.times(upgradeEffect('d', 13))
-	if (hasUpgrade('m', 11)) gain = gain.times(upgradeEffect('m', 11))
-	if (hasUpgrade('d', 15)) gain = gain.times(upgradeEffect('d', 15))
-	if (hasUpgrade('s', 11)) gain = gain.times(upgradeEffect('s', 11))
-	if (hasUpgrade('c', 11)) gain = gain.times(100)
-	if (hasUpgrade('c', 12)) gain = gain.times(upgradeEffect('c', 12))
-	if (hasUpgrade('c', 14)) gain = gain.times(10000)
-	if (hasUpgrade('o', 12)) gain = gain.times(upgradeEffect('o', 12))
-	if (hasUpgrade('s', 14)) gain = gain.times(1e200)
-	if (hasUpgrade('f', 12)) gain = gain.times(upgradeEffect('f', 12))
-	if (hasUpgrade('v', 11)) gain = gain.times(upgradeEffect('v', 11))
-	if (hasMilestone('v', 1)) gain = gain.times(1000)
+	let gain = new Decimal('0')
+	if (hasAchievement('ach', 11)) gain = gain.plus(0.0001)
+	if (player.q.redquarks.gte(1)) gain = gain.plus(player.q.redquarks.plus(1).log2().div(10000).times(player.q.protons.plus(1).log10().div(4).times(upgradeEffect('q', 33)).plus(1)).times(player.e.charge.plus(1).log10().div(10).plus(1)))
+	if (player.q.greenquarks.gte(1) && hasUpgrade('q', 21)) gain = gain.plus(player.q.greenquarks.plus(1).log2().div(25000).times(player.q.protons.plus(1).log10().div(4).times(upgradeEffect('q', 33)).plus(1)).times(player.e.charge.plus(1).log10().div(10).plus(1)))
+	if (player.q.bluequarks.gte(1) && hasUpgrade('q', 22)) gain = gain.plus(player.q.bluequarks.plus(1).log2().div(25000).times(player.q.protons.plus(1).log10().div(4).times(upgradeEffect('q', 33)).plus(1)).times(player.e.charge.plus(1).log10().div(10).plus(1)))
+	gain = gain.times(tmp.ach.effect)
+	gain = gain.times(player.q.greenquarks.plus(1).log2().div(10).times(player.q.protons.plus(1).log10().div(4).times(upgradeEffect('q', 33)).plus(1)).plus(1))
+	if (hasUpgrade('q', 23) && player.q.redquarks.gte(1)) gain = gain.times(player.q.redquarks.plus(1).log2().div(25).times(player.q.protons.plus(1).log10().div(4).times(upgradeEffect('q', 33)).plus(1)).plus(1))
+	if (hasUpgrade('q', 24) && player.q.bluequarks.gte(1)) gain = gain.times(player.q.bluequarks.plus(1).log2().div(25).times(player.q.protons.plus(1).log10().div(4).times(upgradeEffect('q', 33)).plus(1)).plus(1))
+	if (hasUpgrade('q', 11)) gain = gain.times(upgradeEffect('q', 11))
+	if (hasUpgrade('q', 12)) gain = gain.times(upgradeEffect('q', 12))
+	if (hasAchievement('ach', 16) && player.points.gte(1)) gain = gain.times(1.5)
+	if (hasMilestone('e', 3)) gain = gain.times(player.e.charge5.plus(1).log10().div(8).plus(1))
 	return gain
 }
 
@@ -70,7 +67,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e263449700"))
+	return player.points.gte(new Decimal("e26340049700"))
 }
 
 
