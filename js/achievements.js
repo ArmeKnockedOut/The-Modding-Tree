@@ -112,5 +112,17 @@ addLayer("ach", {
             done() {return player.q.cyanquarks.gte(1)}
              
         },
+        26: {
+            name: "gayming 😎",
+            tooltip: "Get at least one of each secondary Quark, Proton, And Neutron.",
+            done() {return player.q.cyanquarks.gte(1) && player.q.magentaquarks.gte(1) && player.q.yellowquarks.gte(1) && player.q.secondaryprotons.gte(1) && player.q.secondaryneutrons.gte(1)}
+             
+        },
+        27: {
+            name: "27 is just a cool number. also the row/column num of this achievement lmao",
+            tooltip: "Reach 1.00e27 Quarks.",
+            done() {return player.q.points.gte(1e27)}
+             
+        },
     }
 })

@@ -3,7 +3,7 @@ addLayer("e", {
     symbol: "E",
     position: 0,
     branches: true,
-    onPrestige() {return player.e.charge = new Decimal(0), player.e.charge2 = new Decimal(0), player.e.charge3 = new Decimal(0), player.e.charge4 = new Decimal(0), player.e.charge5 = new Decimal(0), player.e.charge6 = new Decimal(0), player.e.charge7 = new Decimal(0)},
+    onPrestige() {return player.e.charge = new Decimal(0), player.e.charge2 = new Decimal(0), player.e.charge3 = new Decimal(0), player.e.charge4 = new Decimal(0), player.e.charge5 = new Decimal(0), player.e.charge6 = new Decimal(0), player.e.charge7 = new Decimal(0), player.e.charge8 = new Decimal(0), player.e.charge9 = new Decimal(0), player.e.charge10 = new Decimal(0)},
   //  passiveGeneration() {
    //     if (hasUpgrade('c', 15)) return 100
    //     else return 0},
@@ -16,7 +16,10 @@ addLayer("e", {
         charge4: new Decimal(0),
         charge5: new Decimal(0),
         charge6: new Decimal(0),
-        charge7: new Decimal(0)
+        charge7: new Decimal(0),
+        charge8: new Decimal(0),
+        charge9: new Decimal(0),
+        charge10: new Decimal(0)
     }},
     tabFormat: [
         "main-display",
@@ -24,8 +27,8 @@ addLayer("e", {
         "blank",
         "blank",
         ["display-text",
-            function() { if (hasUpgrade('q', 41)) return 'You have ' +  '<h2 style="color: #1a85ff">' + format(player.e.charge) + '</h2>' + ' Charge, which is multiplying the primary-colored Quarks power gain addition effect, and increasing the Proton and Neutron multiplier by ' + '<h3 style="color: #1a85ff">' + format(player.e.charge.plus(1).log10().div(10).plus(1)) + '</h3>' +'x'
-                else return 'You have ' +  '<h2 style="color: #1a85ff">' + format(player.e.charge) + '</h2>' + ' Charge, which is multiplying the colored Quarks power gain addition effect, and increasing the Proton and Neutron multiplier by ' + '<h3 style="color: #1a85ff">' + format(player.e.charge.plus(1).log10().div(10).plus(1)) + '</h3>' +'x'},
+            function() { if (hasUpgrade('q', 41)) return 'You have ' +  '<h2 style="color: #1a85ff">' + format(player.e.charge) + '</h2>' + ' Charge, which is multiplying the primary-colored Quarks power gain addition effect, Proton, and Neutron multiplier by ' + '<h3 style="color: #1a85ff">' + format(player.e.charge.plus(1).log10().div(10).plus(1)) + '</h3>' +'x'
+                else return 'You have ' +  '<h2 style="color: #1a85ff">' + format(player.e.charge) + '</h2>' + ' Charge, which is multiplying the colored Quarks power gain addition effect, Proton, and Neutron multiplier by ' + '<h3 style="color: #1a85ff">' + format(player.e.charge.plus(1).log10().div(10).plus(1)) + '</h3>' +'x'},
             { "color": "white", "font-size": "16px" }],
         "blank",
         ["display-text",
@@ -52,6 +55,18 @@ addLayer("e", {
             function() {if (hasMilestone('e', 5)) return 'You have ' +  '<h2 style="color: #80b8f7">' + format(player.e.charge7) + '</h2>' + ' Charge 7, which is multiplying previous Charges gains by ' + '<h3 style="color: #80b8f7">' + format(player.e.charge7.plus(1).log10().plus(1)) + '</h3>' +'x'},
             { "color": "white", "font-size": "16px" }],
         "blank",
+        ["display-text",
+            function() {if (hasMilestone('e', 6)) return 'You have ' +  '<h2 style="color: #94c1f5">' + format(player.e.charge8) + '</h2>' + ' Charge 8, which is multiplying previous Charges gains by ' + '<h3 style="color: #94c1f5">' + format(player.e.charge8.plus(1).log10().plus(1)) + '</h3>' +'x'},
+            { "color": "white", "font-size": "16px" }],
+        "blank",
+        ["display-text",
+            function() {if (hasMilestone('e', 7)) return 'You have ' +  '<h2 style="color: #abd2ff">' + format(player.e.charge9) + '</h2>' + ' Charge 9, which is multiplying previous Charges gains by ' + '<h3 style="color: #abd2ff">' + format(player.e.charge9.plus(1).log10().plus(1)) + '</h3>' +'x'},
+            { "color": "white", "font-size": "16px" }],
+        "blank",
+        ["display-text",
+            function() {if (hasMilestone('e', 8)) return 'You have ' +  '<h2 style="color: #bad6f7">' + format(player.e.charge10) + '</h2>' + ' Charge 10, which is multiplying previous Charges gains by ' + '<h3 style="color: #bad6f7">' + format(player.e.charge10.plus(1).log10().plus(1)) + '</h3>' +'x'},
+            { "color": "white", "font-size": "16px" }],
+        "blank",
         "blank",
         "milestones"
     ],
@@ -65,13 +80,16 @@ addLayer("e", {
     gainMult() { 
         mult = new Decimal(1)
         if (hasMilestone('e', 0)) mult = mult.times(player.e.charge2.plus(1).log10().plus(1))
-        player.e.charge = player.e.charge.plus(player.e.points.div(20).times(player.e.charge2.plus(1).log10().plus(1)).times(player.e.charge3.plus(1).log10().plus(1)).times(player.e.charge4.plus(1).log10().plus(1)).times(player.e.charge5.plus(1).log10().plus(1)).times(player.q.cyanquarks.plus(1).log10().times(player.q.secondaryprotons.plus(1).log10().div(4.25).plus(1)).plus(1)).times(player.e.charge6.plus(1).log10().plus(1)).times(player.e.charge7.plus(1).log10().plus(1)))
-        if (hasMilestone('e', 0)) player.e.charge2 = player.e.charge2.plus(player.e.points.div(20).times(player.e.charge3.plus(1).log10().plus(1)).times(player.e.charge4.plus(1).log10().plus(1)).times(player.e.charge5.plus(1).log10().plus(1)).times(player.e.charge6.plus(1).log10().plus(1)).times(player.q.magentaquarks.plus(1).log10().times(player.q.secondaryprotons.plus(1).log10().div(4.25).plus(1)).plus(1)).times(player.e.charge7.plus(1).log10().plus(1)))
-        if (hasMilestone('e', 1)) player.e.charge3 = player.e.charge3.plus(player.e.points.div(20).times(player.e.charge4.plus(1).log10().plus(1)).times(player.e.charge5.plus(1).log10().plus(1)).times(player.e.charge6.plus(1).log10().plus(1)).times(player.q.yellowquarks.plus(1).log10().times(player.q.secondaryprotons.plus(1).log10().div(4.25).plus(1)).plus(1)).times(player.e.charge7.plus(1).log10().plus(1)))
-        if (hasMilestone('e', 2)) player.e.charge4 = player.e.charge4.plus(player.e.points.div(20).times(player.e.charge4.plus(1).log10().div(2).plus(1)).times(player.e.charge5.plus(1).log10().plus(1)).times(player.e.charge6.plus(1).log10().plus(1)).times(player.e.charge7.plus(1).log10().plus(1)))
-        if (hasMilestone('e', 3)) player.e.charge5 = player.e.charge5.plus(player.e.points.div(20).times(player.e.charge6.plus(1).log10().plus(1)).times(player.e.charge7.plus(1).log10().plus(1)))
-        if (hasMilestone('e', 4)) player.e.charge6 = player.e.charge6.plus(player.e.points.div(20).times(player.e.charge7.plus(1).log10().plus(1)))
-        if (hasMilestone('e', 5)) player.e.charge7 = player.e.charge7.plus(player.e.points.div(20))
+        player.e.charge = player.e.charge.plus(player.e.points.div(20).times(player.e.charge2.plus(1).log10().plus(1)).times(player.e.charge3.plus(1).log10().plus(1)).times(player.e.charge4.plus(1).log10().plus(1)).times(player.e.charge5.plus(1).log10().plus(1)).times(player.q.cyanquarks.plus(1).log10().times(player.q.secondaryprotons.plus(1).log10().div(4.25).plus(1)).plus(1)).times(player.e.charge6.plus(1).log10().plus(1)).times(player.e.charge7.plus(1).log10().plus(1)).times(player.e.charge8.plus(1).log10().plus(1)).times(player.e.charge9.plus(1).log10().plus(1)).times(player.e.charge10.plus(1).log10().plus(1)))
+        if (hasMilestone('e', 0)) player.e.charge2 = player.e.charge2.plus(player.e.points.div(20).times(player.e.charge3.plus(1).log10().plus(1)).times(player.e.charge4.plus(1).log10().plus(1)).times(player.e.charge5.plus(1).log10().plus(1)).times(player.e.charge6.plus(1).log10().plus(1)).times(player.q.magentaquarks.plus(1).log10().times(player.q.secondaryprotons.plus(1).log10().div(4.25).plus(1)).plus(1)).times(player.e.charge7.plus(1).log10().plus(1)).times(player.e.charge8.plus(1).log10().plus(1)).times(player.e.charge9.plus(1).log10().plus(1)).times(player.e.charge10.plus(1).log10().plus(1)))
+        if (hasMilestone('e', 1)) player.e.charge3 = player.e.charge3.plus(player.e.points.div(20).times(player.e.charge4.plus(1).log10().plus(1)).times(player.e.charge5.plus(1).log10().plus(1)).times(player.e.charge6.plus(1).log10().plus(1)).times(player.q.yellowquarks.plus(1).log10().times(player.q.secondaryprotons.plus(1).log10().div(4.25).plus(1)).plus(1)).times(player.e.charge7.plus(1).log10().plus(1)).times(player.e.charge8.plus(1).log10().plus(1)).times(player.e.charge9.plus(1).log10().plus(1)).times(player.e.charge10.plus(1).log10().plus(1)))
+        if (hasMilestone('e', 2)) player.e.charge4 = player.e.charge4.plus(player.e.points.div(20).times(player.e.charge4.plus(1).log10().div(2).plus(1)).times(player.e.charge5.plus(1).log10().plus(1)).times(player.e.charge6.plus(1).log10().plus(1)).times(player.e.charge7.plus(1).log10().plus(1)).times(player.e.charge8.plus(1).log10().plus(1)).times(player.e.charge9.plus(1).log10().plus(1)).times(player.e.charge10.plus(1).log10().plus(1)))
+        if (hasMilestone('e', 3)) player.e.charge5 = player.e.charge5.plus(player.e.points.div(20).times(player.e.charge6.plus(1).log10().plus(1)).times(player.e.charge7.plus(1).log10().plus(1)).times(player.e.charge8.plus(1).log10().plus(1)).times(player.e.charge9.plus(1).log10().plus(1)).times(player.e.charge10.plus(1).log10().plus(1)))
+        if (hasMilestone('e', 4)) player.e.charge6 = player.e.charge6.plus(player.e.points.div(20).times(player.e.charge7.plus(1).log10().plus(1)).times(player.e.charge8.plus(1).log10().plus(1)).times(player.e.charge9.plus(1).log10().plus(1)).times(player.e.charge10.plus(1).log10().plus(1)))
+        if (hasMilestone('e', 5)) player.e.charge7 = player.e.charge7.plus(player.e.points.div(20).times(player.e.charge8.plus(1).log10().plus(1)).times(player.e.charge9.plus(1).log10().plus(1)).times(player.e.charge10.plus(1).log10().plus(1)))
+        if (hasMilestone('e', 6)) player.e.charge8 = player.e.charge8.plus(player.e.points.div(20).times(player.e.charge9.plus(1).log10().plus(1)).times(player.e.charge10.plus(1).log10().plus(1)))
+        if (hasMilestone('e', 7)) player.e.charge9 = player.e.charge9.plus(player.e.points.div(20).times(player.e.charge10.plus(1).log10().plus(1)))
+        if (hasMilestone('e', 8)) player.e.charge10 = player.e.charge10.plus(player.e.points.div(20))
         if (player.q.cyanquarks.gte(1) && hasUpgrade('q', 41)) mult = mult.times(player.q.cyanquarks.plus(1).log10().div(4.5).times(player.q.secondaryprotons.plus(1).log10().div(4.25).plus(1)).plus(1))
         if (player.q.magentaquarks.gte(1) && hasUpgrade('q', 42)) mult = mult.times(player.q.magentaquarks.plus(1).log10().div(5.5).times(player.q.secondaryprotons.plus(1).log10().div(4.25).plus(1)).plus(1))
         if (player.q.yellowquarks.gte(1) && hasUpgrade('q', 43)) mult = mult.times(player.q.yellowquarks.plus(1).log10().div(6.5).times(player.q.secondaryprotons.plus(1).log10().div(4.25).plus(1)).plus(1))
@@ -150,6 +168,24 @@ addLayer("e", {
         requirementDescription: "10,000,000 Electrons",
         effectDescription: "Begin Generating Charge 7, also based on your Electron amount",
         done() { return player.e.points.gte(10000000) }
+    },
+
+    6: {
+        requirementDescription: "100,000,000 Electrons",
+        effectDescription: "Begin Generating Charge 8, also based on your Electron amount",
+        done() { return player.e.points.gte(100000000) }
+    },
+
+    7: {
+        requirementDescription: "1.00e9 Electrons",
+        effectDescription: "Begin Generating Charge 9, also based on your Electron amount",
+        done() { return player.e.points.gte(1e9) }
+    },
+
+    8: {
+        requirementDescription: "1.00e10 Electrons",
+        effectDescription: "Begin Generating Charge 10, also based on your Electron amount",
+        done() { return player.e.points.gte(1e10) }
     }
 }   
 })

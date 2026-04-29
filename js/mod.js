@@ -13,13 +13,13 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "1.0",
-	name: "Release",
+	num: "ersion: alpha 0.1",
+	name: "The First Public Version",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.1</h3><br>
-		- Release.<br>`
+	<h3>alpha 0.1</h3><br>
+		- Quarks, Electrons, Progress up to Charge 10.<br>`
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
 
@@ -54,6 +54,7 @@ function getPointGen() {
 	if (hasUpgrade('q', 12)) gain = gain.times(upgradeEffect('q', 12))
 	if (hasAchievement('ach', 16) && player.points.gte(1)) gain = gain.times(1.5)
 	if (hasMilestone('e', 3)) gain = gain.times(player.e.charge5.plus(1).log10().div(8).plus(1))
+   // this is a softcap: if (gain.gte(8e15)) gain = gain.plus(1).pow(0.95).plus(8e15).minus(new Decimal(8e15).pow(0.95))
 	return gain
 }
 

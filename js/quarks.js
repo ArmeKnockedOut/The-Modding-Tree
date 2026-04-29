@@ -3,7 +3,7 @@ addLayer("q", {
     symbol: "Q",
     position: 1,
     branches: true,
-    onPrestige() {return player.e.charge = new Decimal(0), player.e.charge2 = new Decimal(0), player.e.charge3 = new Decimal(0), player.e.charge4 = new Decimal(0), player.e.charge5 = new Decimal(0), player.e.charge6 = new Decimal(0), player.e.charge7 = new Decimal(0)},
+    onPrestige() {return player.e.charge = new Decimal(0), player.e.charge2 = new Decimal(0), player.e.charge3 = new Decimal(0), player.e.charge4 = new Decimal(0), player.e.charge5 = new Decimal(0), player.e.charge6 = new Decimal(0), player.e.charge7 = new Decimal(0), player.e.charge8 = new Decimal(0), player.e.charge9 = new Decimal(0), player.e.charge10 = new Decimal(0)},
   //  passiveGeneration() {
    //     if (hasUpgrade('c', 15)) return 100
    //     else return 0},
@@ -18,7 +18,8 @@ addLayer("q", {
         cyanquarks: new Decimal(0),
         magentaquarks: new Decimal(0),
         yellowquarks: new Decimal(0),
-        secondaryprotons: new Decimal(0)
+        secondaryprotons: new Decimal(0),
+        secondaryneutrons: new Decimal(0),
     }},
     tabFormat: [
         "main-display",
@@ -108,6 +109,14 @@ addLayer("q", {
             { "color": "white", "font-size": "16px" }],
         ["blank", "10px"],
         ["clickable", 24],
+        () => (hasUpgrade('q', 44)) ? "blank" : "",
+        () => (hasUpgrade('q', 44)) ? "blank" : "",
+        ["display-text",
+            function() { if (hasUpgrade('q', 44)) return 'You have ' +  '<h2 style="color: #175825">' + format(player.q.secondaryneutrons) + '</h2>' + ' Secondary Neutrons, which are multiplying Quark -> colored Quark conversion efficiency by ' + '<h3 style="color: #175825">' + format(player.q.secondaryneutrons.plus(1).log10().div(3).plus(1)) + '</h3>' + 'x'
+               else return ''},
+            { "color": "white", "font-size": "16px" }],
+        ["blank", "10px"],
+        ["clickable", 25],
         "blank",
         "blank",
         "blank",
@@ -122,9 +131,9 @@ addLayer("q", {
     exponent: 0.7, 
     gainMult() { 
         mult = new Decimal(1)
-        if (hasAchievement('ach', 25)) player.q.redquarks = player.q.redquarks.plus(player.q.points.div(20).div(1000).times(player.q.neutrons.plus(1).log10().div(2.67).times(upgradeEffect('q', 34)).times(player.e.charge.plus(1).log10().div(10).plus(1)).plus(1)))
-        if (hasAchievement('ach', 25)) player.q.greenquarks = player.q.greenquarks.plus(player.q.points.div(20).div(1000).times(player.q.neutrons.plus(1).log10().div(2.67).times(upgradeEffect('q', 34)).times(player.e.charge.plus(1).log10().div(10).plus(1)).plus(1)))
-        if (hasAchievement('ach', 25)) player.q.bluequarks = player.q.bluequarks.plus(player.q.points.div(20).div(1000).times(player.q.neutrons.plus(1).log10().div(2.67).times(upgradeEffect('q', 34)).times(player.e.charge.plus(1).log10().div(10).plus(1)).plus(1)))
+        if (hasAchievement('ach', 25)) player.q.redquarks = player.q.redquarks.plus(player.q.points.div(20).div(1000).times(player.q.neutrons.plus(1).log10().div(2.67).times(upgradeEffect('q', 34)).times(player.e.charge.plus(1).log10().div(10).plus(1)).plus(1)).times(player.q.secondaryneutrons.plus(1).log10().div(3).plus(1)))
+        if (hasAchievement('ach', 25)) player.q.greenquarks = player.q.greenquarks.plus(player.q.points.div(20).div(1000).times(player.q.neutrons.plus(1).log10().div(2.67).times(upgradeEffect('q', 34)).times(player.e.charge.plus(1).log10().div(10).plus(1)).plus(1)).times(player.q.secondaryneutrons.plus(1).log10().div(3).plus(1)))
+        if (hasAchievement('ach', 25)) player.q.bluequarks = player.q.bluequarks.plus(player.q.points.div(20).div(1000).times(player.q.neutrons.plus(1).log10().div(2.67).times(upgradeEffect('q', 34)).times(player.e.charge.plus(1).log10().div(10).plus(1)).plus(1)).times(player.q.secondaryneutrons.plus(1).log10().div(3).plus(1)))
         mult = mult.times(player.q.bluequarks.plus(1).log2().div(8).times(player.q.protons.plus(1).log10().div(4).times(upgradeEffect('q', 33)).times(player.e.charge.plus(1).log10().div(10).plus(1)).plus(1)).plus(1))
         if (hasUpgrade('q', 13)) mult = mult.times(upgradeEffect('q', 13))
         if (hasUpgrade('q', 14)) mult = mult.times(upgradeEffect('q', 14))
@@ -178,7 +187,7 @@ addLayer("q", {
         11: {
             display() {return "Convert Quarks into Red Quarks"},
             canClick() {return player.q.points.gte(1)},
-            onClick() {if (hasAchievement('ach', 22)) return player.q.redquarks = player.q.redquarks.plus(player.q.points.times(player.q.neutrons.plus(1).log10().div(2.67).times(upgradeEffect('q', 34)).plus(1))), player.q.points = player.q.points.minus(player.q.points.div(2))
+            onClick() {if (hasAchievement('ach', 22)) return player.q.redquarks = player.q.redquarks.plus(player.q.points.times(player.q.neutrons.plus(1).log10().div(2.67).times(upgradeEffect('q', 34)).plus(1)).times(player.q.secondaryneutrons.plus(1).log10().div(3).plus(1))), player.q.points = player.q.points.minus(player.q.points.div(2))
                 else return player.q.redquarks = player.q.redquarks.plus(player.q.points.times(player.q.neutrons.plus(1).log10().div(2.67).times(upgradeEffect('q', 34)).times(player.e.charge.plus(1).log10().div(10).plus(1)).plus(1))), player.q.points = player.q.points.minus(player.q.points)},
             style: {
                 'background-color'() {if (player.q.points.gte(1)) return "red"},
@@ -187,7 +196,7 @@ addLayer("q", {
         12: {
             display() {return "Convert Quarks into Green Quarks"},
             canClick() {return player.q.points.gte(1)},
-            onClick() {if (hasAchievement('ach', 22)) return player.q.greenquarks = player.q.greenquarks.plus(player.q.points.times(player.q.neutrons.plus(1).log10().div(2.67).times(upgradeEffect('q', 34)).plus(1))), player.q.points = player.q.points.minus(player.q.points.div(2))
+            onClick() {if (hasAchievement('ach', 22)) return player.q.greenquarks = player.q.greenquarks.plus(player.q.points.times(player.q.neutrons.plus(1).log10().div(2.67).times(upgradeEffect('q', 34)).plus(1)).times(player.q.secondaryneutrons.plus(1).log10().div(3).plus(1))), player.q.points = player.q.points.minus(player.q.points.div(2))
               else return player.q.greenquarks = player.q.greenquarks.plus(player.q.points.times(player.q.neutrons.plus(1).log10().div(2.67).times(upgradeEffect('q', 34)).times(player.e.charge.plus(1).log10().div(10).plus(1)).plus(1))), player.q.points = player.q.points.minus(player.q.points)},
             style: {
                 'background-color'() {if (player.q.points.gte(1)) return "green"},
@@ -196,7 +205,7 @@ addLayer("q", {
         13: {
             display() {return "Convert Quarks into Blue Quarks"},
             canClick() {return player.q.points.gte(1)},
-            onClick() { if (hasAchievement('ach', 22)) return player.q.bluequarks = player.q.bluequarks.plus(player.q.points.times(player.q.neutrons.plus(1).log10().div(2.67).times(upgradeEffect('q', 34)).plus(1))), player.q.points = player.q.points.minus(player.q.points.div(2))
+            onClick() { if (hasAchievement('ach', 22)) return player.q.bluequarks = player.q.bluequarks.plus(player.q.points.times(player.q.neutrons.plus(1).log10().div(2.67).times(upgradeEffect('q', 34)).plus(1)).times(player.q.secondaryneutrons.plus(1).log10().div(3).plus(1))), player.q.points = player.q.points.minus(player.q.points.div(2))
               else return player.q.bluequarks = player.q.bluequarks.plus(player.q.points.times(player.q.neutrons.plus(1).log10().div(2.67).times(upgradeEffect('q', 34)).times(player.e.charge.plus(1).log10().div(10).plus(1)).plus(1))), player.q.points = player.q.points.minus(player.q.points)},
             style: {
                 'background-color'() {if (player.q.points.gte(1)) return "blue"},
@@ -225,7 +234,7 @@ addLayer("q", {
         21: {
             display() {return "Convert your Quarks into Cyan Quarks"},
             canClick() {return player.q.points.gte(1e20)},
-            onClick() {return player.q.cyanquarks = player.q.cyanquarks.plus(player.q.points.div(1e20).times(player.q.neutrons.plus(1).log10().div(2.67).plus(1))), player.q.points = player.q.points.minus(player.q.points.div(2))},
+            onClick() {return player.q.cyanquarks = player.q.cyanquarks.plus(player.q.points.div(1e20).times(player.q.neutrons.plus(1).log10().div(2.67).plus(1)).times(player.q.secondaryneutrons.plus(1).log10().div(3).plus(1))), player.q.points = player.q.points.minus(player.q.points.div(2))},
             style: {
                 'background-color'() {if (player.q.points.gte(1e20)) return "cyan"},
             },
@@ -234,7 +243,7 @@ addLayer("q", {
         22: {
             display() {return "Convert your Quarks into Magenta Quarks"},
             canClick() {return player.q.points.gte(1e20)},
-            onClick() {return player.q.magentaquarks = player.q.magentaquarks.plus(player.q.points.div(1e20).times(player.q.neutrons.plus(1).log10().div(2.67).plus(1))), player.q.points = player.q.points.minus(player.q.points.div(2))},
+            onClick() {return player.q.magentaquarks = player.q.magentaquarks.plus(player.q.points.div(1e20).times(player.q.neutrons.plus(1).log10().div(2.67).plus(1)).times(player.q.secondaryneutrons.plus(1).log10().div(3).plus(1))), player.q.points = player.q.points.minus(player.q.points.div(2))},
             style: {
                 'background-color'() {if (player.q.points.gte(1e20)) return "magenta"},
             },
@@ -243,7 +252,7 @@ addLayer("q", {
         23: {
             display() {return "Convert your Quarks into Yellow Quarks"},
             canClick() {return player.q.points.gte(1e20)},
-            onClick() {return player.q.yellowquarks = player.q.yellowquarks.plus(player.q.points.div(1e20).times(player.q.neutrons.plus(1).log10().div(2.67).plus(1))), player.q.points = player.q.points.minus(player.q.points.div(2))},
+            onClick() {return player.q.yellowquarks = player.q.yellowquarks.plus(player.q.points.div(1e20).times(player.q.neutrons.plus(1).log10().div(2.67).plus(1)).times(player.q.secondaryneutrons.plus(1).log10().div(3).plus(1))), player.q.points = player.q.points.minus(player.q.points.div(2))},
             style: {
                 'background-color'() {if (player.q.points.gte(1e20)) return "yellow"},
             },
@@ -255,6 +264,15 @@ addLayer("q", {
             onClick() {return player.q.secondaryprotons = player.q.secondaryprotons.plus(player.q.cyanquarks.plus(player.q.magentaquarks.plus(player.q.yellowquarks)).div(6)), player.q.cyanquarks = player.q.cyanquarks.minus(player.q.cyanquarks.div(2)), player.q.magentaquarks = player.q.magentaquarks.minus(player.q.magentaquarks.div(2)), player.q.yellowquarks = player.q.yellowquarks.minus(player.q.yellowquarks.div(2))},
             style: {
                 'background-color'() {if (player.q.cyanquarks.gte(2) && player.q.magentaquarks.gte(2) && player.q.yellowquarks.gte(2)) return "orange"},
+            },
+            unlocked() {return (hasUpgrade('q', 44))}
+        },
+        25: {
+            display() {return "Convert half your secondary-colored Quarks into Secondary Neutrons"},
+            canClick() {return player.q.cyanquarks.gte(2) && player.q.magentaquarks.gte(2) && player.q.yellowquarks.gte(2)},
+            onClick() {return player.q.secondaryneutrons = player.q.secondaryneutrons.plus(player.q.cyanquarks.plus(player.q.magentaquarks.plus(player.q.yellowquarks)).div(6)), player.q.cyanquarks = player.q.cyanquarks.minus(player.q.cyanquarks.div(2)), player.q.magentaquarks = player.q.magentaquarks.minus(player.q.magentaquarks.div(2)), player.q.yellowquarks = player.q.yellowquarks.minus(player.q.yellowquarks.div(2))},
+            style: {
+                'background-color'() {if (player.q.cyanquarks.gte(2) && player.q.magentaquarks.gte(2) && player.q.yellowquarks.gte(2)) return "#175825"},
             },
             unlocked() {return (hasUpgrade('q', 44))}
         },
@@ -389,7 +407,7 @@ addLayer("q", {
 
       44: {
         title: "i know now, i know it's not enough",
-        description: "Unlock Secondary Protons.",
+        description: "Unlock Secondary Protons and Neutrons.",
         cost: new Decimal(1e24),
         unlocked() {return hasUpgrade('q', 43)},
       }
