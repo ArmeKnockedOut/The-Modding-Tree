@@ -13,13 +13,30 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "ersion: alpha 0.1",
-	name: "The First Public Version",
+	num: "ersion: alpha 0.11",
+	name: "Balancing",
 }
 
-let changelog = `<h1>Changelog:</h1><br>
-	<h3>alpha 0.1</h3><br>
-		- Quarks, Electrons, Progress up to Charge 10.<br>`
+let changelog = `<h1>Changelog:</h1><br><br><br>
+    <h1 style="color: #ff5b1a">Alpha v0.11 - Balancing</h1><br><br><h3>[Light Balancing that should make the Cyan Quarks - Charge 10 grind less tedious.]<br>
+	<br>
+	(4/29/2026 4:23PM CEST)<br></h3>
+	<br><h4>
+		  - Gave Achievement 23 a Reward (Achievement Multiplier 1.067x -> 1.15x)<br>
+		  - Gave Achievement 24 a Reward (+50% Power Gain)<br>
+		  - Gave Achievement 26 a Reward (+25% Quark and Electron Gain)<br>
+		  - Improved the changelog a lot ^w^<br>
+	</h4><br>
+	<br>
+	<br>
+	<br>
+	<h1 style="color: #ff3c1a">Alpha v0.1 - The First Alpha</h1><br><br><h3>[Not much to say here... Future versions will get changelogs -w-]<br>
+	<br>
+	(4/29/2026 12:21PM CEST)<br></h3>
+	<br><h4>
+		- Quarks, Electrons, Progress up to Charge 10.<br>
+	</h4><br>`
+	
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
 
@@ -54,6 +71,7 @@ function getPointGen() {
 	if (hasUpgrade('q', 12)) gain = gain.times(upgradeEffect('q', 12))
 	if (hasAchievement('ach', 16) && player.points.gte(1)) gain = gain.times(1.5)
 	if (hasMilestone('e', 3)) gain = gain.times(player.e.charge5.plus(1).log10().div(8).plus(1))
+	if (hasAchievement('ach', 24)) gain = gain.times(1.5)
    // this is a softcap: if (gain.gte(8e15)) gain = gain.plus(1).pow(0.95).plus(8e15).minus(new Decimal(8e15).pow(0.95))
 	return gain
 }

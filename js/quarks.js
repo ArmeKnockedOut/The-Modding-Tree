@@ -143,6 +143,7 @@ addLayer("q", {
         if (hasUpgrade('q', 41) && player.q.cyanquarks.gte(1)) mult = mult.times(player.q.cyanquarks.plus(1).log10().div(9.3).times(player.q.secondaryprotons.plus(1).log10().div(4.25).plus(1)).plus(1))
         if (hasUpgrade('q', 42) && player.q.magentaquarks.gte(1)) mult = mult.times(player.q.magentaquarks.plus(1).log10().div(10.5).times(player.q.secondaryprotons.plus(1).log10().div(4.25).plus(1)).plus(1))
         if (hasUpgrade('q', 43) && player.q.yellowquarks.gte(1)) mult = mult.times(player.q.yellowquarks.plus(1).log10().div(11.7).times(player.q.secondaryprotons.plus(1).log10().div(4.25).plus(1)).plus(1))
+        if (hasAchievement('ach', 26)) mult = mult.times(1.25)
         return mult
     },
     gainExp() {

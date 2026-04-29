@@ -30,6 +30,7 @@ addLayer("ach", {
     tooltip: "Achievements",
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
+        if (hasAchievement('ach', 23)) player.ach.achievementmulti = new Decimal(1.15)
         return mult
     },
     layerShown(){return true},
@@ -96,13 +97,13 @@ addLayer("ach", {
         },
         23: {
             name: "Negativity",
-            tooltip: "Get your first electron.",
+            tooltip: "Get your first Electron. Reward: Achievement Multiplier 1.067x->1.15x",
             done() {return player.e.points.gte(1)}
              
         },
         24: {
             name: "where's my 50% stronger galaxies upgrade :(",
-            tooltip: "Reach 5.00e11 power.",
+            tooltip: "Reach 5.00e11 power. Reward: You gain 50% more power.",
             done() {return player.points.gte(5e11)}
              
         },
@@ -114,7 +115,7 @@ addLayer("ach", {
         },
         26: {
             name: "gayming 😎",
-            tooltip: "Get at least one of each secondary Quark, Proton, And Neutron.",
+            tooltip: "Get at least one of each secondary Quark, Proton, And Neutron. Reward: You gain 25% more Quarks and Electrons.",
             done() {return player.q.cyanquarks.gte(1) && player.q.magentaquarks.gte(1) && player.q.yellowquarks.gte(1) && player.q.secondaryprotons.gte(1) && player.q.secondaryneutrons.gte(1)}
              
         },
