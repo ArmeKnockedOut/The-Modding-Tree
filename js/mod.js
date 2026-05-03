@@ -32,8 +32,8 @@ let changelog = `<h1>Changelog:</h1><br><br><br>
 		  - Added Tertiary Protons and Tertiary Neutrons.<br>
 		  - Made the first four Quark Upgrades a bit cheaper.<br>
 		  - Progress up to 50 Total Atom Challenge Completions.<br><br>
-		  - New Content Estimated Playtime: hrs<br></h4>
-		  - Total Estimated Playtime: hrs<br></h4>
+		  - New Content Estimated Playtime: ~13hrs<br></h4>
+		  - Total Estimated Playtime: ~16hrs<br></h4>
 		  <br>
 		  <br>
 		  <h2>Devlog:</h2><br><br><h4>
