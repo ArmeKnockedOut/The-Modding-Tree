@@ -13,16 +13,26 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "ersion: alpha 0.2",
-	name: "Atoms",
+	num: "ersion: alpha 0.21",
+	name: "Small Stuff",
 }
 
 let changelog = `<h1>Changelog:</h1><br><br><br>
 	<h1 style="color: #ff0000">SPOILERS. OBVIOUSLY. NOT LIKE STORY SPOILERS BECAUSE THERE'S NO STORY BUT YEAH, THERE'S SPOILERS HERE.</h1><br><br><br><br>
+	<h1 style="color: #ffca1a">Alpha v0.21 - Small Stuff</h1><br><br><h3>[Changelog Fixes]<br>
+	<br>
+	(5/3/2026 6:50PM CEST)<br></h3>
+	<br><h4>
+		  - Changed the Alpha v0.2 Release Time to the correct time.<br>
+		  - Changed the Alpha v0.2 Estimated Playtimes to the correct times.<br>
+	</h4><br>
+	<br>
+	<br>
+	<br>
 	<h1 style="color: #ffaf1a">Alpha v0.2 - Atoms</h1><br><br><h3>[The Atom Layer, and Code Changes :D]<br>
 	<br>
 	(Finished 5/2/2026 3:56PM CEST)<br>
-	(Playtested, Released 5/3/2026 3:56PM CEST)<br></h3>
+	(Playtested, Released 5/3/2026 5:14PM CEST)<br></h3>
 	<br><h4>
 		  - Added the Atom Layer.<br>
 		  - Added Achievements 28-48.<br>
