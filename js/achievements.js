@@ -3,6 +3,7 @@ addLayer("ach", {
     symbol: "A", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 0,
     startData() { return {
+        points: new Decimal(0),
         achievementmulti: new Decimal(1.067),
     }},
     tabFormat: [
@@ -30,7 +31,6 @@ addLayer("ach", {
     tooltip: "Achievements",
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
-        if (hasAchievement('ach', 23)) player.ach.achievementmulti = new Decimal(1.15)
         return mult
     },
     layerShown(){return true},
@@ -97,8 +97,9 @@ addLayer("ach", {
         },
         23: {
             name: "Negativity",
-            tooltip: "Get your first Electron. Reward: Achievement Multiplier 1.067x->1.15x",
-            done() {return player.e.points.gte(1)}
+            tooltip: "Get your first Electron. Reward: Achievement Multiplier 1.067x->1.15x.",
+            done() {return player.e.points.gte(1)},
+            onComplete() {return player.ach.achievementmulti = new Decimal(1.15)}
              
         },
         24: {
@@ -109,7 +110,7 @@ addLayer("ach", {
         },
         25: {
             name: "wait... that's not a thing...",
-            tooltip: "Get a Cyan Quark. Reward: You passively gain 0.1% of each primary-colored Quark based on your Quarks per second, multiplied by the Neutron multiplier.",
+            tooltip: "Get a Cyan Quark. Reward: You passively gain 0.1% of each primary-colored Quark based on your Quarks per second, multiplied by the Neutron multipliers.",
             done() {return player.q.cyanquarks.gte(1)}
              
         },
@@ -124,6 +125,100 @@ addLayer("ach", {
             tooltip: "Reach 1.00e27 Quarks.",
             done() {return player.q.points.gte(1e27)}
              
+        },
+        28: {
+            name: "that's one fat baby",
+            tooltip: "Get your first Atom.",
+            done() {return player.a.points.gte(1)}
+             
+        },
+        31: {
+            name: "honestly too easy",
+            tooltip: "Get your first Atom Challenge 1 Completion.",
+            done() {return hasChallenge('a', 11)}
+             
+        },
+        32: {
+            name: "give me a REAL challenge...",
+            tooltip: "Get your first Atom Challenge 2 Completion.",
+            done() {return hasChallenge('a', 12)}
+             
+        },
+        33: {
+            name: "you're holding back, come on...",
+            tooltip: "Get your first Atom Challenge 3 Completion.",
+            done() {return hasChallenge('a', 13)}
+             
+        },
+        34: {
+            name: "light work, no reaction",
+            tooltip: "Get your second Atom Challenge 1 Completion.",
+            done() {return challengeCompletions('a', 11) == 2}
+             
+        },
+        35: {
+            name: "a toddler could do this",
+            tooltip: "Get your second Atom Challenge 2 Completion.",
+            done() {return challengeCompletions('a', 12) == 2}
+             
+        },
+        36: {
+            name: "the wall of time",
+            tooltip: "Get your second Atom Challenge 3 Completion. Reward: 4x Quark gain until 1.00e70 Quarks.",
+            done() {return challengeCompletions('a', 13) == 2}
+             
+        },
+        37: {
+            name: "Atom^2",
+            tooltip: "Reach 1.00e60 Quarks.",
+            done() {return player.q.points.gte(1e60)}
+             
+        },
+        38: {
+            name: "guys the achievement before me is an odd one out",
+            tooltip: "Reach 15 Total Atom Challenge Completions. Reward: Achievement Multiplier 1.15x->1.175x.",
+            done() {return player.a.totalatomchallengecompletions.gte(15)},
+            onComplete() {return player.ach.achievementmulti = new Decimal(1.175)}
+        },
+        41: {
+            name: "uncharted territory",
+            tooltip: "Get your first Tertiary Proton.",
+            done() {return player.q.tertiaryprotons.gte(1)},
+        },
+        42: {
+            name: "not more than my two cents 😎",
+            tooltip: "Reach 1.11e111 Quarks.",
+            done() {return player.q.points.gte(1.11e111)},
+        },
+        43: {
+            name: "the answer to everything",
+            tooltip: "Reach 42 Total Atom Challenge Completions. Reward: Unlock Tertiary Neutrons, and more Atom Upgrades.",
+            done() {return player.a.totalatomchallengecompletions.gte(42)},
+        },
+        44: {
+            name: "how many energy drinks did you get dude...",
+            tooltip: "Have at least 1.00e100 of every Charge.",
+            done() {return player.e.charge10.gte(1e100)},
+        },
+        45: {
+            name: "thanks",
+            tooltip: "Reach a 2.5x Tertiary Proton multiplier.",
+            done() {return player.q.tertiaryprotonmultiplier.gte(2.5)},
+        },
+        46: {
+            name: "we love inside knowledge",
+            tooltip: "Reach +136,136 power gain addition from Red Quarks.",
+            done() {return player.q.redquarkspoweraddition.gte(136136)},
+        },
+        47: {
+            name: "i don't need ener-... zzzzz",
+            tooltip: "Reach 9.99e99 Quarks in Atom Challenge 1.",
+            done() {return inChallenge('a', 11) && player.q.points.gte(9.99e99)},
+        },
+        48: {
+            name: "in which order did i do them in again?",
+            tooltip: "Get all 50 Atom Challenge Completions.",
+            done() {return player.a.totalatomchallengecompletions.gte(50)},
         },
     }
 })
