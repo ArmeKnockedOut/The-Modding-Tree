@@ -25,6 +25,11 @@ h1, h2, h3, b, input {
 	cursor: pointer;
 }
 
+.i.can {
+	background: linear-gradient(-15deg, #ee2f0d 0%, #0daeee 100%); background-origin: border-box;
+	cursor: pointer;
+}
+
 .can:hover {
 	transform: scale(1.15, 1.15);
 	box-shadow: 0 0 20px var(--points)
@@ -32,6 +37,11 @@ h1, h2, h3, b, input {
 
 .bought {
 	background-color: #77bf5f;
+	cursor: default;
+}
+
+.i.bought {
+	background: linear-gradient(-15deg, #0d1cee 0%, #0daeee 100%); background-origin: border-box;
 	cursor: default;
 }
 

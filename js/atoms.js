@@ -4,9 +4,10 @@ addLayer("a", {
     position: 0,
     branches: true,
     onPrestige() {return player.a.timesinceatomreset = new Decimal(0)},
- //   passiveGeneration() {
-  //      if (hasUpgrade('q', 14)) return 1
-  //      else return 0},
+    passiveGeneration() {
+        if (player.tog.passiveAtomGen == true) return 0.01
+        else return 0},
+    automate() {if (player.tog.autobuyAtomUpg == true) buyUpgrade('a', 11), buyUpgrade('a', 12), buyUpgrade('a', 13), buyUpgrade('a', 14), buyUpgrade('a', 15), buyUpgrade('a', 16), buyUpgrade('a', 17), buyUpgrade('a', 18), buyUpgrade('a', 19), buyUpgrade('a', 20), buyUpgrade('a', 21), buyUpgrade('a', 22), buyUpgrade('a', 23), buyUpgrade('a', 24), buyUpgrade('a', 25), buyUpgrade('a', 26), buyUpgrade('a', 27), buyUpgrade('a', 28), buyUpgrade('a', 29), buyUpgrade('a', 30), buyUpgrade('a', 31), buyUpgrade('a', 32), buyUpgrade('a', 33), buyUpgrade('a', 34), buyUpgrade('a', 35), buyUpgrade('a', 36), buyUpgrade('a', 37), buyUpgrade('a', 38), buyUpgrade('a', 39), buyUpgrade('a', 40), buyUpgrade('a', 41), buyUpgrade('a', 42), buyUpgrade('a', 43), buyUpgrade('a', 44), buyUpgrade('a', 45)},
     startData() { return {
         unlocked: false,
 		points: new Decimal(0),
@@ -36,14 +37,70 @@ addLayer("a", {
         atomchallenge17divisor: new Decimal(1),
         ac18quarkexp: new Decimal(1),
         ac19electronexp: new Decimal(1),
-        autobuyQuarkUpg: false,
-        passiveQuarkGen: false,
-        passiveElectronGen: false,
         extratotalatomchallengecompletions: new Decimal(0),
         actualtotalatomchallengecompletions: new Decimal(0),
         ac20everythingmult: new Decimal(1)
     }},
-    update(diff) {if (inChallenge('a', 17)) player.a.atomchallenge17divisor *= Math.pow(5, 1 / 20)},
+    update(diff) {
+        if (inChallenge('a', 17)) player.a.atomchallenge17divisor *= Math.pow(5, diff)
+
+    if (hasMilestone('i', 14) && player.tog.autoCompleteAtomChallenges && !inChallenge('i', 11) && !inChallenge('i', 12)) {
+    let interval = Decimal.div(50, player.i.infinities).toNumber()
+    interval = Math.max(interval, 0.05)
+    player.a.acAutoTimer = (player.a.acAutoTimer || 0) + diff
+    while (player.a.acAutoTimer >= interval) {
+        player.a.acAutoTimer -= interval
+        for (let id = 11; id <= 20; id++) {
+            let comps = challengeCompletions('a', id)
+            if (comps >= 5)
+                continue
+            player.a.challenges[id] = comps + 1
+            break
+        }
+    }
+}
+
+    player.a.timesinceatomreset = player.a.timesinceatomreset.plus(new Decimal(1).times(diff))
+
+    let ac11 = challengeCompletions('a', 11)
+    let ac12 = challengeCompletions('a', 12)
+    let ac13 = challengeCompletions('a', 13)
+    let ac14 = challengeCompletions('a', 14)
+    let ac15 = challengeCompletions('a', 15)
+    let ac16 = challengeCompletions('a', 16)
+    let ac17 = challengeCompletions('a', 17)
+    let ac18 = challengeCompletions('a', 18)
+    let ac19 = challengeCompletions('a', 19)
+    let ac20 = challengeCompletions('a', 20)
+
+    player.a.ac13powerexp = new Decimal([1, 1.02, 1.04, 1.06, 1.08, 1.1][ac13] || 1)
+    player.a.ac12protonmulti = new Decimal([1, 1.1, 1.2, 1.4, 1.6, 1.8][ac12] || 1)
+
+    for (let i = 11; i <= 20; i++) {
+        player.a[`atomchallenge${i}completions`] = new Decimal(challengeCompletions('a', i))
+    }
+
+    if (player.q.points.gte(player.a.bestquarks))
+        player.a.bestquarks = player.q.points
+    if (player.e.points.gte(player.a.bestelectrons))
+        player.a.bestelectrons = player.e.points
+
+    player.a.atomchallenge14multiplier = new Decimal([1, 1.1, 1.2, 1.3, 1.4, 1.5][ac14] || 1)
+    player.a.atomchallenge15multiplier = new Decimal([1, 1.05, 1.1, 1.15, 1.2, 1.25][ac15] || 1)
+    player.a.atomchallenge16multiplier = new Decimal([1, 1.066, 1.133, 1.2, 1.266, 1.33][ac16] || 1)
+    player.a.ac18quarkexp = new Decimal([1, 1.01, 1.02, 1.03, 1.04, 1.05][ac18] || 1)
+    player.a.ac19electronexp = new Decimal([1, 1.0133, 1.0266, 1.04, 1.0533, 1.0666][ac19] || 1)
+    player.a.ac20everythingmult = new Decimal([1, 1.3, 1.6, 2.0, 2.45, 3.0][ac20] || 1)
+
+    player.a.totalatomchallengecompletions = player.a.atomchallenge11completions.plus(player.a.atomchallenge12completions).plus(player.a.atomchallenge13completions).plus(player.a.atomchallenge14completions).plus(player.a.atomchallenge15completions).plus(player.a.atomchallenge16completions).plus(player.a.atomchallenge17completions).plus(player.a.atomchallenge18completions).plus(player.a.atomchallenge19completions).plus(player.a.atomchallenge20completions)
+    player.a.atomchallenge11 = inChallenge('a', 11) ? new Decimal(0) : new Decimal(1)
+    player.a.atomchallenge14 = inChallenge('a', 14) ? new Decimal(0) : new Decimal(1)
+    player.a.extratotalatomchallengecompletions = new Decimal(0).plus(upgradeEffect('a', 41)).plus(player.m.moleculeextraatomchallenges).plus(buyableEffect('m', 14))
+    player.a.actualtotalatomchallengecompletions = player.a.totalatomchallengecompletions.plus(player.a.extratotalatomchallengecompletions)
+    },
+    milestonePopups() {if (hasMilestone('i', 9)) return false
+        else return true
+    },
     tabFormat: [
         "main-display",
         "prestige-button",
@@ -52,7 +109,7 @@ addLayer("a", {
         "milestones",
         "blank",
         ["display-text",
-            function() {if (hasUpgrade('a', 41) && hasMilestone('a', 12)) return 'You have ' +  '<h2 style="color: white">' + format(player.a.totalatomchallengecompletions, 0) + '+' + format(player.a.extratotalatomchallengecompletions, 0) + '/50</h2>' + ' Total Atom Challenge Completions, which are multiplying power gain by ' + '<h3 style="color: white">' + format(new Decimal.pow(player.a.atomchallenge14multiplier, player.a.actualtotalatomchallengecompletions)) + '</h3>' +'x, Quark gain by ' + '<h3 style="color: white">' + format(new Decimal.pow(player.a.atomchallenge15multiplier, player.a.actualtotalatomchallengecompletions)) + '</h3>' +'x, and Electron gain by ' + '<h3 style="color: white">' + format(new Decimal.pow(player.a.atomchallenge16multiplier, player.a.actualtotalatomchallengecompletions)) + '</h3>' +'x'
+            function() {if (hasMilestone('a', 12)) return 'You have ' +  '<h2 style="color: white">' + format(player.a.totalatomchallengecompletions, 0) + '+' + format(player.a.extratotalatomchallengecompletions, 0) + '/50</h2>' + ' Total Atom Challenge Completions, which are multiplying power gain by ' + '<h3 style="color: white">' + format(new Decimal.pow(player.a.atomchallenge14multiplier, player.a.actualtotalatomchallengecompletions)) + '</h3>' +'x, Quark gain by ' + '<h3 style="color: white">' + format(new Decimal.pow(player.a.atomchallenge15multiplier, player.a.actualtotalatomchallengecompletions)) + '</h3>' +'x, and Electron gain by ' + '<h3 style="color: white">' + format(new Decimal.pow(player.a.atomchallenge16multiplier, player.a.actualtotalatomchallengecompletions)) + '</h3>' +'x'
                 else if (hasUpgrade('a', 41)) return 'You have ' +  '<h2 style="color: white">' + format(player.a.totalatomchallengecompletions, 0) + '+' + format(player.a.extratotalatomchallengecompletions, 0) + '/45</h2>' + ' Total Atom Challenge Completions, which are multiplying power gain by ' + '<h3 style="color: white">' + format(new Decimal.pow(player.a.atomchallenge14multiplier, player.a.actualtotalatomchallengecompletions)) + '</h3>' +'x, Quark gain by ' + '<h3 style="color: white">' + format(new Decimal.pow(player.a.atomchallenge15multiplier, player.a.actualtotalatomchallengecompletions)) + '</h3>' +'x, and Electron gain by ' + '<h3 style="color: white">' + format(new Decimal.pow(player.a.atomchallenge16multiplier, player.a.actualtotalatomchallengecompletions)) + '</h3>' +'x'
                 else if (hasMilestone('a', 6)) return 'You have ' +  '<h2 style="color: white">' + format(player.a.actualtotalatomchallengecompletions, 0) + '/45</h2>' + ' Total Atom Challenge Completions, which are multiplying power gain by ' + '<h3 style="color: white">' + format(new Decimal.pow(player.a.atomchallenge14multiplier, player.a.actualtotalatomchallengecompletions)) + '</h3>' +'x, Quark gain by ' + '<h3 style="color: white">' + format(new Decimal.pow(player.a.atomchallenge15multiplier, player.a.actualtotalatomchallengecompletions)) + '</h3>' +'x, and Electron gain by ' + '<h3 style="color: white">' + format(new Decimal.pow(player.a.atomchallenge16multiplier, player.a.actualtotalatomchallengecompletions)) + '</h3>' +'x'
                 else if (hasMilestone('a', 4)) return 'You have ' +  '<h2 style="color: white">' + format(player.a.actualtotalatomchallengecompletions, 0) + '/30</h2>' + ' Total Atom Challenge Completions, which are multiplying power gain by ' + '<h3 style="color: white">' + format(new Decimal.pow(player.a.atomchallenge14multiplier, player.a.actualtotalatomchallengecompletions)) + '</h3>' +'x, Quark gain by ' + '<h3 style="color: white">' + format(new Decimal.pow(player.a.atomchallenge15multiplier, player.a.actualtotalatomchallengecompletions)) + '</h3>' +'x, and Electron gain by ' + '<h3 style="color: white">' + format(new Decimal.pow(player.a.atomchallenge16multiplier, player.a.actualtotalatomchallengecompletions)) + '</h3>' +'x'
@@ -77,6 +134,7 @@ addLayer("a", {
     exponent: 0.38, 
     gainMult() { 
         mult = new Decimal(1)
+        /*
         if (challengeCompletions('a', 13) == 5) player.a.ac13powerexp = new Decimal(1.1)
         if (challengeCompletions('a', 13) == 4) player.a.ac13powerexp = new Decimal(1.08)
         if (challengeCompletions('a', 13) == 3) player.a.ac13powerexp = new Decimal(1.06)
@@ -137,15 +195,16 @@ addLayer("a", {
         if (challengeCompletions('a', 20) == 3) player.a.atomchallenge20completions = new Decimal(3)
         if (challengeCompletions('a', 20) == 2) player.a.atomchallenge20completions = new Decimal(2)
         if (challengeCompletions('a', 20) == 1) player.a.atomchallenge20completions = new Decimal(1)
-        player.a.timesinceatomreset = player.a.timesinceatomreset.plus(0.05)
         if (player.q.points.gte(player.a.bestquarks)) player.a.bestquarks = player.q.points
         if (player.e.points.gte(player.a.bestelectrons)) player.a.bestelectrons = player.e.points
-        if (challengeCompletions('a', 14) == 5) player.a.atomchallenge14multiplier = new Decimal(1.5)
+        if (challengeCompletions('a', 14) == 5 && !hasUpgrade('m', 21)) player.a.atomchallenge14multiplier = new Decimal(1.5)
+        if (challengeCompletions('a', 14) == 5 && hasUpgrade('m', 21)) player.a.atomchallenge14multiplier = new Decimal(1.66)
         if (challengeCompletions('a', 14) == 4) player.a.atomchallenge14multiplier = new Decimal(1.4)
         if (challengeCompletions('a', 14) == 3) player.a.atomchallenge14multiplier = new Decimal(1.3)
         if (challengeCompletions('a', 14) == 2) player.a.atomchallenge14multiplier = new Decimal(1.2)
         if (challengeCompletions('a', 14) == 1) player.a.atomchallenge14multiplier = new Decimal(1.1)
-        if (challengeCompletions('a', 15) == 5) player.a.atomchallenge15multiplier = new Decimal(1.25)
+        if (challengeCompletions('a', 15) == 5 && !hasUpgrade('m', 22)) player.a.atomchallenge15multiplier = new Decimal(1.25)
+        if (challengeCompletions('a', 15) == 5 && hasUpgrade('m', 22)) player.a.atomchallenge15multiplier = new Decimal(1.4)
         if (challengeCompletions('a', 15) == 4) player.a.atomchallenge15multiplier = new Decimal(1.2)
         if (challengeCompletions('a', 15) == 3) player.a.atomchallenge15multiplier = new Decimal(1.15)
         if (challengeCompletions('a', 15) == 2) player.a.atomchallenge15multiplier = new Decimal(1.1)
@@ -171,13 +230,27 @@ addLayer("a", {
         if (challengeCompletions('a', 20) == 2) player.a.ac20everythingmult = new Decimal(1.6)
         if (challengeCompletions('a', 20) == 1) player.a.ac20everythingmult = new Decimal(1.3)
         player.a.totalatomchallengecompletions = player.a.atomchallenge11completions.plus(player.a.atomchallenge12completions).plus(player.a.atomchallenge13completions).plus(player.a.atomchallenge14completions).plus(player.a.atomchallenge15completions).plus(player.a.atomchallenge16completions).plus(player.a.atomchallenge17completions).plus(player.a.atomchallenge18completions).plus(player.a.atomchallenge19completions).plus(player.a.atomchallenge20completions)
-       // if (inChallenge('a', 17)) player.a.atomchallenge17divisor *= Math.pow(5, 1 / 20)
         if (inChallenge('a', 11)) player.a.atomchallenge11 = new Decimal(0)
         if (!inChallenge('a', 11)) player.a.atomchallenge11 = new Decimal(1)
         if (inChallenge('a', 14)) player.a.atomchallenge14 = new Decimal(0)
         if (!inChallenge('a', 14)) player.a.atomchallenge14 = new Decimal(1)
-        if (hasUpgrade('a', 41)) player.a.extratotalatomchallengecompletions = new Decimal(3)
+        player.a.extratotalatomchallengecompletions = new Decimal(0).plus(upgradeEffect('a', 41)).plus(player.m.moleculeextraatomchallenges).plus(buyableEffect('m', 14))
+        
         player.a.actualtotalatomchallengecompletions = player.a.totalatomchallengecompletions.plus(player.a.extratotalatomchallengecompletions)
+        */
+
+        if (hasUpgrade('i', 15)) mult = mult.times(upgradeEffect('i', 15))
+        if (hasUpgrade('i', 17)) mult = mult.times(upgradeEffect('i', 17))
+        if (hasUpgrade('i', 23)) mult = mult.times(upgradeEffect('i', 23))
+        if (hasUpgrade('i', 27)) mult = mult.times(upgradeEffect('i', 27))
+        if (hasUpgrade('i', 31)) mult = mult.times(upgradeEffect('i', 31))
+        if (hasUpgrade('i', 34)) mult = mult.times(upgradeEffect('i', 34))
+        if (hasUpgrade('i', 37)) mult = mult.times(upgradeEffect('i', 37))
+        if (hasUpgrade('i', 38)) mult = mult.times(upgradeEffect('i', 38))
+        if (hasUpgrade('i', 44)) mult = mult.times(upgradeEffect('i', 44))
+        if (hasMilestone('i', 12)) mult = mult.times(new Decimal.pow(3.08, player.i.totalinfinitychallengecompletions))
+
+        //player.infinity_broken = false
           //  mult = mult.times(1e2)
         return mult
     },
@@ -189,26 +262,37 @@ addLayer("a", {
         {key: "a", description: "A: Reset for Atoms", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     branches: ['e', 'q'],
-    layerShown(){return (hasMilestone('e', 8) || hasMilestone('a', 0))},
- //   doReset(resettingLayer) {
-   //     if (layers[resettingLayer].row > layers[this.layer].row) {
-     //       savedUpgrades = []
-       //     if (hasUpgrade('c', 15) && ['c'].includes(resettingLayer)) {
-         //       if (hasUpgrade(this.layer, 11)) {savedUpgrades.push(11)}
-           //     if (hasUpgrade(this.layer, 12)) {savedUpgrades.push(12)}
-             //   if (hasUpgrade(this.layer, 13)) {savedUpgrades.push(13)}
-             //   if (hasUpgrade(this.layer, 14)) {savedUpgrades.push(14)}
-            //    if (hasUpgrade(this.layer, 15)) {savedUpgrades.push(15)}
-            //    if (hasUpgrade(this.layer, 16)) {savedUpgrades.push(16)}
-            //    if (hasUpgrade(this.layer, 17)) {savedUpgrades.push(17)}
-            //    if (hasUpgrade(this.layer, 18)) {savedUpgrades.push(18)}
-            //    if (hasUpgrade(this.layer, 19)) {savedUpgrades.push(19)}
-            //    if (hasUpgrade(this.layer, 21)) {savedUpgrades.push(21)}
-          //  }
-          //  layerDataReset(this.layer, [])
-          //  player[this.layer].upgrades = savedUpgrades
-     //   }
-  //  },  
+    layerShown(){return (hasMilestone('e', 8) || hasMilestone('a', 0) || player.i.total.gte(1))},
+    doReset(resettingLayer) {
+    // Stage 1, almost always needed, makes resetting this layer not delete your progress
+    if (layers[resettingLayer].row <= this.row) return;
+
+    // Stage 2, track which specific subfeatures you want to keep, e.g. Upgrade 11, Challenge 32, Buyable 12
+    let keptMilestones = []
+    if (hasMilestone('i', 0) && hasMilestone('a', 0)) keptMilestones.push(0)
+    if (hasMilestone('i', 0) && hasMilestone('a', 7)) keptMilestones.push(7)
+    if (hasMilestone('i', 1) && hasMilestone('a', 5)) keptMilestones.push(5)
+    if (hasMilestone('i', 2) && hasMilestone('a', 8)) keptMilestones.push(8)
+    if (hasMilestone('i', 10) && hasMilestone('a', 2)) keptMilestones.push(2)
+    if (hasMilestone('i', 10) && hasMilestone('a', 3)) keptMilestones.push(3)
+    if (hasMilestone('i', 10) && hasMilestone('a', 9)) keptMilestones.push(9)
+    if (hasMilestone('i', 10) && hasMilestone('a', 10)) keptMilestones.push(10)
+    if (hasAchievement('infach', 16) && hasMilestone('a', 11)) keptMilestones.push(11)
+    if (hasMilestone('i', 11) && hasMilestone('a', 1)) keptMilestones.push(1)
+    if (hasMilestone('i', 11) && hasMilestone('a', 4)) keptMilestones.push(4)
+    if (hasMilestone('i', 11) && hasMilestone('a', 6)) keptMilestones.push(6)
+    if (hasMilestone('i', 11) && hasMilestone('a', 12)) keptMilestones.push(12)
+
+    // Stage 3, track which main features you want to keep - all upgrades, total points, specific toggles, etc.
+    let keep = [];
+    //if (hasMilestone('i', 8) && player.tog.keepElectronMilestones) keep.push("milestones");
+
+    // Stage 4, do the actual data reset
+    layerDataReset(this.layer, keep);
+
+    // Stage 5, add back in the specific subfeatures you saved earlier
+    player[this.layer].milestones.push(...keptMilestones)
+    },
  //   clickables: {
   //      11: {
    //         display() {return "Convert Quarks into Red Quarks"},
@@ -316,7 +400,7 @@ addLayer("a", {
         description: "Power gain is multiplied based on the time spent in this Atom Reset, not reset by entering/exiting Atom Challenges.",
         cost: new Decimal(1e8),
         effect() {
-        return Math.log(player.a.timesinceatomreset) / Math.log(235) + 1
+        return Math.log(player.a.timesinceatomreset.plus(1)) / Math.log(235) + 1
       },
       effectDisplay() { return format((upgradeEffect(this.layer, this.id)))+"x" },
       branches: ['a', 16],
@@ -328,7 +412,7 @@ addLayer("a", {
         description: "Quark gain is multiplied based on the time spent in this Atom Reset, not reset by entering/exiting Atom Challenges.",
         cost: new Decimal(1e8),
         effect() {
-        return Math.log(player.a.timesinceatomreset) / Math.log(345) / 1.25 + 1    
+        return Math.log(player.a.timesinceatomreset.plus(1)) / Math.log(345) / 1.25 + 1    
     },
       effectDisplay() { return format((upgradeEffect(this.layer, this.id)))+"x" },
       branches: ['a', 17],
@@ -340,7 +424,7 @@ addLayer("a", {
         description: "Electron gain is multiplied based on the time spent in this Atom Reset, not reset by entering/exiting Atom Challenges.",
         cost: new Decimal(1e8),
         effect() {
-        return Math.log(player.a.timesinceatomreset) / Math.log(305) / 1.125 + 1
+        return Math.log(player.a.timesinceatomreset.plus(1)) / Math.log(305) / 1.125 + 1
       },
       effectDisplay() { return format((upgradeEffect(this.layer, this.id)))+"x" },
       branches: ['a', 18],
@@ -532,7 +616,7 @@ addLayer("a", {
             else return 1   
         },
         effectDisplay() { return format(new Decimal.pow(1.015, player.a.upgrades.length))+"x" },
-        unlocked() {return (hasAchievement('ach', 43))}
+        unlocked() {return (hasAchievement('ach', 43) && hasUpgrade('a', 35))}
       },
 
       37: {
@@ -545,7 +629,7 @@ addLayer("a", {
             else return 1   
         },
         effectDisplay() { return format(player.q.points.plus(1).pow(0.0067))+"x" },
-        unlocked() {return (hasAchievement('ach', 43))}
+        unlocked() {return (hasAchievement('ach', 43) && hasUpgrade('a', 35))}
       },
 
       38: {
@@ -589,9 +673,12 @@ addLayer("a", {
 
       41: {
         title: "31",
-        description: "You get 3 extra Total Atom Challenge completions.",
+        description: "You get 3 Extra Total Atom Challenge completions.",
         cost: new Decimal(1e51),
         branches: ['a', 38],
+        effect() {if (hasUpgrade('a', 41)) return new Decimal(3)
+            else return 0
+        },
         unlocked() {return (hasUpgrade('a', 38))}
       },
 
@@ -640,7 +727,7 @@ addLayer("a", {
             requirementDescription: "1 Atom",
             effectDescription: "You passively gain 10% of the Electrons you'd gain on reset per second",
             done() { return player.a.points.gte(1) },
-            toggles: [["a", "passiveElectronGen"]]
+            toggles: [["tog", "passiveElectronGen"]]
         },
         1: {
             requirementDescription: "10 Atoms",
@@ -667,7 +754,7 @@ addLayer("a", {
             requirementDescription: "1.00e18 Atoms",
             effectDescription: "You passively gain 10% of the Protons, Neutrons, Secondary Protons, and Secondary Neutrons you'd get on Converting",
             done() { return player.a.points.gte(1e18) },
-            unlocked() {return hasMilestone('a', 3)}
+            unlocked() {return hasMilestone('a', 3) || hasMilestone('i', 1)}
         },
         6: {
             requirementDescription: "1.00e21 Atoms",
@@ -679,27 +766,27 @@ addLayer("a", {
             requirementDescription: "1.00e25 Atoms",
             effectDescription: "Unlock Quark Upgrade Autobuyer",
             done() { return player.a.points.gte(1e25) },
-            unlocked() {return hasMilestone('a', 6)},
-            toggles: [["a", "autobuyQuarkUpg"]]
+            unlocked() {return hasMilestone('a', 6) || hasMilestone('i', 0)},
+            toggles: [["tog", "autobuyQuarkUpg"]]
         },
         8: {
             requirementDescription: "1.00e32 Atoms",
             effectDescription: "You passively gain 1% of the Quarks you'd gain on reset every second",
             done() { return player.a.points.gte(1e32) },
-            unlocked() {return hasMilestone('a', 7)},
-            toggles: [["a", "passiveQuarkGen"]]
+            unlocked() {return hasMilestone('a', 7) || hasMilestone('i', 2)},
+            toggles: [["tog", "passiveQuarkGen"]]
         },
         9: {
             requirementDescription: "1.00e40 Atoms",
             effectDescription: "Quark passive gain is increased to 10%",
             done() { return player.a.points.gte(1e40) },
-            unlocked() {return hasMilestone('a', 8)},
+            unlocked() {return hasMilestone('a', 8) || hasMilestone('i', 10)},
         },
         10: {
             requirementDescription: "1.00e48 Atoms",
             effectDescription: "Quark passive gain is increased to 100%",
             done() { return player.a.points.gte(1e48) },
-            unlocked() {return hasMilestone('a', 9)},
+            unlocked() {return hasMilestone('a', 9) || hasMilestone('i', 10)},
         },
         12: {
             requirementDescription: "5.00e55 Atoms",
@@ -715,323 +802,514 @@ addLayer("a", {
         },
     },
     challenges: {
-        11: {
-            name() {if (challengeCompletions('a', 11) == 5) return "Atom Challenge 1<br>Power Outage<br> (5 / 5)"
-                else if (challengeCompletions('a', 11) == 4) return "Atom Challenge 1<br>Power Outage<br> (4 / 5)"
-                else if (challengeCompletions('a', 11) == 3) return "Atom Challenge 1<br>Power Outage<br> (3 / 5)"
-                else if (challengeCompletions('a', 11) == 2) return "Atom Challenge 1<br>Power Outage<br> (2 / 5)"
-                else if (challengeCompletions('a', 11) == 1) return "Atom Challenge 1<br>Power Outage<br> (1 / 5)"
-                else return "Atom Challenge 1<br>Power Outage<br> (0 / 5)"
-            },
-            challengeDescription: "Charges aren't generated.",
-            goalDescription() {if (player.a.atomchallenge11completions.gte(4)) return "6.96e69 Quarks"
-                else if (challengeCompletions('a', 11) == 3) return "1.00e50 Quarks"
-                else if (challengeCompletions('a', 11) == 2) return "1.00e40 Quarks"
-                else if (challengeCompletions('a', 11) == 1) return "1.00e30 Quarks"
-                else return "1.00e21 Quarks"},
-            rewardDescription() {if (challengeCompletions('a', 11) == 5) return "Charges 6, 7, 8, 9 and 10 now boost another resource."
-                else if (challengeCompletions('a', 11) == 4) return "Charges 6, 7, 8 and 9 now boost another resource."
-                else if (challengeCompletions('a', 11) == 3) return "Charges 6, 7 and 8 now boost another resource."
-                else if (challengeCompletions('a', 11) == 2) return "Charges 6 and 7 now boost another resource."
-                else if (challengeCompletions('a', 11) == 1) return "Charge 6 now boosts another resource."
-                else return "Challenge not yet completed."},
-            canComplete: function() {if (player.a.atomchallenge11completions.gte(4)) return player.q.points.gte(6.96e69)
-                else if (challengeCompletions('a', 11) == 3) return player.q.points.gte(1e50)
-                else if (challengeCompletions('a', 11) == 2) return player.q.points.gte(1e40)
-                else if (challengeCompletions('a', 11) == 1) return player.q.points.gte(1e30)
-                else return player.q.points.gte(1e21)
-            },
-            completionLimit: 5,
-            onEnter() {return player.a.atomchallenge11 = new Decimal(0)},
-            onExit() {return player.a.atomchallenge11 = new Decimal(1)},
-            unlocked() {return hasMilestone('a', 1)}
-        },
+11: {
+    requirements: [1e21,1e30,1e40,1e50,6.96e69],
+    getChallengeBulk() {
+        let comp = challengeCompletions('a', 11)
+        if (!inChallenge('a', 11)) return comp
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.q.points.gte(this.requirements[i])) return i + 1
+        }
+        return comp
+    },
+    name() {return `Atom Challenge 1<br>Power Outage<br> (${challengeCompletions('a', 11)} / 5)`},
+    challengeDescription: "Charges aren't generated.",
+    goalDescription() {
+    let current = challengeCompletions('a', 11)
+    let bulk = this.getChallengeBulk()
+    // NO BULK MODE
+    if (!hasMilestone('i', 9) && !player.a.atomchallenge11completions.gte(5)) {
+        let ready = player.q.points.gte(this.requirements[current]) && inChallenge('a', 11)
+        return `${format(this.requirements[current])} Quarks (+${ready ? 1 : 0})`
+    }
+    if (player.a.atomchallenge11completions.gte(5)) {
+        return "Fully completed (6.96e69 Quarks)"
+    }
+    // BULK MODE
+    if (bulk >= this.completionLimit)
+        return "Fully completed (6.96e69 Quarks)"
 
-        12: {
-            name() {if (challengeCompletions('a', 12) == 5) return "Atom Challenge 2<br>steal quarks corp.<br> (5 / 5)"
-                else if (challengeCompletions('a', 12) == 4) return "Atom Challenge 2<br>steal quarks corp.<br> (4 / 5)"
-                else if (challengeCompletions('a', 12) == 3) return "Atom Challenge 2<br>steal quarks corp.<br> (3 / 5)"
-                else if (challengeCompletions('a', 12) == 2) return "Atom Challenge 2<br>steal quarks corp.<br> (2 / 5)"
-                else if (challengeCompletions('a', 12) == 1) return "Atom Challenge 2<br>steal quarks corp.<br> (1 / 5)"
-                else return "Atom Challenge 2<br>steal quarks corp.<br> (0 / 5)"
-            },
-            challengeDescription: "You cannot buy Quark upgrades.",
-            goalDescription() {if (player.a.atomchallenge12completions.gte(4)) return "1.00e20 Quarks"
-                else if (challengeCompletions('a', 12) == 3) return "1.00e16 Quarks"
-                else if (challengeCompletions('a', 12) == 2) return "1.00e11 Quarks"
-                else if (challengeCompletions('a', 12) == 1) return "500,000,000 Quarks"
-                else return "5,000,000 Quarks"},
-            rewardDescription() {if (challengeCompletions('a', 12) == 5) return "+80% to the Proton Multiplier."
-                else if (challengeCompletions('a', 12) == 4) return "+60% to the Proton Multiplier."
-                else if (challengeCompletions('a', 12) == 3) return "+40% to the Proton Multiplier."
-                else if (challengeCompletions('a', 12) == 2) return "+20% to the Proton Multiplier."
-                else if (challengeCompletions('a', 12) == 1) return "+10% to the Proton Multiplier."
-                else return "Challenge not yet completed."},
-            canComplete: function() {if (player.a.atomchallenge12completions.gte(4)) return player.q.points.gte(1e20)
-                else if (challengeCompletions('a', 12) == 3) return player.q.points.gte(1e16)
-                else if (challengeCompletions('a', 12) == 2) return player.q.points.gte(1e11)
-                else if (challengeCompletions('a', 12) == 1) return player.q.points.gte(5e8)
-                else return player.q.points.gte(5e6)
-            },
-            completionLimit: 5,
-            unlocked() {return hasMilestone('a', 1)}
-        },
+    let gained = bulk - current
+    return `${format(this.requirements[bulk])} Quarks (+${gained})`
+},
+    rewardDescription() {
+        let comp = challengeCompletions('a', 11)
+        if (comp == 0) return "Challenge not yet completed."
+        return `Charges 6${comp >= 2 ? ", 7" : ""}${comp >= 3 ? ", 8" : ""}${comp >= 4 ? ", 9" : ""}${comp >= 5 ? " and 10" : ""} now boost another resource.`
+    },
+    canComplete() {
+        let comp = challengeCompletions('a', 11)
+        if (!hasMilestone('i', 9)) return player.q.points.gte(this.requirements[comp])
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.q.points.gte(this.requirements[i])) return i - comp + 1
+        }
+        return false
+    },
+    completionLimit: 5,
+    onEnter() {return player.a.atomchallenge11 = new Decimal(0)},
+    onExit() {return player.a.atomchallenge11 = new Decimal(1)},
+    unlocked() {return hasMilestone('a', 1)}
+},
 
-        13: {
-            name() {if (challengeCompletions('a', 13) == 5) return "Atom Challenge 3<br>power power<br> (5 / 5)"
-                else if (challengeCompletions('a', 13) == 4) return "Atom Challenge 3<br>power power<br> (4 / 5)"
-                else if (challengeCompletions('a', 13) == 3) return "Atom Challenge 3<br>power power<br> (3 / 5)"
-                else if (challengeCompletions('a', 13) == 2) return "Atom Challenge 3<br>power power<br> (2 / 5)"
-                else if (challengeCompletions('a', 13) == 1) return "Atom Challenge 3<br>power power<br> (1 / 5)"
-                else return "Atom Challenge 3<br>power power<br> (0 / 5)"
-            },
-            challengeDescription: "Power gain is ^0.5",
-            goalDescription() {if (player.a.atomchallenge13completions.gte(4)) return "1.00e45 Quarks"
-                else if (challengeCompletions('a', 13) == 3) return "1.00e35 Quarks"
-                else if (challengeCompletions('a', 13) == 2) return "1.00e30 Quarks"
-                else if (challengeCompletions('a', 13) == 1) return "1.00e18 Quarks"
-                else return "1.00e13 Quarks"},
-            rewardDescription() {if (challengeCompletions('a', 13) == 5) return "Power gain above 1 is raised to ^1.1."
-                else if (challengeCompletions('a', 13) == 4) return "Power gain above 1 is raised to ^1.08."
-                else if (challengeCompletions('a', 13) == 3) return "Power gain above 1 is raised to ^1.06."
-                else if (challengeCompletions('a', 13) == 2) return "Power gain above 1 is raised to ^1.04."
-                else if (challengeCompletions('a', 13) == 1) return "Power gain above 1 is raised to ^1.02."
-                else return "Challenge not yet completed."},
-            canComplete: function() {if (player.a.atomchallenge13completions.gte(4)) return player.q.points.gte(1e45)
-                else if (challengeCompletions('a', 13) == 3) return player.q.points.gte(1e35)
-                else if (challengeCompletions('a', 13) == 2) return player.q.points.gte(1e30)
-                else if (challengeCompletions('a', 13) == 1) return player.q.points.gte(1e18)
-                else return player.q.points.gte(1e13)
-            },
-            completionLimit: 5,
-            unlocked() {return hasMilestone('a', 1)}
-        },
+12: {
+    requirements: [5e6,5e8,1e11,1e16,1e20],
+    rewards: ["+10% to the Proton Multiplier.","+20% to the Proton Multiplier.","+40% to the Proton Multiplier.","+60% to the Proton Multiplier.","+80% to the Proton Multiplier."],
+    name() {return `Atom Challenge 2<br>steal quarks corp.<br> (${challengeCompletions('a', 12)} / 5)`},
+    challengeDescription: "You cannot buy Quark upgrades.",
+    getChallengeBulk() {
+        let comp = challengeCompletions('a', 12)
+        if (!inChallenge('a', 12)) return comp
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.q.points.gte(this.requirements[i])) return i + 1
+        }
+        return comp
+    },
+    goalDescription() {
+    let current = challengeCompletions('a', 12)
+    let bulk = this.getChallengeBulk()
+    // NO BULK MODE
+    if (!hasMilestone('i', 9) && !player.a.atomchallenge12completions.gte(5)) {
+        let ready = player.q.points.gte(this.requirements[current]) && inChallenge('a', 12)
+        return `${format(this.requirements[current])} Quarks (+${ready ? 1 : 0})`
+    }
+    if (player.a.atomchallenge12completions.gte(5)) {
+        return "Fully completed (1.00e20 Quarks)"
+    }
+    // BULK MODE
+    if (bulk >= this.completionLimit)
+        return "Fully completed (1.00e20 Quarks)"
 
-        14: {
-            name() {if (challengeCompletions('a', 14) == 5) return "Atom Challenge 4<br>Stability<br> (5 / 5)"
-                else if (challengeCompletions('a', 14) == 4) return "Atom Challenge 4<br>Stability<br> (4 / 5)"
-                else if (challengeCompletions('a', 14) == 3) return "Atom Challenge 4<br>Stability<br> (3 / 5)"
-                else if (challengeCompletions('a', 14) == 2) return "Atom Challenge 4<br>Stability<br> (2 / 5)"
-                else if (challengeCompletions('a', 14) == 1) return "Atom Challenge 4<br>Stability<br> (1 / 5)"
-                else return "Atom Challenge 4<br>Stability<br> (0 / 5)"
-            },
-            challengeDescription: "You cannot get Colored Quarks.",
-            goalDescription() {if (player.a.atomchallenge14completions.gte(4)) return "1.00e43 Quarks"
-                else if (challengeCompletions('a', 14) == 3) return "1.00e37 Quarks"
-                else if (challengeCompletions('a', 14) == 2) return "1.00e30 Quarks"
-                else if (challengeCompletions('a', 14) == 1) return "1.00e20 Quarks"
-                else return "1.00e15 Quarks"},
-            rewardDescription() {if (challengeCompletions('a', 14) == 5) return "Every Atom Challenge completed gives a 1.5x multiplicative boost to power gain."
-                else if (challengeCompletions('a', 14) == 4) return "Every Atom Challenge completed gives a 1.4x multiplicative boost to power gain."
-                else if (challengeCompletions('a', 14) == 3) return "Every Atom Challenge completed gives a 1.3x multiplicative boost to power gain."
-                else if (challengeCompletions('a', 14) == 2) return "Every Atom Challenge completed gives a 1.2x multiplicative boost to power gain."
-                else if (challengeCompletions('a', 14) == 1) return "Every Atom Challenge completed gives a 1.1x multiplicative boost to power gain."
-                else return "Challenge not yet completed."},
-            canComplete: function() {if (player.a.atomchallenge14completions.gte(4)) return player.q.points.gte(1e43)
-                else if (challengeCompletions('a', 14) == 3) return player.q.points.gte(1e37)
-                else if (challengeCompletions('a', 14) == 2) return player.q.points.gte(1e30)
-                else if (challengeCompletions('a', 14) == 1) return player.q.points.gte(1e20)
-                else return player.q.points.gte(1e15)
-            },
-            completionLimit: 5,
-            onEnter() {return player.a.atomchallenge14 = new Decimal(0)},
-            onExit() {return player.a.atomchallenge14 = new Decimal(1)},
-            unlocked() {return hasMilestone('a', 4)}
-        },
+    let gained = bulk - current
+    return `${format(this.requirements[bulk])} Quarks (+${gained})`
+},
+    rewardDescription() {
+        let comp = challengeCompletions('a', 12)
+        if (comp == 0) return "Challenge not yet completed."
+        return this.rewards[comp - 1]
+    },
+    canComplete() {
+        let comp = challengeCompletions('a', 12)
+        if (!hasMilestone('i', 9)) return player.q.points.gte(this.requirements[comp])
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.q.points.gte(this.requirements[i])) return i - comp + 1
+        }
+        return false
+    },
+    completionLimit: 5,
+    unlocked() {return hasMilestone('a', 1)}
+},
 
-        15: {
-            name() {if (challengeCompletions('a', 15) == 5) return "Atom Challenge 5<br>Duality<br> (5 / 5)"
-                else if (challengeCompletions('a', 15) == 4) return "Atom Challenge 5<br>Duality<br> (4 / 5)"
-                else if (challengeCompletions('a', 15) == 3) return "Atom Challenge 5<br>Duality<br> (3 / 5)"
-                else if (challengeCompletions('a', 15) == 2) return "Atom Challenge 5<br>Duality<br> (2 / 5)"
-                else if (challengeCompletions('a', 15) == 1) return "Atom Challenge 5<br>Duality<br> (1 / 5)"
-                else return "Atom Challenge 5<br>Duality<br> (0 / 5)"
-            },
-            challengeDescription: "Atom Challenges 1 and 3 at the same time.",
-            goalDescription() {if (player.a.atomchallenge15completions.gte(4)) return "1.00e50 Quarks"
-                else if (challengeCompletions('a', 15) == 3) return "1.00e40 Quarks"
-                else if (challengeCompletions('a', 15) == 2) return "1.00e35 Quarks"
-                else if (challengeCompletions('a', 15) == 1) return "1.00e30 Quarks"
-                else return "1.00e20 Quarks"},
-            rewardDescription() {if (challengeCompletions('a', 15) == 5) return "Every Atom Challenge completed gives a 1.25x multiplicative boost to Quark gain."
-                else if (challengeCompletions('a', 15) == 4) return "Every Atom Challenge completed gives a 1.2x multiplicative boost to Quark gain."
-                else if (challengeCompletions('a', 15) == 3) return "Every Atom Challenge completed gives a 1.15x multiplicative boost to Quark gain."
-                else if (challengeCompletions('a', 15) == 2) return "Every Atom Challenge completed gives a 1.1x multiplicative boost to Quark gain."
-                else if (challengeCompletions('a', 15) == 1) return "Every Atom Challenge completed gives a 1.05x multiplicative boost to Quark gain."
-                else return "Challenge not yet completed."},
-            canComplete: function() {if (player.a.atomchallenge15completions.gte(4)) return player.q.points.gte(1e50)
-                else if (challengeCompletions('a', 15) == 3) return player.q.points.gte(1e40)
-                else if (challengeCompletions('a', 15) == 2) return player.q.points.gte(1e35)
-                else if (challengeCompletions('a', 15) == 1) return player.q.points.gte(1e30)
-                else return player.q.points.gte(1e20)
-            },
-            completionLimit: 5,
-            countsAs: [11, 13],
-            onEnter() {return player.a.atomchallenge11 = new Decimal(0)},
-            onExit() {return player.a.atomchallenge11 = new Decimal(1)},
-            unlocked() {return hasMilestone('a', 4)}
-        },
+13: {
+    requirements: [1e13,1e18,1e30,1e35,1e45],
+    rewards: ["Power gain above 1 is raised to ^1.02.","Power gain above 1 is raised to ^1.04.","Power gain above 1 is raised to ^1.06.","Power gain above 1 is raised to ^1.08.","Power gain above 1 is raised to ^1.1."],
+    name() {return `Atom Challenge 3<br>power power<br> (${challengeCompletions('a', 13)} / 5)`},
+    challengeDescription: "Power gain is ^0.5.",
+    getChallengeBulk() {
+        let comp = challengeCompletions('a', 13)
+        if (!inChallenge('a', 13)) return comp
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.q.points.gte(this.requirements[i])) return i + 1
+        }
+        return comp
+    },
+    goalDescription() {
+    let current = challengeCompletions('a', 13)
+    let bulk = this.getChallengeBulk()
+    // NO BULK MODE
+    if (!hasMilestone('i', 9) && !player.a.atomchallenge13completions.gte(5)) {
+        let ready = player.q.points.gte(this.requirements[current]) && inChallenge('a', 13)
+        return `${format(this.requirements[current])} Quarks (+${ready ? 1 : 0})`
+    }
+    if (player.a.atomchallenge13completions.gte(5)) {
+        return "Fully completed (1.00e45 Quarks)"
+    }
+    // BULK MODE
+    if (bulk >= this.completionLimit)
+        return "Fully completed (1.00e45 Quarks)"
 
-        16: {
-            name() {if (challengeCompletions('a', 16) == 5) return "Atom Challenge 6<br>Quarkless<br> (5 / 5)"
-                else if (challengeCompletions('a', 16) == 4) return "Atom Challenge 6<br>Quarkless<br> (4 / 5)"
-                else if (challengeCompletions('a', 16) == 3) return "Atom Challenge 6<br>Quarkless<br> (3 / 5)"
-                else if (challengeCompletions('a', 16) == 2) return "Atom Challenge 6<br>Quarkless<br> (2 / 5)"
-                else if (challengeCompletions('a', 16) == 1) return "Atom Challenge 6<br>Quarkless<br> (1 / 5)"
-                else return "Atom Challenge 6<br>Quarkless<br> (0 / 5)"
-            },
-            challengeDescription: "Atom Challenges 2 and 4 at the same time.",
-            goalDescription() {if (player.a.atomchallenge16completions.gte(4)) return "1.00e34 Quarks"
-                else if (challengeCompletions('a', 16) == 3) return "1.00e30 Quarks"
-                else if (challengeCompletions('a', 16) == 2) return "1.00e27 Quarks"
-                else if (challengeCompletions('a', 16) == 1) return "1.00e20 Quarks"
-                else return "250,000,000 Quarks"},
-            rewardDescription() {if (challengeCompletions('a', 16) == 5) return "Every Atom Challenge completed gives a 1.33x multiplicative boost to Electron gain."
-                else if (challengeCompletions('a', 16) == 4) return "Every Atom Challenge completed gives a 1.266x multiplicative boost to Electron gain."
-                else if (challengeCompletions('a', 16) == 3) return "Every Atom Challenge completed gives a 1.2x multiplicative boost to Electron gain."
-                else if (challengeCompletions('a', 16) == 2) return "Every Atom Challenge completed gives a 1.133x multiplicative boost to Electron gain."
-                else if (challengeCompletions('a', 16) == 1) return "Every Atom Challenge completed gives a 1.066x multiplicative boost to Electron gain."
-                else return "Challenge not yet completed."},
-            canComplete: function() {if (player.a.atomchallenge16completions.gte(4)) return player.q.points.gte(1e34)
-                else if (challengeCompletions('a', 16) == 3) return player.q.points.gte(1e30)
-                else if (challengeCompletions('a', 16) == 2) return player.q.points.gte(1e27)
-                else if (challengeCompletions('a', 16) == 1) return player.q.points.gte(1e20)
-                else return player.q.points.gte(2.5e8)
-            },
-            completionLimit: 5,
-            countsAs: [12, 14],
-            onEnter() {return player.a.atomchallenge14 = new Decimal(0)},
-            onExit() {return player.a.atomchallenge14 = new Decimal(1)},
-            unlocked() {return hasMilestone('a', 4)}
-        },
+    let gained = bulk - current
+    return `${format(this.requirements[bulk])} Quarks (+${gained})`
+},
+    rewardDescription() {
+        let comp = challengeCompletions('a', 13)
+        if (comp == 0) return "Challenge not yet completed."
+        return this.rewards[comp - 1]
+    },
+    canComplete() {
+        let comp = challengeCompletions('a', 13)
+        if (!hasMilestone('i', 9)) return player.q.points.gte(this.requirements[comp])
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.q.points.gte(this.requirements[i])) return i - comp + 1
+        }
+        return false
+    },
+    completionLimit: 5,
+    unlocked() {return hasMilestone('a', 1)}
+},
 
-        17: {
-            name() {if (challengeCompletions('a', 17) == 5) return "Atom Challenge 7<br>a playground slide<br> (5 / 5)"
-                else if (challengeCompletions('a', 17) == 4) return "Atom Challenge 7<br>a playground slide<br> (4 / 5)"
-                else if (challengeCompletions('a', 17) == 3) return "Atom Challenge 7<br>a playground slide<br> (3 / 5)"
-                else if (challengeCompletions('a', 17) == 2) return "Atom Challenge 7<br>a playground slide<br> (2 / 5)"
-                else if (challengeCompletions('a', 17) == 1) return "Atom Challenge 7<br>a playground slide<br> (1 / 5)"
-                else return "Atom Challenge 7<br>a playground slide<br> (0 / 5)"
-            },
-            challengeDescription: "Power gain is divided by 5 every second.",
-            goalDescription() {if (player.a.atomchallenge17completions.gte(4)) return "1.00e100 Quarks" 
-                else if (challengeCompletions('a', 17) == 3) return "1.00e90 Quarks"
-                else if (challengeCompletions('a', 17) == 2) return "1.00e80 Quarks"
-                else if (challengeCompletions('a', 17) == 1) return "1.00e70 Quarks"
-                else return "1.00e60 Quarks"},
-            rewardDescription() {if (challengeCompletions('a', 17) == 5) return 'For every second in an Atom Reset, +1.00e8x to all Charges gains. Currently: ' + format(player.e.ac17allchargesmultiplier) + 'x'
-                else if (challengeCompletions('a', 17) == 4) return 'For every second in an Atom Reset, +2,000,000x to all Charges gains. Currently: ' + format(player.e.ac17allchargesmultiplier) + 'x'
-                else if (challengeCompletions('a', 17) == 3) return 'For every second in an Atom Reset, +30,000x to all Charges gains. Currently: ' + format(player.e.ac17allchargesmultiplier) + 'x'
-                else if (challengeCompletions('a', 17) == 2) return 'For every second in an Atom Reset, +400x to all Charges gains. Currently: ' + format(player.e.ac17allchargesmultiplier) + 'x'
-                else if (challengeCompletions('a', 17) == 1) return 'For every second in an Atom Reset, +5.00x to all Charges gains. Currently: ' + format(player.e.ac17allchargesmultiplier) + 'x'
-                else return "Challenge not yet completed."},
-            canComplete: function() {if (player.a.atomchallenge17completions.gte(4)) return player.q.points.gte(1e100)
-                else if (challengeCompletions('a', 17) == 3) return player.q.points.gte(1e90)
-                else if (challengeCompletions('a', 17) == 2) return player.q.points.gte(1e80)
-                else if (challengeCompletions('a', 17) == 1) return player.q.points.gte(1e70)
-                else return player.q.points.gte(1e60)
-            },
-            completionLimit: 5,
-            onEnter() {return player.a.atomchallenge17divisor = new Decimal(1)},
-            onExit() {return player.a.atomchallenge17divisor = new Decimal(1)},
-            unlocked() {return hasMilestone('a', 6)}
-        },
+14: {
+    requirements: [1e15,1e20,1e30,1e37,1e43],
+    rewards: ["Every Atom Challenge completed gives a 1.1x multiplicative boost to power gain.","Every Atom Challenge completed gives a 1.2x multiplicative boost to power gain.","Every Atom Challenge completed gives a 1.3x multiplicative boost to power gain.","Every Atom Challenge completed gives a 1.4x multiplicative boost to power gain.","Every Atom Challenge completed gives a 1.5x multiplicative boost to power gain."],
+    name() {return `Atom Challenge 4<br>Stability<br> (${challengeCompletions('a', 14)} / 5)`},
+    challengeDescription: "You cannot get Colored Quarks.",
+    getChallengeBulk() {
+        let comp = challengeCompletions('a', 14)
+        if (!inChallenge('a', 14)) return comp
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.q.points.gte(this.requirements[i])) return i + 1
+        }
+        return comp
+    },
+    goalDescription() {
+    let current = challengeCompletions('a', 14)
+    let bulk = this.getChallengeBulk()
+    // NO BULK MODE
+    if (!hasMilestone('i', 9) && !player.a.atomchallenge14completions.gte(5)) {
+        let ready = player.q.points.gte(this.requirements[current]) && inChallenge('a', 14)
+        return `${format(this.requirements[current])} Quarks (+${ready ? 1 : 0})`
+    }
+    if (player.a.atomchallenge14completions.gte(5)) {
+        return "Fully completed (1.00e43 Quarks)"
+    }
+    // BULK MODE
+    if (bulk >= this.completionLimit)
+        return "Fully completed (1.00e43 Quarks)"
 
-        18: {
-            name() {if (challengeCompletions('a', 18) == 5) return "Atom Challenge 8<br>Resourceless<br> (5 / 5)"
-                else if (challengeCompletions('a', 18) == 4) return "Atom Challenge 8<br>Resourceless<br> (4 / 5)"
-                else if (challengeCompletions('a', 18) == 3) return "Atom Challenge 8<br>Resourceless<br> (3 / 5)"
-                else if (challengeCompletions('a', 18) == 2) return "Atom Challenge 8<br>Resourceless<br> (2 / 5)"
-                else if (challengeCompletions('a', 18) == 1) return "Atom Challenge 8<br>Resourceless<br> (1 / 5)"
-                else return "Atom Challenge 8<br>Resourceless<br> (0 / 5)"
-            },
-            challengeDescription: "Atom Challenges 1 and 4 at the same time.",
-            goalDescription() {if (player.a.atomchallenge18completions.gte(4)) return "1.00e48 Quarks" 
-                else if (challengeCompletions('a', 18) == 3) return "1.00e42 Quarks"
-                else if (challengeCompletions('a', 18) == 2) return "1.00e36 Quarks"
-                else if (challengeCompletions('a', 18) == 1) return "1.00e30 Quarks"
-                else return "1.00e24 Quarks"},
-            rewardDescription() {if (challengeCompletions('a', 18) == 5) return 'Quark gain is raised to ^1.05.'
-                else if (challengeCompletions('a', 18) == 4) return 'Quark gain is raised to ^1.04.'
-                else if (challengeCompletions('a', 18) == 3) return 'Quark gain is raised to ^1.03.'
-                else if (challengeCompletions('a', 18) == 2) return 'Quark gain is raised to ^1.02.'
-                else if (challengeCompletions('a', 18) == 1) return 'Quark gain is raised to ^1.01.'
-                else return "Challenge not yet completed."},
-            canComplete: function() {if (player.a.atomchallenge18completions.gte(4)) return player.q.points.gte(1e48)
-                else if (challengeCompletions('a', 18) == 3) return player.q.points.gte(1e42)
-                else if (challengeCompletions('a', 18) == 2) return player.q.points.gte(1e36)
-                else if (challengeCompletions('a', 18) == 1) return player.q.points.gte(1e30)
-                else return player.q.points.gte(1e24)
-            },
-            completionLimit: 5,
-            countsAs: [11, 14],
-            onEnter() {return player.a.atomchallenge11 = new Decimal(0), player.a.atomchallenge14 = new Decimal(0)},
-            onExit() {return player.a.atomchallenge11 = new Decimal(1), player.a.atomchallenge14 = new Decimal(1)},
-            unlocked() {return hasMilestone('a', 6)}
-        },
+    let gained = bulk - current
+    return `${format(this.requirements[bulk])} Quarks (+${gained})`
+},
+    rewardDescription() {
+        let comp = challengeCompletions('a', 14)
+        if (comp == 0) return "Challenge not yet completed."
+        return this.rewards[comp - 1]
+    },
+    canComplete() {
+        let comp = challengeCompletions('a', 14)
+        if (!hasMilestone('i', 9)) return player.q.points.gte(this.requirements[comp])
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.q.points.gte(this.requirements[i])) return i - comp + 1
+        }
+        return false
+    },
+    completionLimit: 5,
+    onEnter() {return player.a.atomchallenge14 = new Decimal(0)},
+    onExit() {return player.a.atomchallenge14 = new Decimal(1)},
+    unlocked() {return hasMilestone('a', 4)}
+},
 
-        19: {
-            name() {if (challengeCompletions('a', 19) == 5) return "Atom Challenge 9<br>Resourceful<br> (5 / 5)"
-                else if (challengeCompletions('a', 19) == 4) return "Atom Challenge 9<br>Resourceful<br> (4 / 5)"
-                else if (challengeCompletions('a', 19) == 3) return "Atom Challenge 9<br>Resourceful<br> (3 / 5)"
-                else if (challengeCompletions('a', 19) == 2) return "Atom Challenge 9<br>Resourceful<br> (2 / 5)"
-                else if (challengeCompletions('a', 19) == 1) return "Atom Challenge 9<br>Resourceful<br> (1 / 5)"
-                else return "Atom Challenge 9<br>Resourceful<br> (0 / 5)"
-            },
-            challengeDescription: "You only have one Quark and Electron.",
-            goalDescription() {if (player.a.atomchallenge19completions.gte(4)) return "1.00e23 Power"
-                else if (challengeCompletions('a', 19) == 3) return "1.00e18 Power"
-                else if (challengeCompletions('a', 19) == 2) return "1.00e15 Power"
-                else if (challengeCompletions('a', 19) == 1) return "1.00e13 Power"
-                else return "1.00e11 Power"},
-            rewardDescription() {if (challengeCompletions('a', 19) == 5) return 'Electron gain is raised to ^1.0666.'
-                else if (challengeCompletions('a', 19) == 4) return 'Electron gain is raised to ^1.0533.'
-                else if (challengeCompletions('a', 19) == 3) return 'Electron gain is raised to ^1.04.'
-                else if (challengeCompletions('a', 19) == 2) return 'Electron gain is raised to ^1.0266.'
-                else if (challengeCompletions('a', 19) == 1) return 'Electron gain is raised to ^1.0133.'
-                else return "Challenge not yet completed."},
-            canComplete: function() {if (player.a.atomchallenge19completions.gte(4)) return player.points.gte(1e23)
-                else if (challengeCompletions('a', 19) == 3) return player.points.gte(1e18)
-                else if (challengeCompletions('a', 19) == 2) return player.points.gte(1e15)
-                else if (challengeCompletions('a', 19) == 1) return player.points.gte(1e13)
-                else return player.points.gte(1e11)
-            },
-            completionLimit: 5,
-            onEnter() {return player.q.points = new Decimal(1), player.e.points = new Decimal(1)},
-            unlocked() {return hasMilestone('a', 6)}
-        },
+15: {
+    requirements: [1e20,1e30,1e35,1e40,1e50],
+    rewards: [
+        "Every Atom Challenge completed gives a 1.05x multiplicative boost to Quark gain.",
+        "Every Atom Challenge completed gives a 1.1x multiplicative boost to Quark gain.",
+        "Every Atom Challenge completed gives a 1.15x multiplicative boost to Quark gain.",
+        "Every Atom Challenge completed gives a 1.2x multiplicative boost to Quark gain.",
+        "Every Atom Challenge completed gives a 1.25x multiplicative boost to Quark gain."
+    ],
+    name() {return `Atom Challenge 5<br>Duality<br> (${challengeCompletions('a', 15)} / 5)`},
+    challengeDescription: "Atom Challenges 1 and 3 at the same time.",
+    getChallengeBulk() {
+        let comp = challengeCompletions('a', 15)
+        if (!inChallenge('a', 15)) return comp
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.q.points.gte(this.requirements[i])) return i + 1
+        }
+        return comp
+    },
+    goalDescription() {
+    let current = challengeCompletions('a', 15)
+    let bulk = this.getChallengeBulk()
+    // NO BULK MODE
+    if (!hasMilestone('i', 9) && !player.a.atomchallenge15completions.gte(5)) {
+        let ready = player.q.points.gte(this.requirements[current]) && inChallenge('a', 15)
+        return `${format(this.requirements[current])} Quarks (+${ready ? 1 : 0})`
+    }
+    if (player.a.atomchallenge15completions.gte(5)) {
+        return "Fully completed (1.00e50 Quarks)"
+    }
+    // BULK MODE
+    if (bulk >= this.completionLimit)
+        return "Fully completed (1.00e50 Quarks)"
 
-        20: {
-            name() {if (challengeCompletions('a', 20) == 5) return "Atom Challenge 10<br>The Void<br> (5 / 5)"
-                else if (challengeCompletions('a', 20) == 4) return "Atom Challenge 10<br>The Void<br> (4 / 5)"
-                else if (challengeCompletions('a', 20) == 3) return "Atom Challenge 10<br>The Void<br> (3 / 5)"
-                else if (challengeCompletions('a', 20) == 2) return "Atom Challenge 10<br>The Void<br> (2 / 5)"
-                else if (challengeCompletions('a', 20) == 1) return "Atom Challenge 10<br>The Void<br> (1 / 5)"
-                else return "Atom Challenge 10<br>The Void<br> (0 / 5)"
-            },
-            challengeDescription: "All Atom Challenges at once.",
-            goalDescription() {if (player.a.atomchallenge20completions.gte(4)) return "1.75e12 Power"
-                else if (challengeCompletions('a', 20) == 3) return "7.50e11 Power"
-                else if (challengeCompletions('a', 20) == 2) return "2.50e11 Power"
-                else if (challengeCompletions('a', 20) == 1) return "1.00e11 Power"
-                else return "4.50e10 Power"},
-            rewardDescription() {if (challengeCompletions('a', 20) == 5) return '3.0x multiplier to ALL Quark Sub-Resources multipliers (including Tertiary)'
-                else if (challengeCompletions('a', 20) == 4) return '2.45x multiplier to ALL Quark Sub-Resources multipliers (including Tertiary)'
-                else if (challengeCompletions('a', 20) == 3) return '2.0x multiplier to ALL Quark Sub-Resources multipliers (including Tertiary)'
-                else if (challengeCompletions('a', 20) == 2) return '1.6x multiplier to ALL Quark Sub-Resources multipliers (including Tertiary)'
-                else if (challengeCompletions('a', 20) == 1) return '1.3x multiplier to ALL Quark Sub-Resources multipliers (including Tertiary)'
-                else return "Challenge not yet completed."},
-            canComplete: function() {if (player.a.atomchallenge20completions.gte(4)) return player.points.gte(1.75e12)
-                else if (challengeCompletions('a', 20) == 3) return player.points.gte(7.5e11)
-                else if (challengeCompletions('a', 20) == 2) return player.points.gte(2.5e11)
-                else if (challengeCompletions('a', 20) == 1) return player.points.gte(1e11)
-                else return player.points.gte(4.5e10)
-            },
-            completionLimit: 5,
-            countsAs: [11, 12, 13, 14, 17, 19],
-            onEnter() {return player.a.atomchallenge11 = new Decimal(0), player.a.atomchallenge14 = new Decimal(0), player.a.atomchallenge17divisor = new Decimal(1), player.q.points = new Decimal(1), player.e.points = new Decimal(1)},
-            onExit() {return player.a.atomchallenge11 = new Decimal(1), player.a.atomchallenge14 = new Decimal(1), player.a.atomchallenge17divisor = new Decimal(1)},
-            unlocked() {return hasMilestone('a', 12)}
-        },
+    let gained = bulk - current
+    return `${format(this.requirements[bulk])} Quarks (+${gained})`
+},
+    rewardDescription() {
+        let comp = challengeCompletions('a', 15)
+        if (comp == 0) return "Challenge not yet completed."
+        return this.rewards[comp - 1]
+    },
+    canComplete() {
+        let comp = challengeCompletions('a', 15)
+        if (!hasMilestone('i', 9)) return player.q.points.gte(this.requirements[comp])
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.q.points.gte(this.requirements[i])) return i - comp + 1
+        }
+        return false
+    },
+    completionLimit: 5,
+    countsAs: [11, 13],
+    onEnter() {return player.a.atomchallenge11 = new Decimal(0)},
+    onExit() {return player.a.atomchallenge11 = new Decimal(1)},
+    unlocked() {return hasMilestone('a', 4)}
+},
+
+16: {
+    requirements: [2.5e8,1e20,1e27,1e30,1e34],
+    rewards: [
+        "Every Atom Challenge completed gives a 1.066x multiplicative boost to Electron gain.",
+        "Every Atom Challenge completed gives a 1.133x multiplicative boost to Electron gain.",
+        "Every Atom Challenge completed gives a 1.2x multiplicative boost to Electron gain.",
+        "Every Atom Challenge completed gives a 1.266x multiplicative boost to Electron gain.",
+        "Every Atom Challenge completed gives a 1.33x multiplicative boost to Electron gain."
+    ],
+    name() {return `Atom Challenge 6<br>Quarkless<br> (${challengeCompletions('a', 16)} / 5)`},
+    challengeDescription: "Atom Challenges 2 and 4 at the same time.",
+    getChallengeBulk() {
+        let comp = challengeCompletions('a', 16)
+        if (!inChallenge('a', 16)) return comp
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.q.points.gte(this.requirements[i])) return i + 1
+        }
+        return comp
+    },
+    goalDescription() {
+    let current = challengeCompletions('a', 16)
+    let bulk = this.getChallengeBulk()
+    // NO BULK MODE
+    if (!hasMilestone('i', 9) && !player.a.atomchallenge16completions.gte(5)) {
+        let ready = player.q.points.gte(this.requirements[current]) && inChallenge('a', 16)
+        return `${format(this.requirements[current])} Quarks (+${ready ? 1 : 0})`
+    }
+    if (player.a.atomchallenge16completions.gte(5)) {
+        return "Fully completed (1.00e34 Quarks)"
+    }
+    // BULK MODE
+    if (bulk >= this.completionLimit)
+        return "Fully completed (1.00e34 Quarks)"
+
+    let gained = bulk - current
+    return `${format(this.requirements[bulk])} Quarks (+${gained})`
+},
+    rewardDescription() {
+        let comp = challengeCompletions('a', 16)
+        if (comp == 0) return "Challenge not yet completed."
+        return this.rewards[comp - 1]
+    },
+    canComplete() {
+        let comp = challengeCompletions('a', 16)
+        if (!hasMilestone('i', 9)) return player.q.points.gte(this.requirements[comp])
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.q.points.gte(this.requirements[i])) return i - comp + 1
+        }
+        return false
+    },
+    completionLimit: 5,
+    countsAs: [12, 14],
+    onEnter() {return player.a.atomchallenge14 = new Decimal(0)},
+    onExit() {return player.a.atomchallenge14 = new Decimal(1)},
+    unlocked() {return hasMilestone('a', 4)}
+},
+
+17: {
+    requirements: [1e60,1e70,1e80,1e90,1e100],
+    rewards: [5,400,30000,2000000,1e8],
+    name() {return `Atom Challenge 7<br>a playground slide<br> (${challengeCompletions('a', 17)} / 5)`},
+    challengeDescription: "Power gain is divided by 5 every second.",
+    getChallengeBulk() {
+        let comp = challengeCompletions('a', 17)
+        if (!inChallenge('a', 17)) return comp
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.q.points.gte(this.requirements[i])) return i + 1
+        }
+        return comp
+    },
+    goalDescription() {
+    let current = challengeCompletions('a', 17)
+    let bulk = this.getChallengeBulk()
+    // NO BULK MODE
+    if (!hasMilestone('i', 9) && !player.a.atomchallenge17completions.gte(5)) {
+        let ready = player.q.points.gte(this.requirements[current]) && inChallenge('a', 17)
+        return `${format(this.requirements[current])} Quarks (+${ready ? 1 : 0})`
+    }
+    if (player.a.atomchallenge17completions.gte(5)) {
+        return "Fully completed (1.00e100 Quarks)"
+    }
+    // BULK MODE
+    if (bulk >= this.completionLimit)
+        return "Fully completed (1.00e100 Quarks)"
+
+    let gained = bulk - current
+    return `${format(this.requirements[bulk])} Quarks (+${gained})`
+},
+    rewardDescription() {
+        let comp = challengeCompletions('a', 17)
+        if (comp == 0) return "Challenge not yet completed."
+        return `For every second in an Atom Reset, +${format(this.rewards[comp - 1])}x to all Charges gains. Currently: ${format(player.e.ac17allchargesmultiplier)}x`
+    },
+    canComplete() {
+        let comp = challengeCompletions('a', 17)
+        if (!hasMilestone('i', 9)) return player.q.points.gte(this.requirements[comp])
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.q.points.gte(this.requirements[i])) return i - comp + 1
+        }
+        return false
+    },
+    completionLimit: 5,
+    onEnter() {return player.a.atomchallenge17divisor = new Decimal(1)},
+    onExit() {return player.a.atomchallenge17divisor = new Decimal(1)},
+    unlocked() {return hasMilestone('a', 6)}
+},
+
+18: {
+    requirements: [1e24,1e30,1e36,1e42,1e48],
+    rewards: [1.01,1.02,1.03,1.04,1.05],
+    name() {return `Atom Challenge 8<br>Resourceless<br> (${challengeCompletions('a', 18)} / 5)`},
+    challengeDescription: "Atom Challenges 1 and 4 at the same time.",
+    getChallengeBulk() {
+        let comp = challengeCompletions('a', 18)
+        if (!inChallenge('a', 18)) return comp
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.q.points.gte(this.requirements[i])) return i + 1
+        }
+        return comp
+    },
+    goalDescription() {
+    let current = challengeCompletions('a', 18)
+    let bulk = this.getChallengeBulk()
+    // NO BULK MODE
+    if (!hasMilestone('i', 9) && !player.a.atomchallenge18completions.gte(5)) {
+        let ready = player.q.points.gte(this.requirements[current]) && inChallenge('a', 18)
+        return `${format(this.requirements[current])} Quarks (+${ready ? 1 : 0})`
+    }
+    if (player.a.atomchallenge18completions.gte(5)) {
+        return "Fully completed (1.00e48 Quarks)"
+    }
+    // BULK MODE
+    if (bulk >= this.completionLimit)
+        return "Fully completed (1.00e48 Quarks)"
+
+    let gained = bulk - current
+    return `${format(this.requirements[bulk])} Quarks (+${gained})`
+},
+    rewardDescription() {
+        let comp = challengeCompletions('a', 18)
+        if (comp == 0) return "Challenge not yet completed."
+        return `Quark gain is raised to ^${this.rewards[comp - 1]}.`
+    },
+    canComplete() {
+        let comp = challengeCompletions('a', 18)
+        if (!hasMilestone('i', 9)) return player.q.points.gte(this.requirements[comp])
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.q.points.gte(this.requirements[i])) return i - comp + 1
+        }
+        return false
+    },
+    completionLimit: 5,
+    countsAs: [11, 14],
+    onEnter() {return player.a.atomchallenge11 = new Decimal(0), player.a.atomchallenge14 = new Decimal(0)},
+    onExit() {return player.a.atomchallenge11 = new Decimal(1), player.a.atomchallenge14 = new Decimal(1)},
+    unlocked() {return hasMilestone('a', 6)}
+},
+
+19: {
+    requirements: [1e11,1e13,1e15,1e18,1e23],
+    rewards: [1.0133,1.0266,1.04,1.0533,1.0666],
+    name() {return `Atom Challenge 9<br>Resourceful<br> (${challengeCompletions('a', 19)} / 5)`},
+    challengeDescription: "You only have one Quark and Electron.",
+    getChallengeBulk() {
+        let comp = challengeCompletions('a', 19)
+        if (!inChallenge('a', 19)) return comp
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.points.gte(this.requirements[i])) return i + 1
+        }
+        return comp
+    },
+    goalDescription() {
+    let current = challengeCompletions('a', 19)
+    let bulk = this.getChallengeBulk()
+    // NO BULK MODE
+    if (!hasMilestone('i', 9) && !player.a.atomchallenge19completions.gte(5)) {
+        let ready = player.points.gte(this.requirements[current]) && inChallenge('a', 19)
+        return `${format(this.requirements[current])} Power (+${ready ? 1 : 0})`
+    }
+    if (player.a.atomchallenge19completions.gte(5)) {
+        return "Fully completed (1.00e23 Power)"
+    }
+    // BULK MODE
+    if (bulk >= this.completionLimit)
+        return "Fully completed (1.00e23 Power)"
+
+    let gained = bulk - current
+    return `${format(this.requirements[bulk])} Power (+${gained})`
+},
+    rewardDescription() {
+        let comp = challengeCompletions('a', 19)
+        if (comp == 0) return "Challenge not yet completed."
+        return `Electron gain is raised to ^${this.rewards[comp - 1]}.`
+    },
+    canComplete() {
+        let comp = challengeCompletions('a', 19)
+        if (!hasMilestone('i', 9)) return player.points.gte(this.requirements[comp])
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.points.gte(this.requirements[i])) return i - comp + 1
+        }
+        return false
+    },
+    completionLimit: 5,
+    onEnter() {return player.q.points = new Decimal(1), player.e.points = new Decimal(1)},
+    unlocked() {return hasMilestone('a', 6)}
+},
+
+20: {
+    requirements: [4.5e10,1e11,2.5e11,7.5e11,1.75e12],
+    rewards: [1.3,1.6,2,2.45,3],
+    name() {return `Atom Challenge 10<br>The Void<br> (${challengeCompletions('a', 20)} / 5)`},
+    challengeDescription: "All Atom Challenges at once.",
+    getChallengeBulk() {
+        let comp = challengeCompletions('a', 20)
+        if (!inChallenge('a', 20)) return comp
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.points.gte(this.requirements[i])) return i + 1
+        }
+        return comp
+    },
+    goalDescription() {
+    let current = challengeCompletions('a', 20)
+    let bulk = this.getChallengeBulk()
+    // NO BULK MODE
+    if (!hasMilestone('i', 9) && !player.a.atomchallenge20completions.gte(5)) {
+        let ready = player.points.gte(this.requirements[current]) && inChallenge('a', 20)
+        return `${format(this.requirements[current])} Power (+${ready ? 1 : 0})`
+    }
+    if (player.a.atomchallenge20completions.gte(5)) {
+        return "Fully completed (1.75e12 Power)"
+    }
+    // BULK MODE
+    if (bulk >= this.completionLimit)
+        return "Fully completed (1.75e12 Power)"
+
+    let gained = bulk - current
+    return `${format(this.requirements[bulk])} Power (+${gained})`
+},
+    rewardDescription() {
+        let comp = challengeCompletions('a', 20)
+        if (comp == 0) return "Challenge not yet completed."
+        return `${this.rewards[comp - 1]}x multiplier to ALL Quark Sub-Resources multipliers (including Tertiary)`
+    },
+    canComplete() {
+        let comp = challengeCompletions('a', 20)
+        if (!hasMilestone('i', 9)) return player.points.gte(this.requirements[comp])
+        for (let i = this.completionLimit - 1; i >= comp; i--) {
+            if (player.points.gte(this.requirements[i])) return i - comp + 1
+        }
+        return false
+    },
+    completionLimit: 5,
+    countsAs: [11, 12, 13, 14, 17, 19],
+    onEnter() {return player.a.atomchallenge11 = new Decimal(0), player.a.atomchallenge14 = new Decimal(0), player.a.atomchallenge17divisor = new Decimal(1), player.q.points = new Decimal(1), player.e.points = new Decimal(1)},
+    onExit() {return player.a.atomchallenge11 = new Decimal(1), player.a.atomchallenge14 = new Decimal(1), player.a.atomchallenge17divisor = new Decimal(1)},
+    unlocked() {return hasMilestone('a', 12)}
+},
     }
 })

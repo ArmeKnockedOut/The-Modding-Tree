@@ -6,17 +6,35 @@ addLayer("ach", {
         points: new Decimal(0),
         achievementmulti: new Decimal(1.067),
     }},
-    tabFormat: [
+    achievementPopups() {if (hasMilestone('i', 9)) return false
+        else return true
+    },
+    tabFormat: {
+        "Main": {
+            content: [
         ["display-text",
-            function() { return 'Every achievement gives a ' + format(player.ach.achievementmulti, 3) + 'x multiplicative boost to power gain.'},
+            function() { return 'Every Achievement gives a ' + format(player.ach.achievementmulti, 3) + 'x multiplicative boost to power gain.'},
             { "color": "gray", "font-size": "15px" }],
         "blank",
         ["display-text",
-            function() { return 'Your achievements multiply power gain by ' + format(tmp.ach.effect) + 'x'},
+            function() { return 'Your Achievements multiply power gain by ' + format(tmp.ach.effect) + 'x'},
             { "color": "white", "font-size": "16.5px" }],
         "blank",
         "achievements"
     ],
+    },
+
+    "Infinity": {
+        unlocked() {return player.i.total.gte(1)},
+        embedLayer: "infach",
+        buttonStyle() {
+                return {
+                'border': '2px solid #195ef3',
+                //'background': 'linear-gradient(-15deg, #0d1cee 0%, #0daeee 100%)',
+                "background-origin": "border-box"}
+            },
+    }
+    },
     effect(){
         return Decimal.pow(player.ach.achievementmulti, player[this.layer].achievements.length)
         /*
@@ -27,13 +45,35 @@ addLayer("ach", {
       },
     color: "#058400", // Can be a function that takes requirement increases into account
     type: "none", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have // Prestige currency exponent
-    row: "side", // Row the layer is in on the tree (0 is the first row)
+    row: "499",
+    displayRow: "side", // Row the layer is in on the tree (0 is the first row)
     tooltip: "Achievements",
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
         return mult
     },
     layerShown(){return true},
+
+    doReset(resettingLayer) {
+    // Stage 1, almost always needed, makes resetting this layer not delete your progress
+    if (layers[resettingLayer].row <= this.row) return;
+
+    // Stage 2, track which specific subfeatures you want to keep, e.g. Upgrade 11, Challenge 32, Buyable 12
+    let keptAchievements = []
+    if (hasMilestone('i', 9) && hasAchievement('ach', 25)) keptAchievements.push(25)
+    if (hasMilestone('i', 10) && hasAchievement('ach', 47)) keptAchievements.push(47)
+
+    // Stage 3, track which main features you want to keep - all upgrades, total points, specific toggles, etc.
+    let keep = [];
+    //if (hasMilestone('i', 8) && player.tog.keepElectronMilestones) keep.push("milestones");
+
+    // Stage 4, do the actual data reset
+    layerDataReset(this.layer, keep);
+
+    // Stage 5, add back in the specific subfeatures you saved earlier
+    player[this.layer].achievements.push(...keptAchievements)
+    },
+
     achievements: {
         11: {
             name: "Everything has to start somewhere.",
@@ -153,19 +193,19 @@ addLayer("ach", {
         34: {
             name: "light work, no reaction",
             tooltip: "Get your second Atom Challenge 1 Completion.",
-            done() {return challengeCompletions('a', 11) == 2}
+            done() {return player.a.atomchallenge11completions.gte(2)}
              
         },
         35: {
             name: "a toddler could do this",
             tooltip: "Get your second Atom Challenge 2 Completion.",
-            done() {return challengeCompletions('a', 12) == 2}
+            done() {return player.a.atomchallenge12completions.gte(2)}
              
         },
         36: {
             name: "the wall of time",
             tooltip: "Get your second Atom Challenge 3 Completion. Reward: 4x Quark gain until 1.00e70 Quarks.",
-            done() {return challengeCompletions('a', 13) == 2}
+            done() {return player.a.atomchallenge13completions.gte(2)}
              
         },
         37: {
@@ -219,6 +259,21 @@ addLayer("ach", {
             name: "in which order did i do them in again?",
             tooltip: "Get all 50 Atom Challenge Completions.",
             done() {return player.a.totalatomchallengecompletions.gte(50)},
+        },
+        51: {
+            name: "awww, it's a cute couple!",
+            tooltip: "Get your first Molecule.",
+            done() {return player.m.points.gte(1)},
+        },
+        52: {
+            name: "still not more than my two cents 😎",
+            tooltip: "Reach 1.11e111 Atoms.",
+            done() {return player.a.points.gte(1.11e111)},
+        },
+        53: {
+            name: "super powers",
+            tooltip: "Reach 1.79e308 power.",
+            done() {return player.points.gte(1.79e308)},
         },
     }
 })

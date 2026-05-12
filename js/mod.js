@@ -3,7 +3,7 @@ let modInfo = {
 	id: "armeselementmodtree",
 	author: "Arme",
 	pointsName: "power",
-	modFiles: ["tree.js", "quarks.js", "achievements.js", "electrons.js", "atoms.js"],
+	modFiles: ["tree.js", "quarks.js", "achievements.js", "electrons.js", "atoms.js", "molecules.js", "infinity.js", "infinity_achievements.js", "toggles.js"],
 
 	discordName: "ArmeKnockedOut",
 	discordLink: "",
@@ -13,12 +13,33 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "ersion: alpha 0.21",
-	name: "Small Stuff",
+	num: "ersion: alpha 0.3",
+	name: "Infinity",
 }
 
 let changelog = `<h1>Changelog:</h1><br><br><br>
 	<h1 style="color: #ff0000">SPOILERS. OBVIOUSLY. NOT LIKE STORY SPOILERS BECAUSE THERE'S NO STORY BUT YEAH, THERE'S SPOILERS HERE.</h1><br><br><br><br>
+	<h1 style="color: #c4f319">Alpha v0.3 - Infinity</h1><br><br><h3>[Molecules, Infinity c:]<br>
+	<br>
+	(Finished 5/9/2026 7:57PM CEST)<br>
+	(Playtested, Released 5/12/2026 11:08PM CEST)<br></h3>
+	<br><h4>
+		  - Added the Molecule Layer, with 5 new Buyables, 2 Upgrades, and 3 Subcurrencies.<br>
+		  - Added the Infinity Layer, with 36 new Upgrades, 2 Challenges, 18 Milestones and 2 Subcurrencies.<br>
+		  - Added 3 new Main Achievements, and 14 Infinity Achievements.<br>
+		  - Added some new Themes: crimson, mystic, infinity<br>
+		  - All Subcurrencies should now be gained even when tabbed out.<br>
+		  - Progress up to full completion of IC1, one completion of IC2, and Infinity Milestone 18 (or Infinity Achievement 25 if you are crazy [or 1,000 Infinities if you are really crazy]).<br><br>
+		  - New Content Estimated Playtime: ~10hrs<br></h4>
+		  - Total Estimated Playtime: ~1d<br></h4>
+		  <br>
+		  <br>
+		  <h2>Devlog:</h2><br><br><h4>
+		  - (5/9/2026 7:58PM CEST) don't shoot me... don't get out your guns... i used chatgpt to optimize my atom challenge code, subcurrency gain code, and to figure out bulk complete on challenges. i still suck at coding and it helps me learn. i will never use chatgpt for ideas, or extensively during coding. just as a tool.
+	</h4><br>
+	<br>
+	<br>
+	<br>
 	<h1 style="color: #ffca1a">Alpha v0.21 - Small Stuff</h1><br><br><h3>[Changelog Fixes]<br>
 	<br>
 	(5/3/2026 6:50PM CEST)<br></h3>
@@ -72,7 +93,7 @@ let changelog = `<h1>Changelog:</h1><br><br><br>
 	(4/29/2026 12:21PM CEST)<br></h3>
 	<br><h4>
 		- Quarks, Electrons, Progress up to Charge 10.<br>
-		- Estimated Playtime: ~2-3hrs<br>
+		- Estimated Playtime: ~1-3hrs<br>
 	</h4><br>`
 	
 
@@ -102,6 +123,7 @@ function getPointGen() {
 	if (player.q.greenquarks.gte(1) && hasUpgrade('q', 21)) gain = gain.plus(player.q.greenquarkspoweraddition)
 	if (player.q.bluequarks.gte(1) && hasUpgrade('q', 22)) gain = gain.plus(player.q.bluequarkspoweraddition)
 	gain = gain.times(tmp.ach.effect)
+	gain = gain.times(tmp.infach.effect)
 	gain = gain.times(player.q.greenquarkspowermultiplier)
 	if (hasUpgrade('q', 23) && player.q.redquarks.gte(1)) gain = gain.times(player.q.redquarkspowermultiplier)
 	if (hasUpgrade('q', 24) && player.q.bluequarks.gte(1)) gain = gain.times(player.q.bluequarkspowermultiplier)
@@ -119,19 +141,28 @@ function getPointGen() {
 	if (hasUpgrade('a', 31)) gain = gain.times(upgradeEffect('a', 31))
 	if (hasChallenge('a', 14)) gain = gain.times(new Decimal.pow(player.a.atomchallenge14multiplier, player.a.actualtotalatomchallengecompletions))
 	if (inChallenge('a', 17)) gain = gain.div(player.a.atomchallenge17divisor)
+	gain = gain.times(player.m.diatomicmultiplier)
+	if (hasUpgrade('i', 12)) gain = gain.times(upgradeEffect('i', 12))
+	if (hasUpgrade('i', 20)) gain = gain.times(upgradeEffect('i', 20))
+	if (hasUpgrade('i', 41)) gain = gain.times(upgradeEffect('i', 41))
    // this is a softcap: if (gain.gte(8e15)) gain = gain.plus(1).pow(0.95).plus(8e15).minus(new Decimal(8e15).pow(0.95))
 	if (inChallenge('a', 13)) gain = gain.pow(0.5)
 	if (hasChallenge('a', 13) && gain.gte(1)) gain = gain.pow(player.a.ac13powerexp)
 	//gain = gain.times(100)
+
+	if (player.infinity_broken == false && player.points.gte(1.794e308)) player.points = new Decimal(1.794e308), gain = gain.times(0)
 	return gain
 }
 
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() { return {
+	infinity_broken: false
 }}
 
 // Display extra things at the top of the page
 var displayThings = [
+	() => (player.infinity_broken == false && player.q.points.gte(1.79e308)) ? 'You can<span style=\"color: #195ef3; text-shadow: 0px 0px 10px #195ef3; font-family: Lucida Console\"> Infinity</span>' : "",
+	() => (player.infinity_broken == false && player.q.redquarks.gte(1.79e308) || player.infinity_broken == false && player.q.protons.gte(1.79e308) || player.infinity_broken == false && player.q.points.gte(1.79e308)) ? 'Your resources are capped at Infinity (1.79e308).' : "",
 ]
 
 // Determines when the game "ends"

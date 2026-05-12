@@ -3,13 +3,13 @@ addLayer("e", {
     symbol: "E",
     position: 0,
     branches: true,
-    milestonePopups() {if (hasMilestone('a', 4)) return false
+    milestonePopups() {if (hasMilestone('a', 4) || player.i.total.gte(1)) return false
         else return true
     },
     onPrestige() {return player.e.charge = new Decimal(0), player.e.charge2 = new Decimal(0), player.e.charge3 = new Decimal(0), player.e.charge4 = new Decimal(0), player.e.charge5 = new Decimal(0), player.e.charge6 = new Decimal(0), player.e.charge7 = new Decimal(0), player.e.charge8 = new Decimal(0), player.e.charge9 = new Decimal(0), player.e.charge10 = new Decimal(0)},
     passiveGeneration() {
-        if (hasMilestone('a', 3) && player.a.passiveElectronGen == true) return 1
-        else if (hasMilestone('a', 0) && player.a.passiveElectronGen == true) return 0.1
+        if (hasMilestone('a', 3) && player.tog.passiveElectronGen == true) return 1
+        else if (player.tog.passiveElectronGen == true && hasMilestone('a', 0)) return 0.1
         else return 0},
     startData() { return {
         unlocked: false,
@@ -97,35 +97,18 @@ addLayer("e", {
         "blank",
         "milestones"
     ],
-    color: "#1a85ff",
-    requires: new Decimal(2.5e8), 
-    resource: "Electrons", 
-    baseResource: "power", 
-    baseAmount() {return player.points}, 
-    type: "normal", 
-    exponent: 0.676756, 
-    gainMult() { 
-        mult = new Decimal(1)
-        if (hasMilestone('e', 0)) mult = mult.times(player.e.charge2multiplier)
-        player.e.charge = player.e.charge.plus(player.e.points.div(20).times(player.e.charge2multiplier).times(player.e.charge3multiplier).times(player.e.charge4multiplier).times(player.e.charge5multiplier).times(player.q.cyanquarkschargemultiplier).times(player.e.charge6multiplier).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
-        if (hasMilestone('e', 0)) player.e.charge2 = player.e.charge2.plus(player.e.points.div(20).times(player.e.charge3multiplier).times(player.e.charge4multiplier).times(player.e.charge5multiplier).times(player.e.charge6multiplier).times(player.q.magentaquarkschargemultiplier).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
-        if (hasMilestone('e', 1)) player.e.charge3 = player.e.charge3.plus(player.e.points.div(20).times(player.e.charge4multiplier).times(player.e.charge5multiplier).times(player.e.charge6multiplier).times(player.q.yellowquarkschargemultiplier).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
-        if (hasMilestone('e', 2)) player.e.charge4 = player.e.charge4.plus(player.e.points.div(20).times(player.e.charge4.plus(1).log10().div(2).plus(1)).times(player.e.charge5multiplier).times(player.e.charge6multiplier).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
-        if (hasMilestone('e', 3)) player.e.charge5 = player.e.charge5.plus(player.e.points.div(20).times(player.e.charge6multiplier).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
-        if (hasMilestone('e', 4)) player.e.charge6 = player.e.charge6.plus(player.e.points.div(20).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
-        if (hasMilestone('e', 5)) player.e.charge7 = player.e.charge7.plus(player.e.points.div(20).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
-        if (hasMilestone('e', 6)) player.e.charge8 = player.e.charge8.plus(player.e.points.div(20).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
-        if (hasMilestone('e', 7)) player.e.charge9 = player.e.charge9.plus(player.e.points.div(20).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
-        if (hasMilestone('e', 8)) player.e.charge10 = player.e.charge10.plus(player.e.points.div(20).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
-        if (player.q.cyanquarks.gte(1) && hasUpgrade('q', 41)) mult = mult.times(player.q.cyanquarkselectronmultiplier)
-        if (player.q.magentaquarks.gte(1) && hasUpgrade('q', 42)) mult = mult.times(player.q.magentaquarkselectronmultiplier)
-        if (player.q.yellowquarks.gte(1) && hasUpgrade('q', 43)) mult = mult.times(player.q.yellowquarkselectronmultiplier)
-        if (hasAchievement('ach', 26)) mult = mult.times(1.25)
-        if (hasUpgrade('a', 13)) mult = mult.times(softcap((upgradeEffect('a', 13)), new Decimal(10), 0.4))
-        if (hasUpgrade('a', 18)) mult = mult.times(upgradeEffect('a', 18))
-        if (hasUpgrade('a', 21)) mult = mult.times(upgradeEffect('a', 21))
-        if (hasUpgrade('a', 33)) mult = mult.times(upgradeEffect('a', 33))
-        if (hasChallenge('a', 16)) mult = mult.times(new Decimal.pow(player.a.atomchallenge16multiplier, player.a.actualtotalatomchallengecompletions))
+    update(diff) {
+        player.e.charge = player.e.charge.plus(player.e.points.times(diff).times(player.e.charge2multiplier).times(player.e.charge3multiplier).times(player.e.charge4multiplier).times(player.e.charge5multiplier).times(player.q.cyanquarkschargemultiplier).times(player.e.charge6multiplier).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)).times(upgradeEffect('i', 40)))
+        if (hasMilestone('e', 0)) player.e.charge2 = player.e.charge2.plus(player.e.points.times(diff).times(player.e.charge3multiplier).times(player.e.charge4multiplier).times(player.e.charge5multiplier).times(player.e.charge6multiplier).times(player.q.magentaquarkschargemultiplier).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)).times(upgradeEffect('i', 40)))
+        if (hasMilestone('e', 1)) player.e.charge3 = player.e.charge3.plus(player.e.points.times(diff).times(player.e.charge4multiplier).times(player.e.charge5multiplier).times(player.e.charge6multiplier).times(player.q.yellowquarkschargemultiplier).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)).times(upgradeEffect('i', 40)))
+        if (hasMilestone('e', 2)) player.e.charge4 = player.e.charge4.plus(player.e.points.times(diff).times(player.e.charge4.plus(1).log10().div(2).plus(1)).times(player.e.charge5multiplier).times(player.e.charge6multiplier).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)).times(upgradeEffect('i', 40)))
+        if (hasMilestone('e', 3)) player.e.charge5 = player.e.charge5.plus(player.e.points.times(diff).times(player.e.charge6multiplier).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)).times(upgradeEffect('i', 40)))
+        if (hasMilestone('e', 4)) player.e.charge6 = player.e.charge6.plus(player.e.points.times(diff).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)).times(upgradeEffect('i', 40)))
+        if (hasMilestone('e', 5)) player.e.charge7 = player.e.charge7.plus(player.e.points.times(diff).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)).times(upgradeEffect('i', 40)))
+        if (hasMilestone('e', 6)) player.e.charge8 = player.e.charge8.plus(player.e.points.times(diff).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)).times(upgradeEffect('i', 40)))
+        if (hasMilestone('e', 7)) player.e.charge9 = player.e.charge9.plus(player.e.points.times(diff).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)).times(upgradeEffect('i', 40)))
+        if (hasMilestone('e', 8)) player.e.charge10 = player.e.charge10.plus(player.e.points.times(diff).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)).times(upgradeEffect('i', 40)))
+    
         player.e.chargemultiplier = player.e.charge.plus(1).log10().div(10).plus(1)
         player.e.charge2multiplier = player.e.charge2.plus(1).log10().plus(1)
         player.e.charge3multiplier = player.e.charge3.plus(1).log10().plus(1)
@@ -143,16 +126,98 @@ addLayer("e", {
         player.e.charge8multiplier2 = player.e.charge8.plus(1).log10().div(20).plus(1)
         player.e.charge9multiplier2 = player.e.charge9.plus(1).log10().div(250).plus(1)
         player.e.charge10multiplier2 = player.e.charge10.plus(1).log10().div(90).plus(1)
-        if (challengeCompletions('a', 17) == 5) player.e.ac17allchargesmultiplier = player.e.ac17allchargesmultiplier.plus(5000000)
-        if (challengeCompletions('a', 17) == 4) player.e.ac17allchargesmultiplier = player.e.ac17allchargesmultiplier.plus(100000)
-        if (challengeCompletions('a', 17) == 3) player.e.ac17allchargesmultiplier = player.e.ac17allchargesmultiplier.plus(1500)
-        if (challengeCompletions('a', 17) == 2) player.e.ac17allchargesmultiplier = player.e.ac17allchargesmultiplier.plus(20)
-        if (challengeCompletions('a', 17) == 1) player.e.ac17allchargesmultiplier = player.e.ac17allchargesmultiplier.plus(0.25)
+
+        if (challengeCompletions('a', 17) == 5) player.e.ac17allchargesmultiplier = player.e.ac17allchargesmultiplier.plus(new Decimal(1e8).times(diff))
+        if (challengeCompletions('a', 17) == 4) player.e.ac17allchargesmultiplier = player.e.ac17allchargesmultiplier.plus(new Decimal(2e6).times(diff))
+        if (challengeCompletions('a', 17) == 3) player.e.ac17allchargesmultiplier = player.e.ac17allchargesmultiplier.plus(new Decimal(30000).times(diff))
+        if (challengeCompletions('a', 17) == 2) player.e.ac17allchargesmultiplier = player.e.ac17allchargesmultiplier.plus(new Decimal(400).times(diff))
+        if (challengeCompletions('a', 17) == 1) player.e.ac17allchargesmultiplier = player.e.ac17allchargesmultiplier.plus(new Decimal(5).times(diff))
+
+        if (player.infinity_broken == false && player.e.charge.gte(1.794e308)) player.e.charge = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge2.gte(1.794e308)) player.e.charge2 = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge3.gte(1.794e308)) player.e.charge3 = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge4.gte(1.794e308)) player.e.charge4 = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge5.gte(1.794e308)) player.e.charge5 = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge6.gte(1.794e308)) player.e.charge6 = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge7.gte(1.794e308)) player.e.charge7 = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge8.gte(1.794e308)) player.e.charge8 = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge9.gte(1.794e308)) player.e.charge9 = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge10.gte(1.794e308)) player.e.charge10 = new Decimal(1.794e308)
+        },
+    color: "#1a85ff",
+    requires: new Decimal(2.5e8), 
+    resource: "Electrons", 
+    baseResource: "power", 
+    baseAmount() {return player.points}, 
+    type: "normal", 
+    exponent: 0.676756, 
+    gainMult() { 
+        mult = new Decimal(1)
+        if (hasMilestone('e', 0)) mult = mult.times(player.e.charge2multiplier)
+      //  player.e.charge = player.e.charge.plus(player.e.points.div(20).times(player.e.charge2multiplier).times(player.e.charge3multiplier).times(player.e.charge4multiplier).times(player.e.charge5multiplier).times(player.q.cyanquarkschargemultiplier).times(player.e.charge6multiplier).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
+      //  if (hasMilestone('e', 0)) player.e.charge2 = player.e.charge2.plus(player.e.points.div(20).times(player.e.charge3multiplier).times(player.e.charge4multiplier).times(player.e.charge5multiplier).times(player.e.charge6multiplier).times(player.q.magentaquarkschargemultiplier).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
+      //  if (hasMilestone('e', 1)) player.e.charge3 = player.e.charge3.plus(player.e.points.div(20).times(player.e.charge4multiplier).times(player.e.charge5multiplier).times(player.e.charge6multiplier).times(player.q.yellowquarkschargemultiplier).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
+      //  if (hasMilestone('e', 2)) player.e.charge4 = player.e.charge4.plus(player.e.points.div(20).times(player.e.charge4.plus(1).log10().div(2).plus(1)).times(player.e.charge5multiplier).times(player.e.charge6multiplier).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
+      //  if (hasMilestone('e', 3)) player.e.charge5 = player.e.charge5.plus(player.e.points.div(20).times(player.e.charge6multiplier).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
+      //  if (hasMilestone('e', 4)) player.e.charge6 = player.e.charge6.plus(player.e.points.div(20).times(player.e.charge7multiplier).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
+      //  if (hasMilestone('e', 5)) player.e.charge7 = player.e.charge7.plus(player.e.points.div(20).times(player.e.charge8multiplier).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
+      //  if (hasMilestone('e', 6)) player.e.charge8 = player.e.charge8.plus(player.e.points.div(20).times(player.e.charge9multiplier).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
+      //  if (hasMilestone('e', 7)) player.e.charge9 = player.e.charge9.plus(player.e.points.div(20).times(player.e.charge10multiplier).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
+      //  if (hasMilestone('e', 8)) player.e.charge10 = player.e.charge10.plus(player.e.points.div(20).times(player.a.atomchallenge11).times(upgradeEffect('a', 29)).times(upgradeEffect('a', 30)).times(player.e.ac17allchargesmultiplier).times(upgradeEffect('a', 42)))
+        if (player.q.cyanquarks.gte(1) && hasUpgrade('q', 41)) mult = mult.times(player.q.cyanquarkselectronmultiplier)
+        if (player.q.magentaquarks.gte(1) && hasUpgrade('q', 42)) mult = mult.times(player.q.magentaquarkselectronmultiplier)
+        if (player.q.yellowquarks.gte(1) && hasUpgrade('q', 43)) mult = mult.times(player.q.yellowquarkselectronmultiplier)
+        if (hasAchievement('ach', 26)) mult = mult.times(1.25)
+        if (hasUpgrade('a', 13)) mult = mult.times(softcap((upgradeEffect('a', 13)), new Decimal(10), 0.4))
+        if (hasUpgrade('a', 18)) mult = mult.times(upgradeEffect('a', 18))
+        if (hasUpgrade('a', 21)) mult = mult.times(upgradeEffect('a', 21))
+        if (hasUpgrade('a', 33)) mult = mult.times(upgradeEffect('a', 33))
+        if (hasChallenge('a', 16)) mult = mult.times(new Decimal.pow(player.a.atomchallenge16multiplier, player.a.actualtotalatomchallengecompletions))
+     //   player.e.chargemultiplier = player.e.charge.plus(1).log10().div(10).plus(1)
+     //  player.e.charge2multiplier = player.e.charge2.plus(1).log10().plus(1)
+      //  player.e.charge3multiplier = player.e.charge3.plus(1).log10().plus(1)
+      //  player.e.charge4multiplier = player.e.charge4.plus(1).log10().plus(1)
+      //  player.e.charge5multiplier = player.e.charge5.plus(1).log10().plus(1)
+      //  player.e.charge6multiplier = player.e.charge6.plus(1).log10().plus(1)
+      //  player.e.charge7multiplier = player.e.charge7.plus(1).log10().plus(1)
+      //  player.e.charge8multiplier = player.e.charge8.plus(1).log10().plus(1)
+      //  player.e.charge9multiplier = player.e.charge9.plus(1).log10().plus(1)
+      //  player.e.charge10multiplier = player.e.charge10.plus(1).log10().plus(1)
+      //  player.e.charge4multiplier2 = player.e.charge4.plus(1).log10().div(2).plus(1)
+      //  player.e.charge5multiplier2 = player.e.charge5.plus(1).log10().div(8).plus(1)
+      //  player.e.charge6multiplier2 = player.e.charge6.plus(1).log10().div(20).plus(1)
+      //  player.e.charge7multiplier2 = player.e.charge7.plus(1).log10().div(20).plus(1)
+      //  player.e.charge8multiplier2 = player.e.charge8.plus(1).log10().div(20).plus(1)
+      //  player.e.charge9multiplier2 = player.e.charge9.plus(1).log10().div(250).plus(1)
+      //  player.e.charge10multiplier2 = player.e.charge10.plus(1).log10().div(90).plus(1)
+       // if (challengeCompletions('a', 17) == 5) player.e.ac17allchargesmultiplier = player.e.ac17allchargesmultiplier.plus(5000000)
+      //  if (challengeCompletions('a', 17) == 4) player.e.ac17allchargesmultiplier = player.e.ac17allchargesmultiplier.plus(100000)
+      //  if (challengeCompletions('a', 17) == 3) player.e.ac17allchargesmultiplier = player.e.ac17allchargesmultiplier.plus(1500)
+       // if (challengeCompletions('a', 17) == 2) player.e.ac17allchargesmultiplier = player.e.ac17allchargesmultiplier.plus(20)
+       // if (challengeCompletions('a', 17) == 1) player.e.ac17allchargesmultiplier = player.e.ac17allchargesmultiplier.plus(0.25)
 
         if (hasUpgrade('a', 45)) mult = mult.times(15)
 
+        mult = mult.times(player.m.monoatomicmultiplier)
+
+        if (hasUpgrade('i', 14)) mult = mult.times(upgradeEffect('i', 14))
+        if (hasUpgrade('i', 22)) mult = mult.times(upgradeEffect('i', 22))
+        if (hasUpgrade('i', 43)) mult = mult.times(upgradeEffect('i', 43))
+
         if (hasChallenge('a', 19)) mult = mult.pow(player.a.ac19electronexp)
         if (inChallenge('a', 19)) mult = mult.times(0)
+
+        if (player.infinity_broken == false && player.e.points.gte(1.794e308)) player.e.points = new Decimal(1.794e308), mult = mult.times(0)
+      /*  if (player.infinity_broken == false && player.e.charge.gte(1.794e308)) player.e.charge = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge2.gte(1.794e308)) player.e.charge2 = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge3.gte(1.794e308)) player.e.charge3 = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge4.gte(1.794e308)) player.e.charge4 = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge5.gte(1.794e308)) player.e.charge5 = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge6.gte(1.794e308)) player.e.charge6 = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge7.gte(1.794e308)) player.e.charge7 = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge8.gte(1.794e308)) player.e.charge8 = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge9.gte(1.794e308)) player.e.charge9 = new Decimal(1.794e308)
+        if (player.infinity_broken == false && player.e.charge10.gte(1.794e308)) player.e.charge10 = new Decimal(1.794e308)*/
         return mult
     },
     gainExp() {
@@ -162,37 +227,27 @@ addLayer("e", {
     hotkeys: [
         {key: "e", description: "E: Reset for Electrons", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown(){return (hasAchievement('ach', 21))},
- //   doReset(resettingLayer) {
-   //     if (layers[resettingLayer].row > layers[this.layer].row) {
-     //       savedUpgrades = []
-       //     if (hasUpgrade('c', 15) && ['c'].includes(resettingLayer)) {
-         //       if (hasUpgrade(this.layer, 11)) {savedUpgrades.push(11)}
-           //     if (hasUpgrade(this.layer, 12)) {savedUpgrades.push(12)}
-             //   if (hasUpgrade(this.layer, 13)) {savedUpgrades.push(13)}
-             //   if (hasUpgrade(this.layer, 14)) {savedUpgrades.push(14)}
-            //    if (hasUpgrade(this.layer, 15)) {savedUpgrades.push(15)}
-            //    if (hasUpgrade(this.layer, 16)) {savedUpgrades.push(16)}
-            //    if (hasUpgrade(this.layer, 17)) {savedUpgrades.push(17)}
-            //    if (hasUpgrade(this.layer, 18)) {savedUpgrades.push(18)}
-            //    if (hasUpgrade(this.layer, 19)) {savedUpgrades.push(19)}
-            //    if (hasUpgrade(this.layer, 21)) {savedUpgrades.push(21)}
-          //  }
-          //  layerDataReset(this.layer, [])
-          //  player[this.layer].upgrades = savedUpgrades
-     //   }
-  //  },
-    //upgrades: {
-      //  11: {
-        //    title: "Getting help",
-          //  description: "Get more dirt cleaned based on the amount of dirt washers.",
-           // cost: new Decimal(3),
-          // effect() {
-          //      return player[this.layer].points.add(1).pow(0.5)
-          //  },
-          //  effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
-      //  },      
-  // },
+    layerShown(){return (hasAchievement('ach', 21) || player.i.total.gte(1))},
+
+    doReset(resettingLayer) {
+    // Stage 1, almost always needed, makes resetting this layer not delete your progress
+    if (layers[resettingLayer].row <= this.row) return;
+
+    // Stage 2, track which specific subfeatures you want to keep, e.g. Upgrade 11, Challenge 32, Buyable 12
+    //let keptUpgrades = []
+    //if (someCondition && hasUpgrade(this.layer, 11)) keptUpgrades.push(11)
+
+    // Stage 3, track which main features you want to keep - all upgrades, total points, specific toggles, etc.
+    let keep = [];
+    if (hasMilestone('i', 8) && player.tog.keepElectronMilestones) keep.push("milestones");
+
+    // Stage 4, do the actual data reset
+    layerDataReset(this.layer, keep);
+
+    // Stage 5, add back in the specific subfeatures you saved earlier
+    //player[this.layer].upgrades.push(...keptUpgrades)
+    },
+
   milestones: {
     0: {
         requirementDescription: "100 Electrons",
