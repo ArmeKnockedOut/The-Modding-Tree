@@ -5,9 +5,9 @@ addLayer("a", {
     branches: true,
     onPrestige() {return player.a.timesinceatomreset = new Decimal(0)},
     passiveGeneration() {
-        if (player.tog.passiveAtomGen == true) return 0.01
+        if (hasMilestone('i', 7) && player.tog.passiveAtomGen == true) return 0.01
         else return 0},
-    automate() {if (player.tog.autobuyAtomUpg == true) buyUpgrade('a', 11), buyUpgrade('a', 12), buyUpgrade('a', 13), buyUpgrade('a', 14), buyUpgrade('a', 15), buyUpgrade('a', 16), buyUpgrade('a', 17), buyUpgrade('a', 18), buyUpgrade('a', 19), buyUpgrade('a', 20), buyUpgrade('a', 21), buyUpgrade('a', 22), buyUpgrade('a', 23), buyUpgrade('a', 24), buyUpgrade('a', 25), buyUpgrade('a', 26), buyUpgrade('a', 27), buyUpgrade('a', 28), buyUpgrade('a', 29), buyUpgrade('a', 30), buyUpgrade('a', 31), buyUpgrade('a', 32), buyUpgrade('a', 33), buyUpgrade('a', 34), buyUpgrade('a', 35), buyUpgrade('a', 36), buyUpgrade('a', 37), buyUpgrade('a', 38), buyUpgrade('a', 39), buyUpgrade('a', 40), buyUpgrade('a', 41), buyUpgrade('a', 42), buyUpgrade('a', 43), buyUpgrade('a', 44), buyUpgrade('a', 45)},
+    automate() {if (player.tog.autobuyAtomUpg == true && !inChallenge('i', 13)) buyUpgrade('a', 11), buyUpgrade('a', 12), buyUpgrade('a', 13), buyUpgrade('a', 14), buyUpgrade('a', 15), buyUpgrade('a', 16), buyUpgrade('a', 17), buyUpgrade('a', 18), buyUpgrade('a', 19), buyUpgrade('a', 20), buyUpgrade('a', 21), buyUpgrade('a', 22), buyUpgrade('a', 23), buyUpgrade('a', 24), buyUpgrade('a', 25), buyUpgrade('a', 26), buyUpgrade('a', 27), buyUpgrade('a', 28), buyUpgrade('a', 29), buyUpgrade('a', 30), buyUpgrade('a', 31), buyUpgrade('a', 32), buyUpgrade('a', 33), buyUpgrade('a', 34), buyUpgrade('a', 35), buyUpgrade('a', 36), buyUpgrade('a', 37), buyUpgrade('a', 38), buyUpgrade('a', 39), buyUpgrade('a', 40), buyUpgrade('a', 41), buyUpgrade('a', 42), buyUpgrade('a', 43), buyUpgrade('a', 44), buyUpgrade('a', 45)},
     startData() { return {
         unlocked: false,
 		points: new Decimal(0),
@@ -44,7 +44,7 @@ addLayer("a", {
     update(diff) {
         if (inChallenge('a', 17)) player.a.atomchallenge17divisor *= Math.pow(5, diff)
 
-    if (hasMilestone('i', 14) && player.tog.autoCompleteAtomChallenges && !inChallenge('i', 11) && !inChallenge('i', 12)) {
+    if (hasMilestone('i', 14) && player.tog.autoCompleteAtomChallenges && !inChallenge('i', 11) && !inChallenge('i', 12) && !inChallenge('i', 13)) {
     let interval = Decimal.div(50, player.i.infinities).toNumber()
     interval = Math.max(interval, 0.05)
     player.a.acAutoTimer = (player.a.acAutoTimer || 0) + diff
@@ -88,6 +88,7 @@ addLayer("a", {
     player.a.atomchallenge14multiplier = new Decimal([1, 1.1, 1.2, 1.3, 1.4, 1.5][ac14] || 1)
     player.a.atomchallenge15multiplier = new Decimal([1, 1.05, 1.1, 1.15, 1.2, 1.25][ac15] || 1)
     player.a.atomchallenge16multiplier = new Decimal([1, 1.066, 1.133, 1.2, 1.266, 1.33][ac16] || 1)
+    if (player.d.boost8active == 1 && player.d.total.gte(1)) player.a.atomchallenge14multiplier = player.a.atomchallenge14multiplier.times(player.d.boost8mult), player.a.atomchallenge15multiplier = player.a.atomchallenge15multiplier.times(player.d.boost8mult), player.a.atomchallenge16multiplier = player.a.atomchallenge16multiplier.times(player.d.boost8mult)
     player.a.ac18quarkexp = new Decimal([1, 1.01, 1.02, 1.03, 1.04, 1.05][ac18] || 1)
     player.a.ac19electronexp = new Decimal([1, 1.0133, 1.0266, 1.04, 1.0533, 1.0666][ac19] || 1)
     player.a.ac20everythingmult = new Decimal([1, 1.3, 1.6, 2.0, 2.45, 3.0][ac20] || 1)
@@ -95,7 +96,9 @@ addLayer("a", {
     player.a.totalatomchallengecompletions = player.a.atomchallenge11completions.plus(player.a.atomchallenge12completions).plus(player.a.atomchallenge13completions).plus(player.a.atomchallenge14completions).plus(player.a.atomchallenge15completions).plus(player.a.atomchallenge16completions).plus(player.a.atomchallenge17completions).plus(player.a.atomchallenge18completions).plus(player.a.atomchallenge19completions).plus(player.a.atomchallenge20completions)
     player.a.atomchallenge11 = inChallenge('a', 11) ? new Decimal(0) : new Decimal(1)
     player.a.atomchallenge14 = inChallenge('a', 14) ? new Decimal(0) : new Decimal(1)
-    player.a.extratotalatomchallengecompletions = new Decimal(0).plus(upgradeEffect('a', 41)).plus(player.m.moleculeextraatomchallenges).plus(buyableEffect('m', 14))
+    let eTAC = new Decimal(0).plus(upgradeEffect('a', 41)).plus(player.m.moleculeextraatomchallenges).plus(buyableEffect('m', 14)).plus(upgradeEffect('w', 17))
+    if (player.d.boost3active == 1) eTAC = eTAC.plus(player.d.boost3add)
+    player.a.extratotalatomchallengecompletions = eTAC
     player.a.actualtotalatomchallengecompletions = player.a.totalatomchallengecompletions.plus(player.a.extratotalatomchallengecompletions)
     },
     milestonePopups() {if (hasMilestone('i', 9)) return false
@@ -134,111 +137,6 @@ addLayer("a", {
     exponent: 0.38, 
     gainMult() { 
         mult = new Decimal(1)
-        /*
-        if (challengeCompletions('a', 13) == 5) player.a.ac13powerexp = new Decimal(1.1)
-        if (challengeCompletions('a', 13) == 4) player.a.ac13powerexp = new Decimal(1.08)
-        if (challengeCompletions('a', 13) == 3) player.a.ac13powerexp = new Decimal(1.06)
-        if (challengeCompletions('a', 13) == 2) player.a.ac13powerexp = new Decimal(1.04)
-        if (challengeCompletions('a', 13) == 1) player.a.ac13powerexp = new Decimal(1.02)
-        if (challengeCompletions('a', 12) == 5) player.a.ac12protonmulti = new Decimal(1.8)
-        if (challengeCompletions('a', 12) == 4) player.a.ac12protonmulti = new Decimal(1.6)
-        if (challengeCompletions('a', 12) == 3) player.a.ac12protonmulti = new Decimal(1.4)
-        if (challengeCompletions('a', 12) == 2) player.a.ac12protonmulti = new Decimal(1.2)
-        if (challengeCompletions('a', 12) == 1) player.a.ac12protonmulti = new Decimal(1.1)
-        if (challengeCompletions('a', 11) == 5) player.a.atomchallenge11completions = new Decimal(5)
-        if (challengeCompletions('a', 11) == 4) player.a.atomchallenge11completions = new Decimal(4)
-        if (challengeCompletions('a', 11) == 3) player.a.atomchallenge11completions = new Decimal(3)
-        if (challengeCompletions('a', 11) == 2) player.a.atomchallenge11completions = new Decimal(2)
-        if (challengeCompletions('a', 11) == 1) player.a.atomchallenge11completions = new Decimal(1)
-        if (challengeCompletions('a', 12) == 5) player.a.atomchallenge12completions = new Decimal(5)
-        if (challengeCompletions('a', 12) == 4) player.a.atomchallenge12completions = new Decimal(4)
-        if (challengeCompletions('a', 12) == 3) player.a.atomchallenge12completions = new Decimal(3)
-        if (challengeCompletions('a', 12) == 2) player.a.atomchallenge12completions = new Decimal(2)
-        if (challengeCompletions('a', 12) == 1) player.a.atomchallenge12completions = new Decimal(1)
-        if (challengeCompletions('a', 13) == 5) player.a.atomchallenge13completions = new Decimal(5)
-        if (challengeCompletions('a', 13) == 4) player.a.atomchallenge13completions = new Decimal(4)
-        if (challengeCompletions('a', 13) == 3) player.a.atomchallenge13completions = new Decimal(3)
-        if (challengeCompletions('a', 13) == 2) player.a.atomchallenge13completions = new Decimal(2)
-        if (challengeCompletions('a', 13) == 1) player.a.atomchallenge13completions = new Decimal(1)
-        if (challengeCompletions('a', 14) == 5) player.a.atomchallenge14completions = new Decimal(5)
-        if (challengeCompletions('a', 14) == 4) player.a.atomchallenge14completions = new Decimal(4)
-        if (challengeCompletions('a', 14) == 3) player.a.atomchallenge14completions = new Decimal(3)
-        if (challengeCompletions('a', 14) == 2) player.a.atomchallenge14completions = new Decimal(2)
-        if (challengeCompletions('a', 14) == 1) player.a.atomchallenge14completions = new Decimal(1)
-        if (challengeCompletions('a', 15) == 5) player.a.atomchallenge15completions = new Decimal(5)
-        if (challengeCompletions('a', 15) == 4) player.a.atomchallenge15completions = new Decimal(4)
-        if (challengeCompletions('a', 15) == 3) player.a.atomchallenge15completions = new Decimal(3)
-        if (challengeCompletions('a', 15) == 2) player.a.atomchallenge15completions = new Decimal(2)
-        if (challengeCompletions('a', 15) == 1) player.a.atomchallenge15completions = new Decimal(1)
-        if (challengeCompletions('a', 16) == 5) player.a.atomchallenge16completions = new Decimal(5)
-        if (challengeCompletions('a', 16) == 4) player.a.atomchallenge16completions = new Decimal(4)
-        if (challengeCompletions('a', 16) == 3) player.a.atomchallenge16completions = new Decimal(3)
-        if (challengeCompletions('a', 16) == 2) player.a.atomchallenge16completions = new Decimal(2)
-        if (challengeCompletions('a', 16) == 1) player.a.atomchallenge16completions = new Decimal(1)
-        if (challengeCompletions('a', 17) == 5) player.a.atomchallenge17completions = new Decimal(5)
-        if (challengeCompletions('a', 17) == 4) player.a.atomchallenge17completions = new Decimal(4)
-        if (challengeCompletions('a', 17) == 3) player.a.atomchallenge17completions = new Decimal(3)
-        if (challengeCompletions('a', 17) == 2) player.a.atomchallenge17completions = new Decimal(2)
-        if (challengeCompletions('a', 17) == 1) player.a.atomchallenge17completions = new Decimal(1)
-        if (challengeCompletions('a', 18) == 5) player.a.atomchallenge18completions = new Decimal(5)
-        if (challengeCompletions('a', 18) == 4) player.a.atomchallenge18completions = new Decimal(4)
-        if (challengeCompletions('a', 18) == 3) player.a.atomchallenge18completions = new Decimal(3)
-        if (challengeCompletions('a', 18) == 2) player.a.atomchallenge18completions = new Decimal(2)
-        if (challengeCompletions('a', 18) == 1) player.a.atomchallenge18completions = new Decimal(1)
-        if (challengeCompletions('a', 19) == 5) player.a.atomchallenge19completions = new Decimal(5)
-        if (challengeCompletions('a', 19) == 4) player.a.atomchallenge19completions = new Decimal(4)
-        if (challengeCompletions('a', 19) == 3) player.a.atomchallenge19completions = new Decimal(3)
-        if (challengeCompletions('a', 19) == 2) player.a.atomchallenge19completions = new Decimal(2)
-        if (challengeCompletions('a', 19) == 1) player.a.atomchallenge19completions = new Decimal(1)
-        if (challengeCompletions('a', 20) == 5) player.a.atomchallenge20completions = new Decimal(5)
-        if (challengeCompletions('a', 20) == 4) player.a.atomchallenge20completions = new Decimal(4)
-        if (challengeCompletions('a', 20) == 3) player.a.atomchallenge20completions = new Decimal(3)
-        if (challengeCompletions('a', 20) == 2) player.a.atomchallenge20completions = new Decimal(2)
-        if (challengeCompletions('a', 20) == 1) player.a.atomchallenge20completions = new Decimal(1)
-        if (player.q.points.gte(player.a.bestquarks)) player.a.bestquarks = player.q.points
-        if (player.e.points.gte(player.a.bestelectrons)) player.a.bestelectrons = player.e.points
-        if (challengeCompletions('a', 14) == 5 && !hasUpgrade('m', 21)) player.a.atomchallenge14multiplier = new Decimal(1.5)
-        if (challengeCompletions('a', 14) == 5 && hasUpgrade('m', 21)) player.a.atomchallenge14multiplier = new Decimal(1.66)
-        if (challengeCompletions('a', 14) == 4) player.a.atomchallenge14multiplier = new Decimal(1.4)
-        if (challengeCompletions('a', 14) == 3) player.a.atomchallenge14multiplier = new Decimal(1.3)
-        if (challengeCompletions('a', 14) == 2) player.a.atomchallenge14multiplier = new Decimal(1.2)
-        if (challengeCompletions('a', 14) == 1) player.a.atomchallenge14multiplier = new Decimal(1.1)
-        if (challengeCompletions('a', 15) == 5 && !hasUpgrade('m', 22)) player.a.atomchallenge15multiplier = new Decimal(1.25)
-        if (challengeCompletions('a', 15) == 5 && hasUpgrade('m', 22)) player.a.atomchallenge15multiplier = new Decimal(1.4)
-        if (challengeCompletions('a', 15) == 4) player.a.atomchallenge15multiplier = new Decimal(1.2)
-        if (challengeCompletions('a', 15) == 3) player.a.atomchallenge15multiplier = new Decimal(1.15)
-        if (challengeCompletions('a', 15) == 2) player.a.atomchallenge15multiplier = new Decimal(1.1)
-        if (challengeCompletions('a', 15) == 1) player.a.atomchallenge15multiplier = new Decimal(1.05)
-        if (challengeCompletions('a', 16) == 5) player.a.atomchallenge16multiplier = new Decimal(1.33)
-        if (challengeCompletions('a', 16) == 4) player.a.atomchallenge16multiplier = new Decimal(1.266)
-        if (challengeCompletions('a', 16) == 3) player.a.atomchallenge16multiplier = new Decimal(1.2)
-        if (challengeCompletions('a', 16) == 2) player.a.atomchallenge16multiplier = new Decimal(1.133)
-        if (challengeCompletions('a', 16) == 1) player.a.atomchallenge16multiplier = new Decimal(1.066)
-        if (challengeCompletions('a', 18) == 5) player.a.ac18quarkexp = new Decimal(1.05)
-        if (challengeCompletions('a', 18) == 4) player.a.ac18quarkexp = new Decimal(1.04)
-        if (challengeCompletions('a', 18) == 3) player.a.ac18quarkexp = new Decimal(1.03)
-        if (challengeCompletions('a', 18) == 2) player.a.ac18quarkexp = new Decimal(1.02)
-        if (challengeCompletions('a', 18) == 1) player.a.ac18quarkexp = new Decimal(1.01)
-        if (challengeCompletions('a', 19) == 5) player.a.ac19electronexp = new Decimal(1.0666)
-        if (challengeCompletions('a', 19) == 4) player.a.ac19electronexp = new Decimal(1.0533)
-        if (challengeCompletions('a', 19) == 3) player.a.ac19electronexp = new Decimal(1.04)
-        if (challengeCompletions('a', 19) == 2) player.a.ac19electronexp = new Decimal(1.0266)
-        if (challengeCompletions('a', 19) == 1) player.a.ac19electronexp = new Decimal(1.0133)
-        if (challengeCompletions('a', 20) == 5) player.a.ac20everythingmult = new Decimal(3.0)
-        if (challengeCompletions('a', 20) == 4) player.a.ac20everythingmult = new Decimal(2.45)
-        if (challengeCompletions('a', 20) == 3) player.a.ac20everythingmult = new Decimal(2.0)
-        if (challengeCompletions('a', 20) == 2) player.a.ac20everythingmult = new Decimal(1.6)
-        if (challengeCompletions('a', 20) == 1) player.a.ac20everythingmult = new Decimal(1.3)
-        player.a.totalatomchallengecompletions = player.a.atomchallenge11completions.plus(player.a.atomchallenge12completions).plus(player.a.atomchallenge13completions).plus(player.a.atomchallenge14completions).plus(player.a.atomchallenge15completions).plus(player.a.atomchallenge16completions).plus(player.a.atomchallenge17completions).plus(player.a.atomchallenge18completions).plus(player.a.atomchallenge19completions).plus(player.a.atomchallenge20completions)
-        if (inChallenge('a', 11)) player.a.atomchallenge11 = new Decimal(0)
-        if (!inChallenge('a', 11)) player.a.atomchallenge11 = new Decimal(1)
-        if (inChallenge('a', 14)) player.a.atomchallenge14 = new Decimal(0)
-        if (!inChallenge('a', 14)) player.a.atomchallenge14 = new Decimal(1)
-        player.a.extratotalatomchallengecompletions = new Decimal(0).plus(upgradeEffect('a', 41)).plus(player.m.moleculeextraatomchallenges).plus(buyableEffect('m', 14))
-        
-        player.a.actualtotalatomchallengecompletions = player.a.totalatomchallengecompletions.plus(player.a.extratotalatomchallengecompletions)
-        */
-
         if (hasUpgrade('i', 15)) mult = mult.times(upgradeEffect('i', 15))
         if (hasUpgrade('i', 17)) mult = mult.times(upgradeEffect('i', 17))
         if (hasUpgrade('i', 23)) mult = mult.times(upgradeEffect('i', 23))
@@ -249,9 +147,11 @@ addLayer("a", {
         if (hasUpgrade('i', 38)) mult = mult.times(upgradeEffect('i', 38))
         if (hasUpgrade('i', 44)) mult = mult.times(upgradeEffect('i', 44))
         if (hasMilestone('i', 12)) mult = mult.times(new Decimal.pow(3.08, player.i.totalinfinitychallengecompletions))
-
-        //player.infinity_broken = false
-          //  mult = mult.times(1e2)
+        if (getBuyableAmount('m', 23).gte(1)) mult = mult.times(buyableEffect('m', 23))
+        if (player.am.total.gte(1) && player.am.nitrogen.gte(1)) mult = mult.times(player.am.nitrogenboost)
+        if (hasUpgrade('w', 11)) mult = mult.times(upgradeEffect('w', 11))
+        if (hasUpgrade('w', 24)) mult = mult.times(upgradeEffect('w', 24))
+        if (hasUpgrade('w', 36)) mult = mult.times(upgradeEffect('w', 36))
         return mult
     },
     gainExp() {
@@ -313,6 +213,10 @@ addLayer("a", {
         return player.a.points.add(2).pow(0.389)
       },
       effectDisplay() { return format(softcap((upgradeEffect(this.layer, this.id)), new Decimal(10) , 0.4))+"x" },
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       12: {
@@ -323,6 +227,10 @@ addLayer("a", {
         return player.a.points.add(2).pow(0.346)
       },
       effectDisplay() { return format(softcap((upgradeEffect(this.layer, this.id)), new Decimal(10) , 0.4))+"x" },
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       13: {
@@ -333,6 +241,10 @@ addLayer("a", {
         return player.a.points.add(2).pow(0.364)
       },
       effectDisplay() { return format(softcap((upgradeEffect(this.layer, this.id)), new Decimal(10) , 0.4))+"x" },
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       14: {
@@ -344,7 +256,11 @@ addLayer("a", {
       },
       effectDisplay() { return format((upgradeEffect(this.layer, this.id)))+"x" },
       branches: ['a', 11, 12],
-      unlocked() {return (hasUpgrade('a', 11) && hasUpgrade('a', 12))}
+      unlocked() {return (hasUpgrade('a', 11) && hasUpgrade('a', 12) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       15: {
@@ -356,7 +272,11 @@ addLayer("a", {
       },
       effectDisplay() { return format((upgradeEffect(this.layer, this.id)))+"x" },
       branches: ['a', 12, 13],
-      unlocked() {return (hasUpgrade('a', 12) && hasUpgrade('a', 13))}
+      unlocked() {return (hasUpgrade('a', 12) && hasUpgrade('a', 13) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       16: {
@@ -368,7 +288,11 @@ addLayer("a", {
       },
       effectDisplay() { return format((upgradeEffect(this.layer, this.id)))+"x" },
       branches: ['a', 14],
-      unlocked() {return (hasUpgrade('a', 14))}
+      unlocked() {return (hasUpgrade('a', 14) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       17: {
@@ -380,7 +304,11 @@ addLayer("a", {
       },
       effectDisplay() { return format((upgradeEffect(this.layer, this.id)))+"x" },
       branches: ['a', 14, 15],
-      unlocked() {return (hasUpgrade('a', 14) && hasUpgrade('a', 15))}
+      unlocked() {return (hasUpgrade('a', 14) && hasUpgrade('a', 15) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       18: {
@@ -392,7 +320,11 @@ addLayer("a", {
       },
       effectDisplay() { return format((upgradeEffect(this.layer, this.id)))+"x" },
       branches: ['a', 15],
-      unlocked() {return (hasUpgrade('a', 15))}
+      unlocked() {return (hasUpgrade('a', 15) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       19: {
@@ -404,7 +336,11 @@ addLayer("a", {
       },
       effectDisplay() { return format((upgradeEffect(this.layer, this.id)))+"x" },
       branches: ['a', 16],
-      unlocked() {return (hasUpgrade('a', 16))}
+      unlocked() {return (hasUpgrade('a', 16) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       20: {
@@ -416,7 +352,11 @@ addLayer("a", {
     },
       effectDisplay() { return format((upgradeEffect(this.layer, this.id)))+"x" },
       branches: ['a', 17],
-      unlocked() {return (hasUpgrade('a', 17))}
+      unlocked() {return (hasUpgrade('a', 17) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       21: {
@@ -428,7 +368,11 @@ addLayer("a", {
       },
       effectDisplay() { return format((upgradeEffect(this.layer, this.id)))+"x" },
       branches: ['a', 18],
-      unlocked() {return (hasUpgrade('a', 18))}
+      unlocked() {return (hasUpgrade('a', 18) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       22: {
@@ -441,7 +385,11 @@ addLayer("a", {
       },
       effectDisplay() { return format(player.e.points.add(1).pow(0.00133))+"x" },
       branches: ['a', 19],
-      unlocked() {return (hasUpgrade('a', 19))}
+      unlocked() {return (hasUpgrade('a', 19) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       23: {
@@ -454,7 +402,11 @@ addLayer("a", {
       },
       effectDisplay() { return format(player.e.points.add(1).pow(0.0019))+"x" },
       branches: ['a', 19, 20,],
-      unlocked() {return (hasUpgrade('a', 19) && hasUpgrade('a', 20))}
+      unlocked() {return (hasUpgrade('a', 19) && hasUpgrade('a', 20) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       24: {
@@ -467,7 +419,11 @@ addLayer("a", {
       },
       effectDisplay() { return format(player.points.add(1).pow(0.00083))+"x" },
       branches: ['a', 20, 21],
-      unlocked() {return (hasUpgrade('a', 20) && hasUpgrade('a', 21))}
+      unlocked() {return (hasUpgrade('a', 20) && hasUpgrade('a', 21) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       25: {
@@ -480,7 +436,11 @@ addLayer("a", {
       },
       effectDisplay() { return format(player.points.add(1).pow(0.00107))+"x" },
       branches: ['a', 21],
-      unlocked() {return (hasUpgrade('a', 21))}
+      unlocked() {return (hasUpgrade('a', 21) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       26: {
@@ -492,7 +452,11 @@ addLayer("a", {
       },
       effectDisplay() { return format((upgradeEffect(this.layer, this.id)))+"x" },
       branches: ['a', 22, 23],
-      unlocked() {return (hasUpgrade('a', 22) && hasUpgrade('a', 23))}
+      unlocked() {return (hasUpgrade('a', 22) && hasUpgrade('a', 23) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       27: {
@@ -504,7 +468,11 @@ addLayer("a", {
       },
       effectDisplay() { return format((upgradeEffect(this.layer, this.id)))+"x" },
       branches: ['a', 24, 25],
-      unlocked() {return (hasUpgrade('a', 24) && hasUpgrade('a', 25))}
+      unlocked() {return (hasUpgrade('a', 24) && hasUpgrade('a', 25) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       28: {
@@ -517,7 +485,11 @@ addLayer("a", {
       },
       effectDisplay() { return format(player.q.points.add(1).pow(0.00610))+"x" },
       branches: ['a', 26, 27],
-      unlocked() {return (hasUpgrade('a', 26) && hasUpgrade('a', 27))}
+      unlocked() {return (hasUpgrade('a', 26) && hasUpgrade('a', 27) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       29: {
@@ -530,7 +502,11 @@ addLayer("a", {
       },
       effectDisplay() { return format(softcap(player.a.points.add(1).pow(0.1820), new Decimal(1e6), 0.3))+"x" },
       branches: ['a', 28],
-      unlocked() {return (hasUpgrade('a', 28))}
+      unlocked() {return (hasUpgrade('a', 28) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       30: {
@@ -543,7 +519,11 @@ addLayer("a", {
       },
       effectDisplay() { return format(new Decimal.pow(1.425, player.a.upgrades.length))+"x" },
       branches: ['a', 28],
-      unlocked() {return (hasUpgrade('a', 28))}
+      unlocked() {return (hasUpgrade('a', 28) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       31: {
@@ -556,7 +536,11 @@ addLayer("a", {
       },
       effectDisplay() { return format(new Decimal.pow(1.05, player.a.upgrades.length))+"x" },
       branches: ['a', 29],
-      unlocked() {return (hasUpgrade('a', 29))}
+      unlocked() {return (hasUpgrade('a', 29) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       32: {
@@ -569,7 +553,11 @@ addLayer("a", {
       },
       effectDisplay() { return format(new Decimal.pow(1.045, player.a.upgrades.length))+"x" },
       branches: ['a', 29],
-      unlocked() {return (hasUpgrade('a', 29))}
+      unlocked() {return (hasUpgrade('a', 29) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       33: {
@@ -582,7 +570,11 @@ addLayer("a", {
       },
       effectDisplay() { return format(new Decimal.pow(1.06, player.a.upgrades.length))+"x" },
       branches: ['a', 30],
-      unlocked() {return (hasUpgrade('a', 30))}
+      unlocked() {return (hasUpgrade('a', 30) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       34: {
@@ -595,7 +587,11 @@ addLayer("a", {
       },
       effectDisplay() { return format(new Decimal.pow(1.0133, player.a.upgrades.length))+"x" },
       branches: ['a', 30],
-      unlocked() {return (hasUpgrade('a', 30))}
+      unlocked() {return (hasUpgrade('a', 30) || inChallenge('i', 13))},
+      canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       35: {
@@ -603,7 +599,11 @@ addLayer("a", {
         description: "Unlock Tertiary Protons.",
         cost: new Decimal(1e24),
         branches: ['a', 31, 32, 33, 34],
-        unlocked() {return (hasUpgrade('a', 31) && hasUpgrade('a', 32) && hasUpgrade('a', 33) && hasUpgrade('a', 34))}
+        unlocked() {return (hasUpgrade('a', 31) && hasUpgrade('a', 32) && hasUpgrade('a', 33) && hasUpgrade('a', 34) || inChallenge('i', 13))},
+        canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       36: {
@@ -616,7 +616,11 @@ addLayer("a", {
             else return 1   
         },
         effectDisplay() { return format(new Decimal.pow(1.015, player.a.upgrades.length))+"x" },
-        unlocked() {return (hasAchievement('ach', 43) && hasUpgrade('a', 35))}
+        unlocked() {return (hasAchievement('ach', 43) && hasUpgrade('a', 35) || inChallenge('i', 13))},
+        canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       37: {
@@ -629,7 +633,11 @@ addLayer("a", {
             else return 1   
         },
         effectDisplay() { return format(player.q.points.plus(1).pow(0.0067))+"x" },
-        unlocked() {return (hasAchievement('ach', 43) && hasUpgrade('a', 35))}
+        unlocked() {return (hasAchievement('ach', 43) && hasUpgrade('a', 35) || inChallenge('i', 13))},
+        canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       38: {
@@ -642,7 +650,11 @@ addLayer("a", {
             else return 1   
         },
         effectDisplay() { return format(new Decimal.pow(1.0069, player.a.upgrades.length))+"x" },
-        unlocked() {return (hasUpgrade('a', 36))}
+        unlocked() {return (hasUpgrade('a', 36) || inChallenge('i', 13))},
+        canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       39: {
@@ -655,7 +667,11 @@ addLayer("a", {
             else return 1   
         },
         effectDisplay() { return format(player.q.points.plus(1).pow(0.00077))+"x" },
-        unlocked() {return (hasUpgrade('a', 36) && hasUpgrade('a', 37))}
+        unlocked() {return (hasUpgrade('a', 36) && hasUpgrade('a', 37) || inChallenge('i', 13))},
+        canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       40: {
@@ -668,7 +684,11 @@ addLayer("a", {
             else return 1   
         },
         effectDisplay() { return format(new Decimal.pow(1.0266, player.a.upgrades.length))+"x" },
-        unlocked() {return (hasUpgrade('a', 37))}
+        unlocked() {return (hasUpgrade('a', 37) || inChallenge('i', 13))},
+        canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       41: {
@@ -679,7 +699,11 @@ addLayer("a", {
         effect() {if (hasUpgrade('a', 41)) return new Decimal(3)
             else return 0
         },
-        unlocked() {return (hasUpgrade('a', 38))}
+        unlocked() {return (hasUpgrade('a', 38) || inChallenge('i', 13))},
+        canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       42: {
@@ -691,7 +715,11 @@ addLayer("a", {
             if (hasUpgrade('a', 42)) return new Decimal(200000)
             else return 1   
         },
-        unlocked() {return (hasUpgrade('a', 38))}
+        unlocked() {return (hasUpgrade('a', 38) || inChallenge('i', 13))},
+        canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       43: {
@@ -703,7 +731,11 @@ addLayer("a", {
             if (hasUpgrade('a', 43)) return new Decimal(1.5)
             else return 1   
         },
-        unlocked() {return (hasUpgrade('a', 38) && hasUpgrade('a', 39) && hasUpgrade('a', 40))}
+        unlocked() {return (hasUpgrade('a', 38) && hasUpgrade('a', 39) && hasUpgrade('a', 40) || inChallenge('i', 13))},
+        canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       44: {
@@ -711,7 +743,11 @@ addLayer("a", {
         description: "Quark gain is multiplied by 3x.",
         cost: new Decimal(1e53),
         branches: ['a', 40],
-        unlocked() {return (hasUpgrade('a', 40))}
+        unlocked() {return (hasUpgrade('a', 40) || inChallenge('i', 13))},
+        canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
 
       45: {
@@ -719,7 +755,11 @@ addLayer("a", {
         description: "Electron gain is multiplied by 15x.",
         cost: new Decimal(5e53),
         branches: ['a', 40],
-        unlocked() {return (hasUpgrade('a', 40))}
+        unlocked() {return (hasUpgrade('a', 40) || inChallenge('i', 13))},
+        canAfford() {if (inChallenge('i', 13) && player.a.upgrades.length < 5) return true
+        else if (inChallenge('i', 13) && player.a.upgrades.length >= 5) return false
+        else return true
+      }
       },
     },
     milestones: {
@@ -949,7 +989,6 @@ addLayer("a", {
 
 14: {
     requirements: [1e15,1e20,1e30,1e37,1e43],
-    rewards: ["Every Atom Challenge completed gives a 1.1x multiplicative boost to power gain.","Every Atom Challenge completed gives a 1.2x multiplicative boost to power gain.","Every Atom Challenge completed gives a 1.3x multiplicative boost to power gain.","Every Atom Challenge completed gives a 1.4x multiplicative boost to power gain.","Every Atom Challenge completed gives a 1.5x multiplicative boost to power gain."],
     name() {return `Atom Challenge 4<br>Stability<br> (${challengeCompletions('a', 14)} / 5)`},
     challengeDescription: "You cannot get Colored Quarks.",
     getChallengeBulk() {
@@ -979,9 +1018,7 @@ addLayer("a", {
     return `${format(this.requirements[bulk])} Quarks (+${gained})`
 },
     rewardDescription() {
-        let comp = challengeCompletions('a', 14)
-        if (comp == 0) return "Challenge not yet completed."
-        return this.rewards[comp - 1]
+        return 'Every Atom Challenge completed gives a ' + format(player.a.atomchallenge14multiplier) + 'x multiplicative boost to power gain.'
     },
     canComplete() {
         let comp = challengeCompletions('a', 14)
@@ -999,13 +1036,6 @@ addLayer("a", {
 
 15: {
     requirements: [1e20,1e30,1e35,1e40,1e50],
-    rewards: [
-        "Every Atom Challenge completed gives a 1.05x multiplicative boost to Quark gain.",
-        "Every Atom Challenge completed gives a 1.1x multiplicative boost to Quark gain.",
-        "Every Atom Challenge completed gives a 1.15x multiplicative boost to Quark gain.",
-        "Every Atom Challenge completed gives a 1.2x multiplicative boost to Quark gain.",
-        "Every Atom Challenge completed gives a 1.25x multiplicative boost to Quark gain."
-    ],
     name() {return `Atom Challenge 5<br>Duality<br> (${challengeCompletions('a', 15)} / 5)`},
     challengeDescription: "Atom Challenges 1 and 3 at the same time.",
     getChallengeBulk() {
@@ -1035,9 +1065,7 @@ addLayer("a", {
     return `${format(this.requirements[bulk])} Quarks (+${gained})`
 },
     rewardDescription() {
-        let comp = challengeCompletions('a', 15)
-        if (comp == 0) return "Challenge not yet completed."
-        return this.rewards[comp - 1]
+        return 'Every Atom Challenge completed gives a ' + format(player.a.atomchallenge15multiplier) + 'x multiplicative boost to Quark gain.'
     },
     canComplete() {
         let comp = challengeCompletions('a', 15)
@@ -1056,13 +1084,6 @@ addLayer("a", {
 
 16: {
     requirements: [2.5e8,1e20,1e27,1e30,1e34],
-    rewards: [
-        "Every Atom Challenge completed gives a 1.066x multiplicative boost to Electron gain.",
-        "Every Atom Challenge completed gives a 1.133x multiplicative boost to Electron gain.",
-        "Every Atom Challenge completed gives a 1.2x multiplicative boost to Electron gain.",
-        "Every Atom Challenge completed gives a 1.266x multiplicative boost to Electron gain.",
-        "Every Atom Challenge completed gives a 1.33x multiplicative boost to Electron gain."
-    ],
     name() {return `Atom Challenge 6<br>Quarkless<br> (${challengeCompletions('a', 16)} / 5)`},
     challengeDescription: "Atom Challenges 2 and 4 at the same time.",
     getChallengeBulk() {
@@ -1092,9 +1113,7 @@ addLayer("a", {
     return `${format(this.requirements[bulk])} Quarks (+${gained})`
 },
     rewardDescription() {
-        let comp = challengeCompletions('a', 16)
-        if (comp == 0) return "Challenge not yet completed."
-        return this.rewards[comp - 1]
+        return 'Every Atom Challenge completed gives a ' + format(player.a.atomchallenge16multiplier) + 'x multiplicative boost to Electron gain.'
     },
     canComplete() {
         let comp = challengeCompletions('a', 16)

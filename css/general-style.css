@@ -49,3 +49,36 @@ h1, h2, h3, b, input {
 	color: var(--points);
 	text-shadow: 0 0 10px var(--points);
 }
+
+@keyframes pulseColor {
+    from {
+        background-color: orange;
+    }
+
+    to {
+        background-color: rgb(255, 207, 102);
+    }
+}
+
+@keyframes pulseColor2 {
+    from {
+        background-color: rgb(82, 134, 72);
+    }
+
+    to {
+        background-color: rgb(131, 224, 127);
+    }
+}
+
+@keyframes pulseColor3 {
+    from {
+        background-color: rgb(78,80,209)
+    }
+
+    to {
+        background-color: rgb(127, 177, 224);
+    }
+}
+
+
+/*background-color: rgb(216, 244, 255);

@@ -24,6 +24,7 @@ addLayer("i", {
         ic11multiplier: new Decimal(1),
         totalinfinitychallengecompletions: new Decimal(0),
         infinitychallenge12completions: new Decimal(0),
+        infinitychallenge13completions: new Decimal(0),
         ic12: new Decimal(1),
         ic12_1: new Decimal(1),
         ic12_2: new Decimal(1),
@@ -61,14 +62,16 @@ addLayer("i", {
         "milestones",
         "blank",
         ["display-text",
-            function() {if (hasMilestone('i', 3) && hasMilestone('i', 12)) return 'You have ' +  '<h2><span style=\"color: #195ef3; text-shadow: 0px 0px 10px #195ef3; font-family: Lucida Console\">' + format(player.i.totalinfinitychallengecompletions, 0) + '/6</span></h2>' + ' Total Infinity Challenge Completions, which are multiplying Atom gain by ' + '<h3><span style=\"color: #195ef3; text-shadow: 0px 0px 10px #195ef3; font-family: Lucida Console\">' + format(new Decimal.pow(3.08, player.i.totalinfinitychallengecompletions)) + '</span></h3>' +'x'
+            function() {if (hasMilestone('i', 3) && hasMilestone('i', 12) && hasMilestone('i', 17)) return 'You have ' +  '<h2><span style=\"color: #195ef3; text-shadow: 0px 0px 10px #195ef3; font-family: Lucida Console\">' + format(player.i.totalinfinitychallengecompletions, 0) + '/12</span></h2>' + ' Total Infinity Challenge Completions, which are multiplying Atom gain by ' + '<h3><span style=\"color: #195ef3; text-shadow: 0px 0px 10px #195ef3; font-family: Lucida Console\">' + format(new Decimal.pow(3.08, player.i.totalinfinitychallengecompletions)) + '</span></h3>' +'x'
+                else if (hasMilestone('i', 3) && hasMilestone('i', 12)) return 'You have ' +  '<h2><span style=\"color: #195ef3; text-shadow: 0px 0px 10px #195ef3; font-family: Lucida Console\">' + format(player.i.totalinfinitychallengecompletions, 0) + '/6</span></h2>' + ' Total Infinity Challenge Completions, which are multiplying Atom gain by ' + '<h3><span style=\"color: #195ef3; text-shadow: 0px 0px 10px #195ef3; font-family: Lucida Console\">' + format(new Decimal.pow(3.08, player.i.totalinfinitychallengecompletions)) + '</span></h3>' +'x'
                 else if (hasMilestone('i', 3)) return 'You have ' +  '<h2><span style=\"color: #195ef3; text-shadow: 0px 0px 10px #195ef3; font-family: Lucida Console\">' + format(player.i.totalinfinitychallengecompletions, 0) + '/6</span></h2>' + ' Total Infinity Challenge Completions'},
             { "color": "white", "font-size": "16px" }],
         () => (hasMilestone('i', 3)) ? "blank" : "",
-        "challenges",
+        ["row", [["challenge", 11], ["challenge", 12]]],
+        ["row", [["challenge", 13]]],
         "blank",
         "blank",
-        ["upgrade-tree", [ [11], [12, 13, 14, 15, 16],[17,18,19],[20,21,22,23],[24,25],[26],[27,28],[29,30,31],[32,33,34],[35,36,37],[38],[39],[40,41,42,43,44],[45],[46] ] ],
+        ["upgrade-tree", [ [11], [12, 13, 14, 15, 16],[17,18,19],[20,21,22,23],[24,25],[26],[27,28],[29,30,31],[32,33,34],[35,36,37],[38],[39],[40,41,42,43,44],[45],[46],[47,48,49],[50,51],[52],[53],[54] ] ],
     ],
     color: "#195ef3",
     nodeStyle() {
@@ -92,7 +95,13 @@ addLayer("i", {
         if (challengeCompletions('i', 11) == 1) player.i.ic11multiplier = new Decimal(5)
         if (player.i.infinitychallenge12completions.gte(3)) player.i.ic12multiplier_3 = new Decimal(3)
         if (player.i.infinitychallenge12completions.gte(2)) player.i.ic12multiplier_2 = new Decimal(3)
+        if (player.i.infinitychallenge12completions.gte(3)) player.i.ic12multiplier_2 = new Decimal(10)
         if (player.i.infinitychallenge12completions.gte(1)) player.i.ic12multiplier = new Decimal(3)
+        if (player.i.infinitychallenge12completions.gte(2)) player.i.ic12multiplier = new Decimal(10)
+        if (player.i.infinitychallenge12completions.gte(3)) player.i.ic12multiplier = new Decimal(300)
+        if (challengeCompletions('i', 13) == 3) player.i.infinitychallenge13completions = new Decimal(3)
+        if (challengeCompletions('i', 13) == 2) player.i.infinitychallenge13completions = new Decimal(2)
+        if (challengeCompletions('i', 13) == 1) player.i.infinitychallenge13completions = new Decimal(1)
         if (challengeCompletions('i', 12) == 3) player.i.infinitychallenge12completions = new Decimal(3)
         if (challengeCompletions('i', 12) == 2) player.i.infinitychallenge12completions = new Decimal(2)
         if (challengeCompletions('i', 12) == 1) player.i.infinitychallenge12completions = new Decimal(1)
@@ -108,11 +117,11 @@ addLayer("i", {
         if (hasUpgrade('i', 11)) player.i.infinitypowergain = player.i.total.pow(player.i.im5pow)
         if (hasUpgrade('i', 11)) player.i.infinitypower = player.i.infinitypower.plus(player.i.infinitypowergain.times(diff))
         player.i.infinitypowermultiplier = player.i.infinitypower.plus(1).log2().div(7.5).plus(1)
-        player.i.totalinfinitychallengecompletions = player.i.infinitychallenge11completions.plus(player.i.infinitychallenge12completions)
+        player.i.totalinfinitychallengecompletions = player.i.infinitychallenge11completions.plus(player.i.infinitychallenge12completions).plus(player.i.infinitychallenge13completions)
         player.i.timesinceinfinityreset = player.i.timesinceinfinityreset.plus(new Decimal(1).times(diff))
         if (player.q.tertiaryprotons.gte(player.i.besttertiaryprotons)) player.i.besttertiaryprotons = player.q.tertiaryprotons
     },
-    requires() {if (inChallenge('i', 11) || inChallenge('i', 12)) return new Decimal(2e308)
+    requires() {if (inChallenge('i', 11) || inChallenge('i', 12) || inChallenge('i', 13)) return new Decimal(2e308)
         else return new Decimal(1.79e308)}, 
     resource: "Infinity Points", 
     baseResource: "Quarks", 
@@ -573,6 +582,62 @@ addLayer("i", {
             branches: ['i', 45],
             unlocked() {return hasUpgrade('i', 45)}
         },
+        47: {
+            title: "37",
+            description: "You can buy one more Water Upgrade from Rows 3 and 9. Amino Acid, DNA and Water gain is multiplied by 3x.",
+            cost: new Decimal(1e6),
+            branches: ['i', 46],
+            unlocked() {return hasUpgrade('i', 46)}
+        },
+        48: {
+            title: "38",
+            description: "You can buy one more Water Upgrade from Rows 4 and 5.",
+            cost: new Decimal(1e8),
+            branches: ['i', 46],
+            unlocked() {return hasUpgrade('i', 46)}
+        },
+        49: {
+            title: "39",
+            description: "You can buy one more Water Upgrade from Rows 2 and 6.",
+            cost: new Decimal(1e9),
+            branches: ['i', 46],
+            unlocked() {return hasUpgrade('i', 46)}
+        },
+        50: {
+            title: "40",
+            description: "You can buy two more Water Upgrades from Row 7.",
+            cost: new Decimal(1e12),
+            branches: ['i', 47, 48, 49],
+            unlocked() {return hasUpgrade('i', 47) && hasUpgrade('i', 48) && hasUpgrade('i', 49)}
+        },
+        51: {
+            title: "41",
+            description: "You can buy two more Water Upgrades from Row 8.",
+            cost: new Decimal(1e13),
+            branches: ['i', 47, 48, 49],
+            unlocked() {return hasUpgrade('i', 47) && hasUpgrade('i', 48) && hasUpgrade('i', 49)}
+        },
+        52: {
+            title: "42",
+            description: "You can buy one more Water Upgrade from Rows 5, 6 and 7. Water Upgrade 3-2's effect is raised to the power of the log2 of the Water Droplets' effect.",
+            cost: new Decimal(1e14),
+            branches: ['i', 50, 51],
+            unlocked() {return hasUpgrade('i', 50) && hasUpgrade('i', 51)}
+        },
+        53: {
+            title: "43",
+            description: "You can buy all Water Upgrades from Rows 3-5. Energy gain from Molecules (Molecules^Buyable 6 Effect) -> (Buyable 6 Effect^Molecules).",
+            cost: new Decimal(1e16),
+            branches: ['i', 52],
+            unlocked() {return hasUpgrade('i', 52)}
+        },
+        54: {
+            title: "44",
+            description: "You can buy all Water Upgrades, +0.025 to DNA Boost 5 cap, and +0.01x to Double Helix effect base.",
+            cost: new Decimal(1e18),
+            branches: ['i', 53],
+            unlocked() {return hasUpgrade('i', 53)}
+        },
     },
     milestones: {
         0: {
@@ -634,7 +699,9 @@ addLayer("i", {
         },
         5: {
             requirementDescription: "12 Infinities",
-            effectDescription: "Infinity Power gain is raised to ^2",
+            effectDescription() {if (hasUpgrade('i', 39)) return "Infinity Power gain is raised to ^3"
+                else return "Infinity Power gain is raised to ^2"
+            },
             done() { return player.i.infinities.gte(12) },
             style() {
                 if (hasMilestone('i', 5)) return {
@@ -784,7 +851,7 @@ addLayer("i", {
         },
         17: {
             requirementDescription: "250 Infinities",
-            effectDescription: "Molecule Buyables are automatically bought",
+            effectDescription: "The first row of Molecule Buyables is automatically bought and they do not subtract your energy, and unlock two more Infinity Challenges (second one wip)",
             done() { return player.i.infinities.gte(250) },
             toggles: [["tog", "autobuyMoleculeBuyables"]],
             style() {
@@ -794,6 +861,56 @@ addLayer("i", {
                 "background-origin": "border-box"}
             },
             unlocked() {return hasMilestone('i', 14)}
+        },
+        18: {
+            requirementDescription: "100,000,000 Infinity Points",
+            effectDescription: "You keep Amino Acid Milestone 1",
+            done() { return player.i.points.gte(1e8) },
+            style() {
+                if (hasMilestone('i', 18)) return {
+                //'background-color': '#3575ff',
+                'background': 'linear-gradient(-15deg, #0d1cee 0%, #0daeee 100%)',
+                "background-origin": "border-box"}
+            },
+            unlocked() {return hasUpgrade('i', 46)}
+        },
+        19: {
+            requirementDescription: "1.00e9 Infinity Points",
+            effectDescription: "You passively gain 1% of the DNA you'd gain on reset every second",
+            done() { return player.i.points.gte(1e9) },
+            toggles: [["tog", "passiveDNAGen"]],
+            style() {
+                if (hasMilestone('i', 19)) return {
+                //'background-color': '#3575ff',
+                'background': 'linear-gradient(-15deg, #0d1cee 0%, #0daeee 100%)',
+                "background-origin": "border-box"}
+            },
+            unlocked() {return hasUpgrade('i', 46)}
+        },
+        20: {
+            requirementDescription: "5.00e12 Infinity Points",
+            effectDescription: "You passively gain 1% of the Amino Acid you'd gain on reset every second",
+            done() { return player.i.points.gte(5e12) },
+            toggles: [["tog", "passiveAMGen"]],
+            style() {
+                if (hasMilestone('i', 20)) return {
+                //'background-color': '#3575ff',
+                'background': 'linear-gradient(-15deg, #0d1cee 0%, #0daeee 100%)',
+                "background-origin": "border-box"}
+            },
+            unlocked() {return hasUpgrade('i', 46)}
+        },
+        21: {
+            requirementDescription: "1.00e15 Infinity Points",
+            effectDescription: "You can buy max Molecules",
+            done() { return player.i.points.gte(1e15) },
+            style() {
+                if (hasMilestone('i', 21)) return {
+                //'background-color': '#3575ff',
+                'background': 'linear-gradient(-15deg, #0d1cee 0%, #0daeee 100%)',
+                "background-origin": "border-box"}
+            },
+            unlocked() {return hasUpgrade('i', 46)}
         },
     },
     challenges: {
@@ -807,9 +924,9 @@ addLayer("i", {
                 else if (challengeCompletions('i', 11) == 1) return "All Neutrons colored Quarks effects are always 0.01, lowered to 0.0001 after getting your first Atom."
                 else return "All Neutrons colored Quarks effects are always 0.1, lowered to 0.001 after getting your first Atom."},
             goalDescription: "1.79e308 Quarks",
-            rewardDescription() {if (challengeCompletions('i', 11) == 3) return "All Neutrons colored Quarks multipliers are multiplied by 210x"
-                else if (challengeCompletions('i', 11) == 2) return "All Neutrons colored Quarks multipliers are multiplied by 30x"
-                else if (challengeCompletions('i', 11) == 1) return "All Neutrons colored Quarks multipliers are multiplied by 5x"
+            rewardDescription() {if (challengeCompletions('i', 11) == 3) return "All Neutrons colored Quarks multipliers are multiplied by 210x."
+                else if (challengeCompletions('i', 11) == 2) return "All Neutrons colored Quarks multipliers are multiplied by 30x."
+                else if (challengeCompletions('i', 11) == 1) return "All Neutrons colored Quarks multipliers are multiplied by 5x."
                 else return "Challenge not yet completed."},
             canComplete() {return player.q.points.gte(1.79e308)},
             completionLimit: 3,
@@ -835,9 +952,9 @@ addLayer("i", {
                 else if (challengeCompletions('i', 12) == 1) return "Secondary Colored Quarks, and Blue Quarks Effects are disabled."
                 else return "Secondary Colored Quarks Effects are disabled."},
             goalDescription: "1.79e308 Quarks",
-            rewardDescription() {if (challengeCompletions('i', 12) == 3) return "All Protons multipliers are multiplied by 3x"
-                else if (challengeCompletions('i', 12) == 2) return "Proton and Secondary Proton multiplier is multiplied by 3x"
-                else if (challengeCompletions('i', 12) == 1) return "Proton multiplier is multiplied by 3x"
+            rewardDescription() {if (challengeCompletions('i', 12) == 3) return "Proton multiplier is multiplied by 300x, Secondary Proton multiplier is multiplied by 10x, Tertiary Proton Multiplier is multiplied by 3x."
+                else if (challengeCompletions('i', 12) == 2) return "Proton multiplier is multiplied by 10x, Secondary Proton multiplier is multiplied by 3x."
+                else if (challengeCompletions('i', 12) == 1) return "Proton multiplier is multiplied by 3x."
                 else return "Challenge not yet completed."},
             canComplete() {return player.q.points.gte(1.79e308)},
             completionLimit: 3,
@@ -845,6 +962,31 @@ addLayer("i", {
             unlocked() {return hasMilestone('i', 3)},
             style() {
                 if (hasChallenge('i', 12)) return {
+                //'background-color': '#3575ff',
+                'background': 'linear-gradient(-15deg, #0d1cee 0%, #0daeee 100%)',
+                "background-origin": "border-box"}
+            },
+        },
+        13: {
+            name() {if (challengeCompletions('i', 13) == 3) return "Infinity Challenge 3<br>January 24th<br> (3 / 3)"
+                else if (challengeCompletions('i', 13) == 2) return "Infinity Challenge 3<br>January 23rd<br> (2 / 3)"
+                else if (challengeCompletions('i', 13) == 1) return "Infinity Challenge 3<br>January 22nd<br> (1 / 3)"
+                else return "Infinity Challenge 3<br>January 21st<br> (0 / 3)"
+            },
+            challengeDescription() {if (player.i.infinitychallenge13completions.gte(2)) return "All Atom Upgrades are always unlocked, but you can only buy five. Quark gain is ^0.4."
+                else if (challengeCompletions('i', 13) == 1) return "All Atom Upgrades are always unlocked, but you can only buy five. Quark gain is ^0.6."
+                else return "All Atom Upgrades are always unlocked, but you can only buy five. Quark gain is ^0.8."},
+            goalDescription: "1.79e308 Quarks",
+            rewardDescription() {if (challengeCompletions('i', 13) == 3) return "Unlock 6 more Molecule Upgrades."
+                else if (challengeCompletions('i', 13) == 2) return "Unlock 4 more Molecule Upgrades."
+                else if (challengeCompletions('i', 13) == 1) return "Unlock 2 more Molecule Upgrades."
+                else return "Challenge not yet completed."},
+            canComplete() {return player.q.points.gte(1.79e308)},
+            completionLimit: 3,
+            onComplete() {player.i.infinities = player.i.infinities.plus(new Decimal(1).times(upgradeEffect('i', 45))), player.i.points = player.i.points.plus(1), player.i.total = player.i.total.plus(1)},
+            unlocked() {return hasMilestone('i', 17)},
+            style() {
+                if (hasChallenge('i', 13)) return {
                 //'background-color': '#3575ff',
                 'background': 'linear-gradient(-15deg, #0d1cee 0%, #0daeee 100%)',
                 "background-origin": "border-box"}

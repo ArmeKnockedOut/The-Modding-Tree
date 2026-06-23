@@ -6,18 +6,20 @@ addLayer("ach", {
         points: new Decimal(0),
         achievementmulti: new Decimal(1.067),
     }},
-    achievementPopups() {if (hasMilestone('i', 9)) return false
+    achievementPopups() {if (hasMilestone('i', 9) && (!hasAchievement('ach', 48) || !hasAchievement('ach', 51) || !hasAchievement('ach', 52))) return false
         else return true
     },
     tabFormat: {
         "Main": {
             content: [
         ["display-text",
-            function() { return 'Every Achievement gives a ' + format(player.ach.achievementmulti, 3) + 'x multiplicative boost to power gain.'},
+            function() {if (hasUpgrade('w', 19)) return 'Every Achievement gives a ' + format(player.ach.achievementmulti, 3) + 'x multiplicative boost to power and Quark gain.'
+                else return 'Every Achievement gives a ' + format(player.ach.achievementmulti, 3) + 'x multiplicative boost to power gain.'},
             { "color": "gray", "font-size": "15px" }],
         "blank",
         ["display-text",
-            function() { return 'Your Achievements multiply power gain by ' + format(tmp.ach.effect) + 'x'},
+            function() { if (hasUpgrade('w', 19)) return 'Your Achievements multiply power and Quark gain by ' + format(tmp.ach.effect) + 'x'
+                else return 'Your Achievements multiply power gain by ' + format(tmp.ach.effect) + 'x'},
             { "color": "white", "font-size": "16.5px" }],
         "blank",
         "achievements"
@@ -34,6 +36,13 @@ addLayer("ach", {
                 "background-origin": "border-box"}
             },
     }
+    },
+    update(diff) {
+        player.ach.achievementmulti = new Decimal(1.067)
+        if (hasAchievement('ach', 23)) player.ach.achievementmulti = new Decimal(1.15)
+        if (hasAchievement('ach', 38)) player.ach.achievementmulti = new Decimal(1.175)
+        if (player.d.total.gte(1) && player.d.boost7active == 1) player.ach.achievementmulti = player.ach.achievementmulti.plus(player.d.boost7add)
+        if (hasUpgrade('w', 19)) player.ach.achievementmulti = player.ach.achievementmulti.times(1.25)
     },
     effect(){
         return Decimal.pow(player.ach.achievementmulti, player[this.layer].achievements.length)
@@ -137,9 +146,8 @@ addLayer("ach", {
         },
         23: {
             name: "Negativity",
-            tooltip: "Get your first Electron. Reward: Achievement Multiplier 1.067x->1.15x.",
+            tooltip: "Get your first Electron. Reward: Achievement Multiplier Base 1.067x->1.15x.",
             done() {return player.e.points.gte(1)},
-            onComplete() {return player.ach.achievementmulti = new Decimal(1.15)}
              
         },
         24: {
@@ -216,9 +224,8 @@ addLayer("ach", {
         },
         38: {
             name: "guys the achievement before me is an odd one out",
-            tooltip: "Reach 15 Total Atom Challenge Completions. Reward: Achievement Multiplier 1.15x->1.175x.",
+            tooltip: "Reach 15 Total Atom Challenge Completions. Reward: Achievement Multiplier Base 1.15x->1.175x.",
             done() {return player.a.totalatomchallengecompletions.gte(15)},
-            onComplete() {return player.ach.achievementmulti = new Decimal(1.175)}
         },
         41: {
             name: "uncharted territory",
@@ -274,6 +281,41 @@ addLayer("ach", {
             name: "super powers",
             tooltip: "Reach 1.79e308 power.",
             done() {return player.points.gte(1.79e308)},
+        },
+        54: {
+            name: "i wan... my... secondayr... energi..",
+            tooltip: "Reach 1.00e21 Di/Poly/Monoatomic Energy.",
+            done() {return player.m.diatomicenergy.gte(1e21) && player.m.polyatomicenergy.gte(1e21) && player.m.monoatomicenergy.gte(1e21)},
+        },
+        55: {
+            name: "barely punishing!",
+            tooltip: "Perform a Row 3 reset.",
+            done() {return hasAchievement('ach', 55)},
+        },
+        56: {
+            name: "DNI",
+            tooltip: "Reach 20 Double Helixes. Reward: 3x DNA gain.",
+            done() {return player.d.doublehelixes >= 20},
+        },
+        57: {
+            name: "stop being rich now!!!",
+            tooltip: "Reach 1.00e1000 Quarks.",
+            done() {return player.q.points.gte('1e1000')},
+        },
+        58: {
+            name: "AB... C..?",
+            tooltip: "Reach at least 1.00e12 of every Row 3 resource.",
+            done() {return player.am.points.gte(1e12) && player.d.points.gte(1e12) && player.w.points.gte(1e12)},
+        },
+        61: {
+            name: "then, i'll have some G FUEL. after that, i'll have some G FUEL.",
+            tooltip: "Unlock all DNA Boosts.",
+            done() {return player.d.points.gte('1.79e308')},
+        },
+        62: {
+            name: "MY TWO CENTS WILL NEVER BE OUTMATCHED 😎",
+            tooltip: "Reach 1.11e1111 power.",
+            done() {return player.points.gte('1.11e1111')},
         },
     }
 })

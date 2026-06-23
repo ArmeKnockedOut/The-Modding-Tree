@@ -3,7 +3,7 @@ let modInfo = {
 	id: "armeselementmodtree",
 	author: "Arme",
 	pointsName: "power",
-	modFiles: ["tree.js", "quarks.js", "achievements.js", "electrons.js", "atoms.js", "molecules.js", "infinity.js", "infinity_achievements.js", "toggles.js"],
+	modFiles: ["tree.js", "quarks.js", "achievements.js", "electrons.js", "atoms.js", "molecules.js", "infinity.js", "infinity_achievements.js", "toggles.js", "amino_acids.js", "dna.js", "water.js"],
 
 	discordName: "ArmeKnockedOut",
 	discordLink: "",
@@ -13,25 +13,52 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "ersion: alpha 0.3",
-	name: "Infinity",
+	num: "ersion: alpha 0.4",
+	name: "Row 3",
 }
 
 let changelog = `<h1>Changelog:</h1><br><br><br>
 	<h1 style="color: #ff0000">SPOILERS. OBVIOUSLY. NOT LIKE STORY SPOILERS BECAUSE THERE'S NO STORY BUT YEAH, THERE'S SPOILERS HERE.</h1><br><br><br><br>
+	<h1 style="color: #2bf319">Alpha v0.4 - Row 3</h1><br><br><h3>[Amino Acids, DNA, Water]<br>
+	<br>
+	(Finished 6/22/2026 7:47PM CEST)<br>
+	(Playtested, Released 6/23/2026 5:55PM CEST)<br></h3>
+	<br><h4>
+		  - Added the Amino Acid layer, with 1 Milestone and 4 Elements.<br>
+		  - Added the DNA layer, with 2 new Subcurrencies, 9 Boosts and 3 Upgrades.<br>
+		  - Added the Water layer, with a new Subcurrency and 31 Upgrades.<br>
+		  - Added 3 new Molecule Buyables, and 4 Upgrades.<br>
+		  - Added 7 new Achievements.<br>
+		  - Added 4 new Infinity Milestones, 8 Upgrades and another Challenge.<br>
+		  - Added horizontal lines and resource displays to Quarks and Electrons.<br>
+		  - Infinity Milestone 18 now only applies to the first row of Molecule buyables, also makes them not subtract your energy, and unlocks two more Infinity Challenges.<br>
+		  - Made the Molecule Proton boost a Decimal.<br>
+		  - Molecule Buyable Autobuyers now buy max.<br>
+		  - Progress up to being able to afford Molecule Upgrade 6.<br>
+		  <br>
+		  - New Content Estimated Playtime: ~6hrs<br></h4>
+		  - Total Estimated Playtime: ~1d 8hrs<br></h4>
+		  <br>
+		  <br>
+		  <h2>Devlog:</h2><br><br><h4>
+		  - (6/22/2026 7:48PM CEST) I didn't work on this for a while, hence the large time gap between Alpha v0.3 and Alpha v0.4. After this, updates will likely not be anywhere near as frequent, as I'll focus more on other things. Also, yeah I used ChatGPT some more for the buy max Molecule Buyable Autobuyers, the scaling of Double Helixes after 1,000, and coloring the text when activating the boosts.
+	</h4><br>
+	<br>
+	<br>
+	<br>
 	<h1 style="color: #c4f319">Alpha v0.3 - Infinity</h1><br><br><h3>[Molecules, Infinity c:]<br>
 	<br>
 	(Finished 5/9/2026 7:57PM CEST)<br>
 	(Playtested, Released 5/12/2026 11:08PM CEST)<br></h3>
 	<br><h4>
-		  - Added the Molecule Layer, with 5 new Buyables, 2 Upgrades, and 3 Subcurrencies.<br>
+		  - Added the Molecule Layer, with 5 new Buyables, 2 Upgrades and 3 Subcurrencies.<br>
 		  - Added the Infinity Layer, with 36 new Upgrades, 2 Challenges, 18 Milestones and 2 Subcurrencies.<br>
 		  - Added 3 new Main Achievements, and 14 Infinity Achievements.<br>
 		  - Added some new Themes: crimson, mystic, infinity<br>
 		  - All Subcurrencies should now be gained even when tabbed out.<br>
 		  - Progress up to full completion of IC1, one completion of IC2, and Infinity Milestone 18 (or Infinity Achievement 25 if you are crazy [or 1,000 Infinities if you are really crazy]).<br><br>
 		  - New Content Estimated Playtime: ~10hrs<br></h4>
-		  - Total Estimated Playtime: ~1d<br></h4>
+		  - Total Estimated Playtime: ~1d 2hrs<br></h4>
 		  <br>
 		  <br>
 		  <h2>Devlog:</h2><br><br><h4>
@@ -145,9 +172,17 @@ function getPointGen() {
 	if (hasUpgrade('i', 12)) gain = gain.times(upgradeEffect('i', 12))
 	if (hasUpgrade('i', 20)) gain = gain.times(upgradeEffect('i', 20))
 	if (hasUpgrade('i', 41)) gain = gain.times(upgradeEffect('i', 41))
-   // this is a softcap: if (gain.gte(8e15)) gain = gain.plus(1).pow(0.95).plus(8e15).minus(new Decimal(8e15).pow(0.95))
+	if (player.am.total.gte(1) && player.am.carbon.gte(1)) gain = gain.times(player.am.carbonboost)
+	if (hasUpgrade('w', 11)) gain = gain.times(upgradeEffect('w', 11))
+	if (hasUpgrade('w', 27)) gain = gain.times(upgradeEffect('w', 27))
+	if (player.d.total.gte(1) && hasUpgrade('w', 16)) gain = gain.times(player.d.doublehelixesmult)
+	if (hasUpgrade('d', 13)) gain = gain.times(softcap((upgradeEffect('d', 13)), new Decimal(1e18), 0.175))
+
 	if (inChallenge('a', 13)) gain = gain.pow(0.5)
 	if (hasChallenge('a', 13) && gain.gte(1)) gain = gain.pow(player.a.ac13powerexp)
+	if (player.d.boost2active == 1) gain = gain.pow(player.d.boost2pow)
+	if (hasUpgrade('w', 13)) gain = gain.pow(1.01)
+	//gain = player.points.pow(1.01)
 	//gain = gain.times(100)
 
 	if (player.infinity_broken == false && player.points.gte(1.794e308)) player.points = new Decimal(1.794e308), gain = gain.times(0)

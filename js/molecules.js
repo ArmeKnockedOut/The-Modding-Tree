@@ -8,13 +8,26 @@ addLayer("m", {
  //   passiveGeneration() {
   //      if (hasUpgrade('q', 14)) return 1
   //      else return 0},
+    canBuyMax() {return hasMilestone('i', 21)},
     autoPrestige() {if (hasMilestone('i', 15) && player.tog.autobuyMolecules) return true
         else return false
     },
     resetsNothing() {if (hasMilestone('i', 16)) return true
         else return false
     },
-    automate() {if (hasMilestone('i', 17) && player.tog.autobuyMoleculeBuyables) buyBuyable('m', 11), buyBuyable('m', 12), buyBuyable('m', 13), buyBuyable('m', 14), buyBuyable('m', 21)},
+    automate() {if (hasMilestone('i', 17) && player.tog.autobuyMoleculeBuyables) for (let i = 0; i < 100; i++) {
+            buyBuyable('m', 11)
+            buyBuyable('m', 12)
+            buyBuyable('m', 13)
+            buyBuyable('m', 14)
+        }
+        if (hasMilestone('am', 0) && player.tog.autobuyMoleculeBuyables2) for (let i = 0; i < 10; i++) {
+            buyBuyable('m', 21)
+            buyBuyable('m', 22)
+            buyBuyable('m', 23)
+            buyBuyable('m', 24)
+        }
+    },
     startData() { return {
         unlocked: false,
 		points: new Decimal(0),
@@ -29,20 +42,19 @@ addLayer("m", {
         diatomicmultiplier: new Decimal(1),
         polyatomicmultiplier: new Decimal(1),
         monoatomicmultiplier: new Decimal(1),
-        diatomicenergygen: new Decimal(0),
-        polyatomicenergygen: new Decimal(0),
-        monoatomicenergygen: new Decimal(0),
         diatomicenergygenpow: new Decimal(1.5),
         polyatomicenergygenpow: new Decimal(1.5),
         monoatomicenergygenpow: new Decimal(1.5),
-        moleculeextraatomchallengesgiven: new Decimal(5)
+        moleculeextraatomchallengesgiven: new Decimal(5),
+        moleculebuyable2mult: new Decimal(1.5)
     }},
    // update(diff) {if (inChallenge('a', 17)) player.a.atomchallenge17divisor *= Math.pow(5, 1 / 20)},
     tabFormat: [
         //"main-display",
         //"blank",
         ["display-text",
-            function() {return 'You have <h2><span style=\"color: #526668; text-shadow: 0px 0px 10px #526668; font-family: Lucida Console\">' + format(player.m.points, 0) + '</span></h2> Molecules, which are providing <h2><span style=\"color: #526668; text-shadow: 0px 0px 10px #526668; font-family: Lucida Console\">' + format(player.m.moleculeextraatomchallenges, 0) + '</span></h2> Extra Total Atom Challenge Completions, and multiplying the Proton multiplier by <h3><span style=\"color: #526668; text-shadow: 0px 0px 10px #526668; font-family: Lucida Console\">' + format(player.m.moleculeprotonmultiplier, 2) + '</span></h3>x'},
+            function() {if (hasUpgrade('w', 18)) return 'You have <h2><span style=\"color: #526668; text-shadow: 0px 0px 10px #526668; font-family: Lucida Console\">' + format(player.m.points, 0) + '</span></h2> Molecules, which are providing <h2><span style=\"color: #526668; text-shadow: 0px 0px 10px #526668; font-family: Lucida Console\">' + format(player.m.moleculeextraatomchallenges, 0) + '</span></h2> Extra Total Atom Challenge Completions, and multiplying the Primary and Secondary Proton multipliers by <h3><span style=\"color: #526668; text-shadow: 0px 0px 10px #526668; font-family: Lucida Console\">' + format(player.m.moleculeprotonmultiplier, 2) + '</span></h3>x'
+                else return 'You have <h2><span style=\"color: #526668; text-shadow: 0px 0px 10px #526668; font-family: Lucida Console\">' + format(player.m.points, 0) + '</span></h2> Molecules, which are providing <h2><span style=\"color: #526668; text-shadow: 0px 0px 10px #526668; font-family: Lucida Console\">' + format(player.m.moleculeextraatomchallenges, 0) + '</span></h2> Extra Total Atom Challenge Completions, and multiplying the Proton multiplier by <h3><span style=\"color: #526668; text-shadow: 0px 0px 10px #526668; font-family: Lucida Console\">' + format(player.m.moleculeprotonmultiplier, 2) + '</span></h3>x'},
             { "color": "#dfdfdf", "font-size": "16px" }],
         "blank",
         "prestige-button",
@@ -59,25 +71,36 @@ addLayer("m", {
             { "color": "#dfdfdf", "font-size": "16px" }],
         "blank",
         "blank",
-        "upgrades",
+        ["row", [["upgrade", 11], ["upgrade", 12], ["upgrade", 13], ["upgrade", 14]]],
+        ["row", [["upgrade", 15], ["upgrade", 16], ["upgrade", 17], ["upgrade", 18]]],
         "blank",
         "buyables"
     ],
     update(diff) {
         player.m.moleculeextraatomchallenges = player.m.points.times(player.m.moleculeextraatomchallengesgiven)
-        player.m.moleculeprotonmultiplier = Math.pow(player.m.moleculeprotonmultiplyby, player.m.points)
-        player.m.diatomicenergygen = player.m.points.pow(3).times(diff).times(player.m.diatomicenergy.plus(1).log(20).times(player.m.diatomicenergy.plus(1).log(10).plus(1)).plus(1)).times(buyableEffect('m', 12)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16))
-        player.m.diatomicenergy = player.m.diatomicenergy.plus(player.m.diatomicenergygen)
-        player.m.polyatomicenergygen = player.m.points.pow(3).times(diff).times(player.m.polyatomicenergy.plus(1).log(15).times(player.m.polyatomicenergy.plus(1).log(7.5).plus(1)).plus(1)).times(buyableEffect('m', 12)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16))
-        player.m.polyatomicenergy = player.m.polyatomicenergy.plus(player.m.polyatomicenergygen)
-        player.m.monoatomicenergygen = player.m.points.pow(3).times(diff).times(player.m.monoatomicenergy.plus(1).log(17).times(player.m.monoatomicenergy.plus(1).log(8.5).plus(1)).plus(1)).times(buyableEffect('m', 12)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16))
-        player.m.monoatomicenergy = player.m.monoatomicenergy.plus(player.m.monoatomicenergygen)
+        player.m.moleculeprotonmultiplier = Decimal.pow(player.m.moleculeprotonmultiplyby, player.m.points)
+        let DiatomicEnergyGen = player.m.points.pow(getBuyableAmount('m', 22).plus(3)).times(diff).times(player.m.diatomicenergy.plus(1).log(20).times(player.m.diatomicenergy.plus(1).log(10).plus(1)).plus(1)).times(buyableEffect('m', 12)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16)).times(upgradeEffect('w', 21))
+        if (hasUpgrade('i', 53)) DiatomicEnergyGen = new Decimal((getBuyableAmount('m', 22).plus(3)).pow(player.m.points).times(diff).times(player.m.diatomicenergy.plus(1).log(20).times(player.m.diatomicenergy.plus(1).log(10).plus(1)).plus(1)).times(buyableEffect('m', 12)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16)).times(upgradeEffect('w', 21)))
+        if (player.d.boost4active == 1) DiatomicEnergyGen = DiatomicEnergyGen.times(player.d.boost4mult)
+        player.m.diatomicenergy = player.m.diatomicenergy.plus(DiatomicEnergyGen)
+        let PolyatomicEnergyGen = player.m.points.pow(getBuyableAmount('m', 22).plus(3)).times(diff).times(player.m.polyatomicenergy.plus(1).log(15).times(player.m.polyatomicenergy.plus(1).log(7.5).plus(1)).plus(1)).times(buyableEffect('m', 12)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16)).times(upgradeEffect('w', 21))
+        if (hasUpgrade('i', 53)) PolyatomicEnergyGen = new Decimal((getBuyableAmount('m', 22).plus(3)).pow(player.m.points).times(diff).times(player.m.polyatomicenergy.plus(1).log(15).times(player.m.polyatomicenergy.plus(1).log(7.5).plus(1)).plus(1)).times(buyableEffect('m', 12)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16)).times(upgradeEffect('w', 21)))
+        if (player.d.boost4active == 1) PolyatomicEnergyGen = PolyatomicEnergyGen.times(player.d.boost4mult)
+        player.m.polyatomicenergy = player.m.polyatomicenergy.plus(PolyatomicEnergyGen)
+        let MonoatomicEnergyGen = player.m.points.pow(getBuyableAmount('m', 22).plus(3)).times(diff).times(player.m.monoatomicenergy.plus(1).log(17).times(player.m.monoatomicenergy.plus(1).log(8.5).plus(1)).plus(1)).times(buyableEffect('m', 12)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16)).times(upgradeEffect('w', 21))
+        if (hasUpgrade('i', 53)) MonoatomicEnergyGen = new Decimal((getBuyableAmount('m', 22).plus(3)).pow(player.m.points).times(diff).times(player.m.monoatomicenergy.plus(1).log(17).times(player.m.monoatomicenergy.plus(1).log(8.5).plus(1)).plus(1)).times(buyableEffect('m', 12)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16)).times(upgradeEffect('w', 21)))
+        if (player.d.boost4active == 1) MonoatomicEnergyGen = MonoatomicEnergyGen.times(player.d.boost4mult)
+        player.m.monoatomicenergy = player.m.monoatomicenergy.plus(MonoatomicEnergyGen)
         player.m.diatomicmultiplier = player.m.diatomicenergy.plus(1).log(15).times(player.m.points.plus(1)).times(buyableEffect('m', 11)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16)).plus(1)
         player.m.polyatomicmultiplier = player.m.polyatomicenergy.plus(1).log(20).times(player.m.points.plus(1)).times(buyableEffect('m', 11)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16)).plus(1)
         player.m.monoatomicmultiplier = player.m.monoatomicenergy.plus(1).log(17).times(player.m.points.plus(1)).times(buyableEffect('m', 11)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16)).plus(1)
         if (hasUpgrade('m', 12)) player.m.moleculeextraatomchallengesgiven = new Decimal(8)
+        if (hasUpgrade('m', 14)) player.m.moleculeextraatomchallengesgiven = new Decimal(10)
+        if (hasUpgrade('m', 16)) player.m.moleculeextraatomchallengesgiven = new Decimal(13)
 
         if (hasUpgrade('m', 11)) player.m.moleculeprotonmultiplyby = new Decimal(1.33)
+        if (hasUpgrade('m', 13)) player.m.moleculeprotonmultiplyby = new Decimal(1.5)
+        if (hasUpgrade('m', 15)) player.m.moleculeprotonmultiplyby = new Decimal(2)
     },
     color: "#526668",
     requires: new Decimal(1e72), 
@@ -88,20 +111,7 @@ addLayer("m", {
     exponent: 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821, 
     gainMult() { 
         mult = new Decimal(1)
-        //player.m.moleculeextraatomchallenges = player.m.points.times(player.m.moleculeextraatomchallengesgiven)
-        //player.m.moleculeprotonmultiplier = Math.pow(player.m.moleculeprotonmultiplyby, player.m.points)
-       // player.m.diatomicenergygen = player.m.points.pow(3).div(20).times(player.m.diatomicenergy.plus(1).log(20).times(player.m.diatomicenergy.plus(1).log(10).plus(1)).plus(1)).times(buyableEffect('m', 12)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16))
-       // player.m.diatomicenergy = player.m.diatomicenergy.plus(player.m.diatomicenergygen)
-       // player.m.polyatomicenergygen = player.m.points.pow(3).div(20).times(player.m.polyatomicenergy.plus(1).log(15).times(player.m.polyatomicenergy.plus(1).log(7.5).plus(1)).plus(1)).times(buyableEffect('m', 12)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16))
-       // player.m.polyatomicenergy = player.m.polyatomicenergy.plus(player.m.polyatomicenergygen)
-       // player.m.monoatomicenergygen = player.m.points.pow(3).div(20).times(player.m.monoatomicenergy.plus(1).log(17).times(player.m.monoatomicenergy.plus(1).log(8.5).plus(1)).plus(1)).times(buyableEffect('m', 12)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16))
-       // player.m.monoatomicenergy = player.m.monoatomicenergy.plus(player.m.monoatomicenergygen)
-       // player.m.diatomicmultiplier = player.m.diatomicenergy.plus(1).log(15).times(player.m.points.plus(1)).times(buyableEffect('m', 11)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16)).plus(1)
-       // player.m.polyatomicmultiplier = player.m.polyatomicenergy.plus(1).log(20).times(player.m.points.plus(1)).times(buyableEffect('m', 11)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16)).plus(1)
-       // player.m.monoatomicmultiplier = player.m.monoatomicenergy.plus(1).log(17).times(player.m.points.plus(1)).times(buyableEffect('m', 11)).times(buyableEffect('m', 21)).times(upgradeEffect('i', 16)).plus(1)
-       // if (hasUpgrade('m', 12)) player.m.moleculeextraatomchallengesgiven = new Decimal(8)
-
-      //  if (hasUpgrade('m', 11)) player.m.moleculeprotonmultiplyby = new Decimal(1.33)
+        if (hasUpgrade('w', 15)) mult = mult.div(upgradeEffect('w', 15))
         return mult
     },
     gainExp() {
@@ -145,7 +155,7 @@ addLayer("m", {
 //},
     upgrades: {
         11: {
-            fullDisplay() {return "<h3>those words don't do you justice</h3><br>\n\
+            fullDisplay() {return "<h3>01</h3><br>\n\
                 Molecule Proton boost base 1.25x -> 1.33x<br><br>\n\
                 Costs:\n\
                 3 Molecules,<br>1.00e10 Diatomic, Polyatomic and Monoatomic Energy"
@@ -154,7 +164,7 @@ addLayer("m", {
             pay() {player.m.points = player.m.points.minus(3), player.m.diatomicenergy = player.m.diatomicenergy.minus(1e10), player.m.polyatomicenergy = player.m.polyatomicenergy.minus(1e10), player.m.monoatomicenergy = player.m.monoatomicenergy.minus(1e10)},
         },
         12: {
-            fullDisplay() {return "<h3>it's your own advice</h3><br>\n\
+            fullDisplay() {return "<h3>02</h3><br>\n\
                 Each Molecule gives 5 -> 8 Extra Total Challenge Completions<br><br>\n\
                 Costs:\n\
                 5 Molecules,<br>1.00e15 Diatomic, Polyatomic and Monoatomic Energy"
@@ -162,6 +172,46 @@ addLayer("m", {
             canAfford() {return player.m.points.gte(5) && player.m.diatomicenergy.gte(1e15) && player.m.polyatomicenergy.gte(1e15) && player.m.monoatomicenergy.gte(1e15)},
             pay() {player.m.points = player.m.points.minus(5), player.m.diatomicenergy = player.m.diatomicenergy.minus(1e15), player.m.polyatomicenergy = player.m.polyatomicenergy.minus(1e15), player.m.monoatomicenergy = player.m.monoatomicenergy.minus(1e15)},
             unlocked() {return hasUpgrade('m', 11)}
+        },
+        13: {
+            fullDisplay() {return "<h3>03</h3><br>\n\
+                Molecule Proton boost base 1.33x -> 1.5x<br><br>\n\
+                Costs:\n\
+                6 Molecules,<br>1.00e20 Diatomic, Polyatomic and Monoatomic Energy"
+            },
+            canAfford() {return player.m.points.gte(6) && player.m.diatomicenergy.gte(1e20) && player.m.polyatomicenergy.gte(1e20) && player.m.monoatomicenergy.gte(1e20)},
+            pay() {player.m.points = player.m.points.minus(6), player.m.diatomicenergy = player.m.diatomicenergy.minus(1e20), player.m.polyatomicenergy = player.m.polyatomicenergy.minus(1e20), player.m.monoatomicenergy = player.m.monoatomicenergy.minus(1e20)},
+            unlocked() {return player.i.infinitychallenge13completions.gte(1) && hasUpgrade('m', 11)}
+        },
+        14: {
+            fullDisplay() {return "<h3>04</h3><br>\n\
+                Each Molecule gives 8 -> 10 Extra Total Challenge Completions<br><br>\n\
+                Costs:\n\
+                7 Molecules,<br>1.00e22 Diatomic, Polyatomic and Monoatomic Energy"
+            },
+            canAfford() {return player.m.points.gte(7) && player.m.diatomicenergy.gte(1e22) && player.m.polyatomicenergy.gte(1e22) && player.m.monoatomicenergy.gte(1e22)},
+            pay() {player.m.points = player.m.points.minus(7), player.m.diatomicenergy = player.m.diatomicenergy.minus(1e22), player.m.polyatomicenergy = player.m.polyatomicenergy.minus(1e22), player.m.monoatomicenergy = player.m.monoatomicenergy.minus(1e22)},
+            unlocked() {return player.i.infinitychallenge13completions.gte(1) && hasUpgrade('m', 12)}
+        },
+        15: {
+            fullDisplay() {return "<h3>05</h3><br>\n\
+                Molecule Proton boost base 1.5x -> 2x<br><br>\n\
+                Costs:\n\
+                25 Molecules,<br>1.00e168 Diatomic, Polyatomic and Monoatomic Energy"
+            },
+            canAfford() {return player.m.points.gte(25) && player.m.diatomicenergy.gte(1e168) && player.m.polyatomicenergy.gte(1e168) && player.m.monoatomicenergy.gte(1e168)},
+            pay() {player.m.points = player.m.points.minus(20), player.m.diatomicenergy = player.m.diatomicenergy.minus(1e168), player.m.polyatomicenergy = player.m.polyatomicenergy.minus(1e168), player.m.monoatomicenergy = player.m.monoatomicenergy.minus(1e168)},
+            unlocked() {return player.i.infinitychallenge13completions.gte(2) && hasUpgrade('m', 13)}
+        },
+        16: {
+            fullDisplay() {return "<h3>06</h3><br>\n\
+                Each Molecule gives 10 -> 13 Extra Total Challenge Completions<br><br>\n\
+                Costs:\n\
+                48 Molecules,<br>1.00e190 Diatomic, Polyatomic and Monoatomic Energy"
+            },
+            canAfford() {return player.m.points.gte(48) && player.m.diatomicenergy.gte(1e190) && player.m.polyatomicenergy.gte(1e190) && player.m.monoatomicenergy.gte(1e190)},
+            pay() {player.m.points = player.m.points.minus(48), player.m.diatomicenergy = player.m.diatomicenergy.minus(1e190), player.m.polyatomicenergy = player.m.polyatomicenergy.minus(1e190), player.m.monoatomicenergy = player.m.monoatomicenergy.minus(1e190)},
+            unlocked() {return player.i.infinitychallenge13completions.gte(2) && hasUpgrade('m', 14)}
         },
      //   21: {
      //       fullDisplay() {return "<h3>it hasn't been the same lately</h3><br>\n\
@@ -196,9 +246,12 @@ addLayer("m", {
             effect(x) { // Effects of owning x of the items, x is a decimal
                 let eff = {}
                 if (x.gte(0)) eff = Decimal.pow(3, x)
+                if (x.gte(0) && hasUpgrade('w', 34)) eff = Decimal.pow(3.3, x)
                 return eff;
             },
-            title: "3x Energy Effects",
+            title() {if (hasUpgrade('w', 34)) return "3.3x Energy Effects"
+                else return "3x Energy Effects"
+            },
             display() {
              let data = tmp[this.layer].buyables[this.id]
             return "Cost: " + format(data.cost) + " Diatomic, Polyatomic and Monoatomic Energy\n\
@@ -207,10 +260,8 @@ addLayer("m", {
             },
             canAfford() { return player[this.layer].diatomicenergy.gte(this.cost()) && player[this.layer].polyatomicenergy.gte(this.cost()) && player[this.layer].monoatomicenergy.gte(this.cost())},
             buy() {
-                player[this.layer].diatomicenergy = player[this.layer].diatomicenergy.sub(this.cost())
-                player[this.layer].polyatomicenergy = player[this.layer].polyatomicenergy.sub(this.cost())
-                player[this.layer].monoatomicenergy = player[this.layer].monoatomicenergy.sub(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (hasMilestone('i', 17)) return setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                else return player[this.layer].diatomicenergy = player[this.layer].diatomicenergy.sub(this.cost()), player[this.layer].polyatomicenergy = player[this.layer].polyatomicenergy.sub(this.cost()), player[this.layer].monoatomicenergy = player[this.layer].monoatomicenergy.sub(this.cost()), setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             purchaseLimit: 100,
             unlocked() {return true}   
@@ -221,24 +272,23 @@ addLayer("m", {
             return cost.floor()},
             effect(x) { // Effects of owning x of the items, x is a decimal
                 let eff = {}
-                if (x.gte(0)) eff = Decimal.pow(1.5, x)
+                if (x.gte(0)) eff = Decimal.pow(player.m.moleculebuyable2mult, x)
                 return eff;
             },
-            title: "1.5x Energy Gains",
+            title() {return format(player.m.moleculebuyable2mult, 2) + 'x Energy Gains'},
             display() {
              let data = tmp[this.layer].buyables[this.id]
             return "Cost: " + format(data.cost) + " Diatomic, Polyatomic and Monoatomic Energy\n\
-            Amount: " + player[this.layer].buyables[this.id] + "/100\n\
+            Amount: " + player[this.layer].buyables[this.id] + "/500\n\
             Currently: " + format(data.effect, 2) + "x"
             },
             canAfford() { return player[this.layer].diatomicenergy.gte(this.cost()) && player[this.layer].polyatomicenergy.gte(this.cost()) && player[this.layer].monoatomicenergy.gte(this.cost())},
             buy() {
-                player[this.layer].diatomicenergy = player[this.layer].diatomicenergy.sub(this.cost())
-                player[this.layer].polyatomicenergy = player[this.layer].polyatomicenergy.sub(this.cost())
-                player[this.layer].monoatomicenergy = player[this.layer].monoatomicenergy.sub(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (hasMilestone('i', 17)) return setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                else return player[this.layer].diatomicenergy = player[this.layer].diatomicenergy.sub(this.cost()), player[this.layer].polyatomicenergy = player[this.layer].polyatomicenergy.sub(this.cost()), player[this.layer].monoatomicenergy = player[this.layer].monoatomicenergy.sub(this.cost()), setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
-            purchaseLimit: 100,
+            buyMax() {},
+            purchaseLimit: 500,
             unlocked() {return true}   
         },
         13: {
@@ -248,9 +298,11 @@ addLayer("m", {
             effect(x) { // Effects of owning x of the items, x is a decimal
                 let eff = {}
                 if (x.gte(0)) eff = new Decimal(0.2).times(x).plus(1)
+                if (x.gte(0) && hasUpgrade('w', 31)) eff = Decimal.pow(1.2, x)
                 return eff;
             },
-            title: "All Proton Multipliers +20%",
+            title() {if (hasUpgrade('w', 31)) return "1.2x All Proton Multipliers"
+                else return "All Proton Multipliers +20%"},
             display() {
              let data = tmp[this.layer].buyables[this.id]
             return "Cost: " + format(data.cost) + " Diatomic, Polyatomic and Monoatomic Energy\n\
@@ -259,10 +311,8 @@ addLayer("m", {
             },
             canAfford() { return player[this.layer].diatomicenergy.gte(this.cost()) && player[this.layer].polyatomicenergy.gte(this.cost()) && player[this.layer].monoatomicenergy.gte(this.cost())},
             buy() {
-                player[this.layer].diatomicenergy = player[this.layer].diatomicenergy.sub(this.cost())
-                player[this.layer].polyatomicenergy = player[this.layer].polyatomicenergy.sub(this.cost())
-                player[this.layer].monoatomicenergy = player[this.layer].monoatomicenergy.sub(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (hasMilestone('i', 17)) return setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                else return player[this.layer].diatomicenergy = player[this.layer].diatomicenergy.sub(this.cost()), player[this.layer].polyatomicenergy = player[this.layer].polyatomicenergy.sub(this.cost()), player[this.layer].monoatomicenergy = player[this.layer].monoatomicenergy.sub(this.cost()), setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             purchaseLimit: 45,
             unlocked() {return true}   
@@ -285,10 +335,8 @@ addLayer("m", {
             },
             canAfford() { return player[this.layer].diatomicenergy.gte(this.cost()) && player[this.layer].polyatomicenergy.gte(this.cost()) && player[this.layer].monoatomicenergy.gte(this.cost())},
             buy() {
-                player[this.layer].diatomicenergy = player[this.layer].diatomicenergy.sub(this.cost())
-                player[this.layer].polyatomicenergy = player[this.layer].polyatomicenergy.sub(this.cost())
-                player[this.layer].monoatomicenergy = player[this.layer].monoatomicenergy.sub(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (hasMilestone('i', 17)) return setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                else return player[this.layer].diatomicenergy = player[this.layer].diatomicenergy.sub(this.cost()), player[this.layer].polyatomicenergy = player[this.layer].polyatomicenergy.sub(this.cost()), player[this.layer].monoatomicenergy = player[this.layer].monoatomicenergy.sub(this.cost()), setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             purchaseLimit: 75,
             unlocked() {return true}   
@@ -300,9 +348,12 @@ addLayer("m", {
             effect(x) { // Effects of owning x of the items, x is a decimal
                 let eff = {}
                 if (x.gte(0)) eff = Decimal.pow(5, x)
+                if (x.gte(0) && hasUpgrade('w', 38)) eff = Decimal.pow(10, x)
                 return eff;
             },
-            title: "5x Energy Effects & Gains",
+            title() {if (hasUpgrade('w', 38)) return "10x Energy Effects & Gains"
+                else return "5x Energy Effects & Gains"
+            },
             display() {
              let data = tmp[this.layer].buyables[this.id]
             return "Cost: " + format(data.cost) + " Diatomic, Polyatomic and Monoatomic Energy\n\
@@ -311,12 +362,82 @@ addLayer("m", {
             },
             canAfford() { return player[this.layer].diatomicenergy.gte(this.cost()) && player[this.layer].polyatomicenergy.gte(this.cost()) && player[this.layer].monoatomicenergy.gte(this.cost())},
             buy() {
-                player[this.layer].diatomicenergy = player[this.layer].diatomicenergy.sub(this.cost())
-                player[this.layer].polyatomicenergy = player[this.layer].polyatomicenergy.sub(this.cost())
-                player[this.layer].monoatomicenergy = player[this.layer].monoatomicenergy.sub(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                if (hasMilestone('am', 0)) return setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                else return player[this.layer].diatomicenergy = player[this.layer].diatomicenergy.sub(this.cost()), player[this.layer].polyatomicenergy = player[this.layer].polyatomicenergy.sub(this.cost()), player[this.layer].monoatomicenergy = player[this.layer].monoatomicenergy.sub(this.cost()), setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             purchaseLimit: 25,
+            unlocked() {return true}   
+        },
+        22: {
+            cost(x) {
+            let cost = Decimal.pow(1e20, x.plus(1))
+            return cost.floor()},
+            effect(x) { // Effects of owning x of the items, x is a decimal
+                let eff = {}
+                if (x.gte(0)) eff = x.plus(3)
+                return eff;
+            },
+            title: "+ ^1 Energy Gain From Molecules",
+            display() {
+             let data = tmp[this.layer].buyables[this.id]
+            return "Cost: " + format(data.cost) + " Diatomic, Polyatomic and Monoatomic Energy\n\
+            Amount: " + player[this.layer].buyables[this.id] + "/5\n\
+            Currently: ^" + format(data.effect, 0)
+            },
+            canAfford() { return player[this.layer].diatomicenergy.gte(this.cost()) && player[this.layer].polyatomicenergy.gte(this.cost()) && player[this.layer].monoatomicenergy.gte(this.cost())},
+            buy() {
+                if (hasMilestone('am', 0)) return setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                else return player[this.layer].diatomicenergy = player[this.layer].diatomicenergy.sub(this.cost()), player[this.layer].polyatomicenergy = player[this.layer].polyatomicenergy.sub(this.cost()), player[this.layer].monoatomicenergy = player[this.layer].monoatomicenergy.sub(this.cost()), setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            purchaseLimit: 5,
+            unlocked() {return true}   
+        },
+        23: {
+            cost(x) {
+            let cost = Decimal.pow(15, x.plus(21.257))
+            return cost.floor()},
+            effect(x) { // Effects of owning x of the items, x is a decimal
+                let eff = {}
+                if (x.gte(0)) eff = Decimal.pow(1.725, x)
+                return eff;
+            },
+            title: "1.725x Atom Gain",
+            display() {
+             let data = tmp[this.layer].buyables[this.id]
+            return "Cost: " + format(data.cost) + " Diatomic, Polyatomic and Monoatomic Energy\n\
+            Amount: " + player[this.layer].buyables[this.id] + "/75\n\
+            Currently: " + format(data.effect, 2) + "x"
+            },
+            canAfford() { return player[this.layer].diatomicenergy.gte(this.cost()) && player[this.layer].polyatomicenergy.gte(this.cost()) && player[this.layer].monoatomicenergy.gte(this.cost())},
+            buy() {
+                if (hasMilestone('am', 0)) return setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                else return player[this.layer].diatomicenergy = player[this.layer].diatomicenergy.sub(this.cost()), player[this.layer].polyatomicenergy = player[this.layer].polyatomicenergy.sub(this.cost()), player[this.layer].monoatomicenergy = player[this.layer].monoatomicenergy.sub(this.cost()), setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            purchaseLimit: 75,
+            unlocked() {return true}   
+        },
+        24: {
+            cost(x) {
+            let cost = Decimal.pow(1e7, x.plus(4))
+            return cost.floor()},
+            effect(x) { // Effects of owning x of the items, x is a decimal
+                let eff = {}
+                if (x.gte(0)) eff = x.div(100).plus(1)
+                return eff;
+            },
+            title: "+ ^0.01 Quark Gain",
+            display() {
+             let data = tmp[this.layer].buyables[this.id]
+            return "Cost: " + format(data.cost) + " Diatomic, Polyatomic and Monoatomic Energy\n\
+            Amount: " + player[this.layer].buyables[this.id] + "/8\n\
+            Currently: ^" + format(data.effect, 2)
+            },
+            canAfford() { return player[this.layer].diatomicenergy.gte(this.cost()) && player[this.layer].polyatomicenergy.gte(this.cost()) && player[this.layer].monoatomicenergy.gte(this.cost())},
+            buy() {
+                if (hasMilestone('am', 0)) return setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+                else return player[this.layer].diatomicenergy = player[this.layer].diatomicenergy.sub(this.cost()), player[this.layer].polyatomicenergy = player[this.layer].polyatomicenergy.sub(this.cost()), player[this.layer].monoatomicenergy = player[this.layer].monoatomicenergy.sub(this.cost()), setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            purchaseLimit: 8,
             unlocked() {return true}   
         },
     }

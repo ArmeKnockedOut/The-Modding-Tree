@@ -13,7 +13,10 @@ addLayer("tog", {
         autoInfinity: false,
         autoCompleteAtomChallenges: false,
         autobuyMolecules: false,
-        autobuyMoleculeBuyables: false
+        autobuyMoleculeBuyables: false,
+        autobuyMoleculeBuyables2: false,
+        passiveDNAGen: false,
+        passiveAMGen: false,
     }},
     color: "#dadada", // Can be a function that takes requirement increases into account
     type: "none", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have // Prestige currency exponent

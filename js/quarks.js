@@ -56,6 +56,9 @@ addLayer("q", {
     tabFormat: [
         "main-display",
         "prestige-button",
+        "resource-display",
+        "blank",
+        "h-line",
         "blank",
         "blank",
         ["display-text",
@@ -85,7 +88,7 @@ addLayer("q", {
         ["clickable", 13],
         () => (hasAchievement('ach', 18)) ? "blank" : "",
         () => (hasAchievement('ach', 18)) ? "blank" : "",
-        () => (hasAchievement('ach', 18)) ? "blank" : "",
+        () => (hasAchievement('ach', 18)) ? "h-line" : "",
         () => (hasAchievement('ach', 18)) ? "blank" : "",
         () => (hasAchievement('ach', 18)) ? "blank" : "",
         ["display-text",
@@ -106,7 +109,7 @@ addLayer("q", {
         ["clickable", 15],
         () => (hasUpgrade('q', 41)) ? "blank" : "",
         () => (hasUpgrade('q', 41)) ? "blank" : "",
-        () => (hasUpgrade('q', 41)) ? "blank" : "",
+        () => (hasUpgrade('q', 41)) ? "h-line" : "",
         () => (hasUpgrade('q', 41)) ? "blank" : "",
         () => (hasUpgrade('q', 41)) ? "blank" : "",
         ["display-text",
@@ -133,7 +136,7 @@ addLayer("q", {
         ["clickable", 23],
         () => (hasUpgrade('q', 44)) ? "blank" : "",
         () => (hasUpgrade('q', 44)) ? "blank" : "",
-        () => (hasUpgrade('q', 44)) ? "blank" : "",
+        () => (hasUpgrade('q', 44)) ? "h-line" : "",
         () => (hasUpgrade('q', 44)) ? "blank" : "",
         () => (hasUpgrade('q', 44)) ? "blank" : "",
         ["display-text",
@@ -151,22 +154,22 @@ addLayer("q", {
             { "color": "white", "font-size": "16px" }],
         ["blank", "10px"],
         ["clickable", 25],
-        () => (hasUpgrade('a', 35)) ? "blank" : "",
-        () => (hasUpgrade('a', 35)) ? "blank" : "",
-        () => (hasUpgrade('a', 35)) ? "blank" : "",
-        () => (hasUpgrade('a', 35)) ? "blank" : "",
-        () => (hasUpgrade('a', 35)) ? "blank" : "",
+        () => (hasUpgrade('a', 35) || hasMilestone('a', 11)) ? "blank" : "",
+        () => (hasUpgrade('a', 35) || hasMilestone('a', 11)) ? "blank" : "",
+        () => (hasUpgrade('a', 35) || hasMilestone('a', 11)) ? "h-line" : "",
+        () => (hasUpgrade('a', 35) || hasMilestone('a', 11)) ? "blank" : "",
+        () => (hasUpgrade('a', 35) || hasMilestone('a', 11)) ? "blank" : "",
         ["display-text",
-            function() {if (hasUpgrade('a', 35)) return 'You have ' +  '<h2 style="color: pink">' + format(player.q.tertiaryprotons) + '</h2>' + ' Tertiary Protons, which are multiplying all Quark effects by ' + '<h3 style="color: pink">' + format(player.q.tertiaryprotonmultiplier) + '</h3>' + 'x'
+            function() {if (hasUpgrade('a', 35) || hasMilestone('a', 11)) return 'You have ' +  '<h2 style="color: pink">' + format(player.q.tertiaryprotons) + '</h2>' + ' Tertiary Protons, which are multiplying all colored Quark effects by ' + '<h3 style="color: pink">' + format(player.q.tertiaryprotonmultiplier) + '</h3>' + 'x'
                else return ''},
             { "color": "white", "font-size": "16px" }],
         ["blank", "10px"],
         ["clickable", 26],
-        () => (hasAchievement('ach', 43)) ? "blank" : "",
-        () => (hasAchievement('ach', 43)) ? "blank" : "",
+        () => (hasAchievement('ach', 43) || hasMilestone('a', 11)) ? "blank" : "",
+        () => (hasAchievement('ach', 43) || hasMilestone('a', 11)) ? "blank" : "",
         ["display-text",
-            function() { if (hasAchievement('ach', 43) && hasUpgrade('i', 26)) return 'You have ' +  '<h2 style="color: #7bff00">' + format(player.q.tertiaryneutrons) + '</h2>' + ' Tertiary Neutrons, which are multiplying Quark -> colored Quark conversion efficiency by ' + '<h3 style="color: #7bff00">' + format(player.q.tertiaryneutronmultiplier) + '</h3>' + 'x, and the Tertiary Proton multiplier by ' + '<h3 style="color: #7bff00">' + format(player.q.tertiaryneutronmultipliertertiaryprotons) + '</h3>' + 'x'
-               else if (hasAchievement('ach', 43)) return 'You have ' +  '<h2 style="color: #7bff00">' + format(player.q.tertiaryneutrons) + '</h2>' + ' Tertiary Neutrons, which are multiplying Quark -> colored Quark conversion efficiency by ' + '<h3 style="color: #7bff00">' + format(player.q.tertiaryneutronmultiplier) + '</h3>' + 'x'
+            function() { if ((hasAchievement('ach', 43) || hasMilestone('a', 11)) && hasUpgrade('i', 26)) return 'You have ' +  '<h2 style="color: #7bff00">' + format(player.q.tertiaryneutrons) + '</h2>' + ' Tertiary Neutrons, which are multiplying Quark -> colored Quark conversion efficiency by ' + '<h3 style="color: #7bff00">' + format(player.q.tertiaryneutronmultiplier) + '</h3>' + 'x, and the Tertiary Proton multiplier by ' + '<h3 style="color: #7bff00">' + format(player.q.tertiaryneutronmultipliertertiaryprotons) + '</h3>' + 'x'
+               else if (hasAchievement('ach', 43) || hasMilestone('a', 11)) return 'You have ' +  '<h2 style="color: #7bff00">' + format(player.q.tertiaryneutrons) + '</h2>' + ' Tertiary Neutrons, which are multiplying Quark -> colored Quark conversion efficiency by ' + '<h3 style="color: #7bff00">' + format(player.q.tertiaryneutronmultiplier) + '</h3>' + 'x'
                else return ''},
             { "color": "white", "font-size": "16px" }],
         ["blank", "10px"],
@@ -235,17 +238,18 @@ addLayer("q", {
 
       // ======= PROTON MULTIPLIERS =======
         
-        let protonMulti = player.q.protons.plus(1).log10().div(4).times(upgradeEffect('q', 33)).times(player.a.ac12protonmulti).times(upgradeEffect('a', 22)).times(upgradeEffect('a', 24)).times(upgradeEffect('a', 34)).times(upgradeEffect('a', 38)).times(upgradeEffect('a', 43)).times(player.a.ac20everythingmult).times(player.m.moleculeprotonmultiplier).times(buyableEffect('m', 13)).times(upgradeEffect('i', 18)).times(player.i.ic12multiplier).times(player.q.neutronmultiplierprotons).times(upgradeEffect('i', 30)).times(upgradeEffect('i', 33)).times(upgradeEffect('i', 36))
-        if (player.a.atomchallenge11completions.gte(4))
-          protonMulti = protonMulti.times(player.e.charge9multiplier2)
+        let protonMulti = player.q.protons.plus(1).log10().div(4).times(upgradeEffect('q', 33)).times(player.a.ac12protonmulti).times(upgradeEffect('a', 22)).times(upgradeEffect('a', 24)).times(upgradeEffect('a', 34)).times(upgradeEffect('a', 38)).times(upgradeEffect('a', 43)).times(player.a.ac20everythingmult).times(player.m.moleculeprotonmultiplier).times(buyableEffect('m', 13)).times(upgradeEffect('i', 18)).times(player.i.ic12multiplier).times(player.q.neutronmultiplierprotons).times(upgradeEffect('i', 30)).times(upgradeEffect('i', 33)).times(upgradeEffect('i', 36)).times(upgradeEffect('w', 12))
+        if (player.a.atomchallenge11completions.gte(4)) protonMulti = protonMulti.times(player.e.charge9multiplier2)
         player.q.protonmultiplier = protonMulti.plus(1)
         
         let secondaryProtonMulti = player.q.secondaryprotons.plus(1).log10().div(4.25).times(upgradeEffect('a', 23)).times(upgradeEffect('a', 25)).times(upgradeEffect('a', 38)).times(player.a.ac20everythingmult).times(buyableEffect('m', 13)).times(player.i.ic12multiplier_2).times(player.q.secondaryneutronmultipliersecondaryprotons)
-        if (player.a.atomchallenge11completions.gte(5))
-          secondaryProtonMulti = secondaryProtonMulti.times(player.e.charge10multiplier2)
+        if (player.a.atomchallenge11completions.gte(5)) secondaryProtonMulti = secondaryProtonMulti.times(player.e.charge10multiplier2)
+        if (hasUpgrade('w', 18)) secondaryProtonMulti = secondaryProtonMulti.times(player.m.moleculeprotonmultiplier)
         player.q.secondaryprotonmultiplier = secondaryProtonMulti.plus(1)
 
-        player.q.tertiaryprotonmultiplier = player.q.tertiaryprotons.plus(1).log10().div(25).times(upgradeEffect('a', 36)).times(upgradeEffect('a', 38)).times(upgradeEffect('a', 39)).times(player.a.ac20everythingmult).times(buyableEffect('m', 13)).times(player.i.ic12multiplier_3).times(player.q.tertiaryneutronmultipliertertiaryprotons).plus(1)
+        let tertiaryProtonMulti = player.q.tertiaryprotons.plus(1).log10().div(25).times(upgradeEffect('a', 36)).times(upgradeEffect('a', 38)).times(upgradeEffect('a', 39)).times(player.a.ac20everythingmult).times(buyableEffect('m', 13)).times(player.i.ic12multiplier_3).times(player.q.tertiaryneutronmultipliertertiaryprotons).times(upgradeEffect('w', 41))
+        if (player.d.boost1active == 1) tertiaryProtonMulti = tertiaryProtonMulti.times(player.d.boost1mult)
+        player.q.tertiaryprotonmultiplier = tertiaryProtonMulti.plus(1)
 
       // ======= COLORED QUARKS EFFECTS =======
 
@@ -305,21 +309,6 @@ addLayer("q", {
     exponent: 0.7, 
     gainMult() { 
         mult = new Decimal(1)
-       // if (!hasMilestone('a', 2) && hasAchievement('ach', 25)) player.q.redquarks = player.q.redquarks.plus(player.q.points.div(20).div(1000).times(player.q.neutronmultiplier).times(player.q.secondaryneutronmultiplier).times(player.a.atomchallenge14).times(player.q.tertiaryneutronmultiplier))
-       // if (!hasMilestone('a', 2) && hasAchievement('ach', 25)) player.q.greenquarks = player.q.greenquarks.plus(player.q.points.div(20).div(1000).times(player.q.neutronmultiplier).times(player.q.secondaryneutronmultiplier).times(player.a.atomchallenge14).times(player.q.tertiaryneutronmultiplier))
-       // if (!hasMilestone('a', 2) && hasAchievement('ach', 25)) player.q.bluequarks = player.q.bluequarks.plus(player.q.points.div(20).div(1000).times(player.q.neutronmultiplier).times(player.q.secondaryneutronmultiplier).times(player.a.atomchallenge14).times(player.q.tertiaryneutronmultiplier))
-       // if (hasMilestone('a', 2) && hasAchievement('ach', 25)) player.q.redquarks = player.q.redquarks.plus(player.q.points.div(20).div(100).times(player.q.neutronmultiplier).times(player.q.secondaryneutronmultiplier).times(player.a.atomchallenge14).times(player.q.tertiaryneutronmultiplier))
-       // if (hasMilestone('a', 2) && hasAchievement('ach', 25)) player.q.greenquarks = player.q.greenquarks.plus(player.q.points.div(20).div(100).times(player.q.neutronmultiplier).times(player.q.secondaryneutronmultiplier).times(player.a.atomchallenge14).times(player.q.tertiaryneutronmultiplier))
-       // if (hasMilestone('a', 2) && hasAchievement('ach', 25)) player.q.bluequarks = player.q.bluequarks.plus(player.q.points.div(20).div(100).times(player.q.neutronmultiplier).times(player.q.secondaryneutronmultiplier).times(player.a.atomchallenge14).times(player.q.tertiaryneutronmultiplier))
-       // if (hasMilestone('a', 2) && hasUpgrade('q', 41)) player.q.cyanquarks = player.q.cyanquarks.plus(player.q.points.div(20).div(100).div(1e20).times(player.q.neutronmultiplier).times(player.q.secondaryneutronmultiplier).times(player.a.atomchallenge14).times(player.q.tertiaryneutronmultiplier))
-       // if (hasMilestone('a', 2) && hasUpgrade('q', 42)) player.q.magentaquarks = player.q.magentaquarks.plus(player.q.points.div(20).div(100).div(1e20).times(player.q.neutronmultiplier).times(player.q.secondaryneutronmultiplier).times(player.a.atomchallenge14).times(player.q.tertiaryneutronmultiplier))
-       // if (hasMilestone('a', 2) && hasUpgrade('q', 43)) player.q.yellowquarks = player.q.yellowquarks.plus(player.q.points.div(20).div(100).div(1e20).times(player.q.neutronmultiplier).times(player.q.secondaryneutronmultiplier).times(player.a.atomchallenge14).times(player.q.tertiaryneutronmultiplier))
-       // if (player.q.passiveprotonneutrongen == true && player.q.redquarks.gte(2) && player.q.greenquarks.gte(2) && player.q.bluequarks.gte(2)) player.q.protons = player.q.protons.plus(player.q.redquarks.plus(player.q.greenquarks.plus(player.q.bluequarks)).div(6).div(20).div(10))
-       // if (player.q.passiveprotonneutrongen == true && player.q.redquarks.gte(2) && player.q.greenquarks.gte(2) && player.q.bluequarks.gte(2)) player.q.neutrons = player.q.neutrons.plus(player.q.redquarks.plus(player.q.greenquarks.plus(player.q.bluequarks)).div(6).div(20).div(10))
-       // if (player.q.passiveprotonneutrongen == true && player.q.cyanquarks.gte(2) && player.q.magentaquarks.gte(2) && player.q.yellowquarks.gte(2)) player.q.secondaryprotons = player.q.secondaryprotons.plus(player.q.cyanquarks.plus(player.q.magentaquarks.plus(player.q.yellowquarks)).div(6).div(20).div(10))
-       // if (player.q.passiveprotonneutrongen == true && player.q.cyanquarks.gte(2) && player.q.magentaquarks.gte(2) && player.q.yellowquarks.gte(2)) player.q.secondaryneutrons = player.q.secondaryneutrons.plus(player.q.cyanquarks.plus(player.q.magentaquarks.plus(player.q.yellowquarks)).div(6).div(20).div(10))
-       // if (hasMilestone('a', 11) && player.q.redquarks.gte(1e100) && player.q.greenquarks.gte(1e100) && player.q.bluequarks.gte(1e100) && player.q.cyanquarks.gte(1e80) && player.q.magentaquarks.gte(1e80) && player.q.yellowquarks.gte(1e80) && player.q.protons.gte(1e100) && player.q.neutrons.gte(1e100) && player.q.secondaryprotons.gte(1e80) && player.q.secondaryneutrons.gte(1e80)) player.q.tertiaryprotons = player.q.tertiaryprotons.plus(player.q.redquarks.plus(player.q.greenquarks).plus(player.q.bluequarks).plus(player.q.protons).plus(player.q.neutrons).div(5e100).div(20).div(100))
-       // if (hasMilestone('a', 11) && player.q.redquarks.gte(1e100) && player.q.greenquarks.gte(1e100) && player.q.bluequarks.gte(1e100) && player.q.cyanquarks.gte(1e80) && player.q.magentaquarks.gte(1e80) && player.q.yellowquarks.gte(1e80) && player.q.protons.gte(1e100) && player.q.neutrons.gte(1e100) && player.q.secondaryprotons.gte(1e80) && player.q.secondaryneutrons.gte(1e80)) player.q.tertiaryneutrons = player.q.tertiaryneutrons.plus(player.q.redquarks.plus(player.q.greenquarks).plus(player.q.bluequarks).plus(player.q.protons).plus(player.q.neutrons).div(5e100).div(20).div(100))
         mult = mult.times(player.q.bluequarksquarkmultiplier)
         if (hasUpgrade('q', 13)) mult = mult.times(upgradeEffect('q', 13))
         if (hasUpgrade('q', 14)) mult = mult.times(upgradeEffect('q', 14))
@@ -336,98 +325,29 @@ addLayer("q", {
         if (hasUpgrade('a', 20)) mult = mult.times(upgradeEffect('a', 20))
         if (hasUpgrade('a', 32)) mult = mult.times(upgradeEffect('a', 32))
         if (hasChallenge('a', 15)) mult = mult.times(new Decimal.pow(player.a.atomchallenge15multiplier, player.a.actualtotalatomchallengecompletions))
-
-       // if (player.a.atomchallenge11completions.gte(4)) player.q.protonmultiplier = player.q.protons.plus(1).log10().div(4).times(upgradeEffect('q', 33)).times(player.a.ac12protonmulti).times(upgradeEffect('a', 22)).times(upgradeEffect('a', 24)).times(player.e.charge9multiplier2).times(upgradeEffect('a', 34)).times(upgradeEffect('a', 38)).times(upgradeEffect('a', 43)).times(player.a.ac20everythingmult).times(player.m.moleculeprotonmultiplier).times(buyableEffect('m', 13)).times(upgradeEffect('i', 18)).times(player.i.ic12multiplier).times(player.q.neutronmultiplierprotons).times(upgradeEffect('i', 30)).times(upgradeEffect('i', 33)).times(upgradeEffect('i', 36)).plus(1)
-        //if (!player.a.atomchallenge11completions.gte(4)) player.q.protonmultiplier = player.q.protons.plus(1).log10().div(4).times(upgradeEffect('q', 33)).times(player.a.ac12protonmulti).times(upgradeEffect('a', 22)).times(upgradeEffect('a', 24)).times(upgradeEffect('a', 34)).times(upgradeEffect('a', 38)).times(upgradeEffect('a', 43)).times(player.a.ac20everythingmult).times(player.m.moleculeprotonmultiplier).times(buyableEffect('m', 13)).times(upgradeEffect('i', 18)).times(player.i.ic12multiplier).times(player.q.neutronmultiplierprotons).times(upgradeEffect('i', 30)).times(upgradeEffect('i', 33)).times(upgradeEffect('i', 36)).plus(1)
-       // if (inChallenge('i', 11) && challengeCompletions('i', 11) == 0 && player.a.total.gte(1)) player.q.neutronmultiplier = new Decimal(0.001)
-       // if (inChallenge('i', 11) && challengeCompletions('i', 11) == 0 && !player.a.total.gte(1)) player.q.neutronmultiplier = new Decimal(0.1)
-       // if (inChallenge('i', 11) && challengeCompletions('i', 11) == 1 && player.a.total.gte(1)) player.q.neutronmultiplier = new Decimal(0.0001)
-        //if (inChallenge('i', 11) && challengeCompletions('i', 11) == 1 && !player.a.total.gte(1)) player.q.neutronmultiplier = new Decimal(0.01)
-        //if (inChallenge('i', 11) && player.i.infinitychallenge11completions.gte(2) && player.a.total.gte(1)) player.q.neutronmultiplier = new Decimal(0.00001)
-        //if (inChallenge('i', 11) && player.i.infinitychallenge11completions.gte(2) && !player.a.total.gte(1)) player.q.neutronmultiplier = new Decimal(0.001)
-       // if (!inChallenge('i', 11)) player.q.neutronmultiplier = player.q.neutrons.plus(1).log10().div(2.67).times(upgradeEffect('q', 34)).times(player.e.chargemultiplier).times(upgradeEffect('a', 40)).times(player.a.ac20everythingmult).times(upgradeEffect('i', 19)).times(player.i.ic11multiplier).plus(1)
-       // if (player.a.atomchallenge11completions.gte(5)) player.q.secondaryprotonmultiplier = player.q.secondaryprotons.plus(1).log10().div(4.25).times(upgradeEffect('a', 23)).times(upgradeEffect('a', 25)).times(player.e.charge10multiplier2).times(upgradeEffect('a', 38)).times(player.a.ac20everythingmult).times(buyableEffect('m', 13)).times(player.i.ic12multiplier_2).times(player.q.secondaryneutronmultipliersecondaryprotons).plus(1)
-       // if (!player.a.atomchallenge11completions.gte(5)) player.q.secondaryprotonmultiplier = player.q.secondaryprotons.plus(1).log10().div(4.25).times(upgradeEffect('a', 23)).times(upgradeEffect('a', 25)).times(upgradeEffect('a', 38)).times(player.a.ac20everythingmult).times(buyableEffect('m', 13)).times(player.i.ic12multiplier_2).times(player.q.secondaryneutronmultipliersecondaryprotons).plus(1)
-      //  if (inChallenge('i', 11) && challengeCompletions('i', 11) == 0 && player.a.total.gte(1)) player.q.secondaryneutronmultiplier = new Decimal(0.001)
-       // if (inChallenge('i', 11) && challengeCompletions('i', 11) == 0 && !player.a.total.gte(1)) player.q.secondaryneutronmultiplier = new Decimal(0.1)
-       // if (inChallenge('i', 11) && challengeCompletions('i', 11) == 1 && player.a.total.gte(1)) player.q.secondaryneutronmultiplier = new Decimal(0.0001)
-       // if (inChallenge('i', 11) && challengeCompletions('i', 11) == 1 && !player.a.total.gte(1)) player.q.secondaryneutronmultiplier = new Decimal(0.01)
-       // if (inChallenge('i', 11) && player.i.infinitychallenge11completions.gte(2) && player.a.total.gte(1)) player.q.secondaryneutronmultiplier = new Decimal(0.00001)
-      //  if (inChallenge('i', 11) && player.i.infinitychallenge11completions.gte(2) && !player.a.total.gte(1)) player.q.secondaryneutronmultiplier = new Decimal(0.001)
-       // if (!inChallenge('i', 11)) player.q.secondaryneutronmultiplier = player.q.secondaryneutrons.plus(1).log10().div(3).times(upgradeEffect('a', 28)).times(upgradeEffect('a', 40)).times(player.a.ac20everythingmult).times(upgradeEffect('i', 19)).times(player.i.ic11multiplier).plus(1)
-       // player.q.tertiaryprotonmultiplier = player.q.tertiaryprotons.plus(1).log10().div(25).times(upgradeEffect('a', 36)).times(upgradeEffect('a', 38)).times(upgradeEffect('a', 39)).times(player.a.ac20everythingmult).times(buyableEffect('m', 13)).times(player.i.ic12multiplier_3).times(player.q.tertiaryneutronmultipliertertiaryprotons).plus(1)
-      //  if (inChallenge('i', 11) && challengeCompletions('i', 11) == 0 && player.a.total.gte(1)) player.q.tertiaryneutronmultiplier = new Decimal(0.001)
-      //  if (inChallenge('i', 11) && challengeCompletions('i', 11) == 0 && !player.a.total.gte(1)) player.q.tertiaryneutronmultiplier = new Decimal(0.1)
-      //  if (inChallenge('i', 11) && challengeCompletions('i', 11) == 1 && player.a.total.gte(1)) player.q.tertiaryneutronmultiplier = new Decimal(0.0001)
-      //  if (inChallenge('i', 11) && challengeCompletions('i', 11) == 1 && !player.a.total.gte(1)) player.q.tertiaryneutronmultiplier = new Decimal(0.01)
-       // if (inChallenge('i', 11) && player.i.infinitychallenge11completions.gte(2) && player.a.total.gte(1)) player.q.tertiaryneutronmultiplier = new Decimal(0.00001)
-      //  if (inChallenge('i', 11) && player.i.infinitychallenge11completions.gte(2) && !player.a.total.gte(1)) player.q.tertiaryneutronmultiplier = new Decimal(0.001)
-       // if (!inChallenge('i', 11)) player.q.tertiaryneutronmultiplier = player.q.tertiaryneutrons.plus(1).log10().div(3.25).times(upgradeEffect('a', 37)).times(upgradeEffect('a', 40)).times(player.a.ac20everythingmult).times(upgradeEffect('i', 19)).times(player.i.ic11multiplier).plus(1)
-
-        //if (hasUpgrade('i', 24)) player.q.neutronmultiplierprotons = player.q.neutrons.plus(1).log(1e10).div(30.8).plus(1)
-        //if (hasUpgrade('i', 25)) player.q.secondaryneutronmultipliersecondaryprotons = player.q.secondaryneutrons.plus(1).log(1e9).div(30.8).plus(1)
-        //if (hasUpgrade('i', 26)) player.q.tertiaryneutronmultipliertertiaryprotons = player.q.tertiaryneutrons.plus(1).log(1e11).div(30.8).plus(1) 
-
-        //player.q.redquarkspoweraddition = player.q.redquarks.plus(1).log2().div(10000).times(player.q.protonmultiplier).times(player.e.chargemultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier)
-        //if (!hasUpgrade('i', 29)) player.q.redquarkspowermultiplier = player.q.redquarks.plus(1).log2().div(25).times(player.q.protonmultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).plus(1)
-        //if (hasUpgrade('i', 29)) player.q.redquarkspowermultiplier = player.q.redquarks.plus(1).log2().div(10).times(player.q.protonmultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).plus(1)
-        //if (!hasUpgrade('i', 29)) player.q.redquarksquarkmultiplier = player.q.redquarks.plus(1).log2().div(20).times(player.q.protonmultiplier).times(player.e.chargemultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).plus(1)
-        //if (hasUpgrade('i', 29)) player.q.redquarksquarkmultiplier = player.q.redquarks.plus(1).log2().div(8).times(player.q.protonmultiplier).times(player.e.chargemultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).plus(1)
-        
-       // if (!hasUpgrade('i', 32)) player.q.greenquarkspoweraddition = player.q.greenquarks.plus(1).log2().div(25000).times(player.q.protonmultiplier).times(player.e.chargemultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12_2)
-        //if (hasUpgrade('i', 32)) player.q.greenquarkspoweraddition = player.q.greenquarks.plus(1).log2().div(10000).times(player.q.protonmultiplier).times(player.e.chargemultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12_2)
-       // player.q.greenquarkspowermultiplier = player.q.greenquarks.plus(1).log2().div(10).times(player.q.protonmultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12_2).plus(1)
-        //if (!hasUpgrade('i', 32)) player.q.greenquarksquarkmultiplier = player.q.greenquarks.plus(1).log2().div(20).times(player.q.protonmultiplier).times(player.e.chargemultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12_2).plus(1)
-       // if (hasUpgrade('i', 32)) player.q.greenquarksquarkmultiplier = player.q.greenquarks.plus(1).log2().div(8).times(player.q.protonmultiplier).times(player.e.chargemultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12_2).plus(1)
-        
-       // if (!hasUpgrade('i', 35)) player.q.bluequarkspoweraddition = player.q.bluequarks.plus(1).log2().div(25000).times(player.q.protonmultiplier).times(player.e.chargemultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12_1)
-       // if (hasUpgrade('i', 35)) player.q.bluequarkspoweraddition = player.q.bluequarks.plus(1).log2().div(10000).times(player.q.protonmultiplier).times(player.e.chargemultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12_1)
-        //if (!hasUpgrade('i', 35)) player.q.bluequarkspowermultiplier = player.q.bluequarks.plus(1).log2().div(25).times(player.q.protonmultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12_1).plus(1)
-        //if (hasUpgrade('i', 35)) player.q.bluequarkspowermultiplier = player.q.bluequarks.plus(1).log2().div(10).times(player.q.protonmultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12_1).plus(1)
-       // player.q.bluequarksquarkmultiplier = player.q.bluequarks.plus(1).log2().div(8).times(player.q.protonmultiplier).times(player.e.chargemultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12_1).plus(1)
-
-       // if (player.a.atomchallenge11completions.gte(1)) player.q.cyanquarksquarkmultiplier = player.q.cyanquarks.plus(1).log(10).div(9.3).times(player.q.secondaryprotonmultiplier).times(player.e.charge6multiplier2).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12).plus(1)
-       // if (player.a.atomchallenge11completions.gte(1)) player.q.cyanquarkselectronmultiplier = player.q.cyanquarks.plus(1).log10().div(4.5).times(player.q.secondaryprotonmultiplier).times(player.e.charge6multiplier2).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12).plus(1)
-      //  if (!player.a.atomchallenge11completions.gte(1)) player.q.cyanquarksquarkmultiplier = player.q.cyanquarks.plus(1).log(10).div(9.3).times(player.q.secondaryprotonmultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12).plus(1)
-       // if (!player.a.atomchallenge11completions.gte(1)) player.q.cyanquarkselectronmultiplier = player.q.cyanquarks.plus(1).log10().div(4.5).times(player.q.secondaryprotonmultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12).plus(1)
-      //  player.q.cyanquarkschargemultiplier = player.q.cyanquarks.plus(1).log10().times(player.q.secondaryprotonmultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12).plus(1)
-      //  if (player.a.atomchallenge11completions.gte(2)) player.q.magentaquarksquarkmultiplier = player.q.magentaquarks.plus(1).log(10).div(10.5).times(player.q.secondaryprotonmultiplier).times(player.e.charge7multiplier2).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12).plus(1)
-      //  if (player.a.atomchallenge11completions.gte(2)) player.q.magentaquarkselectronmultiplier = player.q.magentaquarks.plus(1).log10().div(5.5).times(player.q.secondaryprotonmultiplier).times(player.e.charge7multiplier2).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12).plus(1)
-      //  if (!player.a.atomchallenge11completions.gte(2)) player.q.magentaquarksquarkmultiplier = player.q.magentaquarks.plus(1).log(10).div(10.5).times(player.q.secondaryprotonmultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12).plus(1)
-      //  if (!player.a.atomchallenge11completions.gte(2)) player.q.magentaquarkselectronmultiplier = player.q.magentaquarks.plus(1).log10().div(5.5).times(player.q.secondaryprotonmultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12).plus(1)
-       // player.q.magentaquarkschargemultiplier = player.q.magentaquarks.plus(1).log10().times(player.q.secondaryprotonmultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12).plus(1)
-     //   if (player.a.atomchallenge11completions.gte(3)) player.q.yellowquarksquarkmultiplier = player.q.yellowquarks.plus(1).log(10).div(11.7).times(player.q.secondaryprotonmultiplier).times(player.e.charge8multiplier2).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12).plus(1)
-      //  if (player.a.atomchallenge11completions.gte(3)) player.q.yellowquarkselectronmultiplier = player.q.yellowquarks.plus(1).log10().div(6.5).times(player.q.secondaryprotonmultiplier).times(player.e.charge8multiplier2).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12).plus(1)
-      //  if (!player.a.atomchallenge11completions.gte(3)) player.q.yellowquarksquarkmultiplier = player.q.yellowquarks.plus(1).log(10).div(11.7).times(player.q.secondaryprotonmultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12).plus(1)
-      //  if (!player.a.atomchallenge11completions.gte(3)) player.q.yellowquarkselectronmultiplier = player.q.yellowquarks.plus(1).log10().div(6.5).times(player.q.secondaryprotonmultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12).plus(1)
-      //  player.q.yellowquarkschargemultiplier = player.q.yellowquarks.plus(1).log10().times(player.q.secondaryprotonmultiplier).times(player.q.tertiaryprotonmultiplier).times(player.a.ac20everythingmult).times(player.i.infinitypowermultiplier).times(player.i.ic12).plus(1)
-
         if (hasUpgrade('a', 44)) mult = mult.times(3)
         if (hasAchievement('ach', 36) && player.q.points.lte(1e70)) mult = mult.times(4)
-
         mult = mult.times(player.m.polyatomicmultiplier)
-
         if (hasUpgrade('i', 13)) mult = mult.times(upgradeEffect('i', 13))
         if (hasUpgrade('i', 21)) mult = mult.times(upgradeEffect('i', 21))
         if (hasUpgrade('i', 28)) mult = mult.times(upgradeEffect('i', 28))
         if (hasUpgrade('i', 42)) mult = mult.times(upgradeEffect('i', 42))
-        
+        if (player.am.total.gte(1) && player.am.hydrogen.gte(1)) mult = mult.times(player.am.hydrogenboost)
+        if (hasUpgrade('w', 11)) mult = mult.times(upgradeEffect('w', 11))
+        if (hasUpgrade('w', 28)) mult = mult.times(upgradeEffect('w', 28))
+        if (hasUpgrade('w', 30)) mult = mult.times(upgradeEffect('w', 30))
+        if (player.d.total.gte(1) && hasUpgrade('w', 16)) mult = mult.times(player.d.doublehelixesmult)
+        if (hasUpgrade('d', 11)) mult = mult.times(softcap((upgradeEffect('d', 11)), new Decimal(1e20), 0.25))
+        if (hasUpgrade('w', 19)) mult = mult.times(tmp.ach.effect)
+
         if (hasChallenge('a', 18)) mult = mult.pow(player.a.ac18quarkexp)
         if (inChallenge('a', 19)) mult = mult.times(0)
+        if (inChallenge('i', 13) && player.i.infinitychallenge13completions.gte(2)) mult = mult.pow(0.4)
+        if (inChallenge('i', 13) && player.i.infinitychallenge13completions == 1) mult = mult.pow(0.6)
+        if (inChallenge('i', 13) && player.i.infinitychallenge13completions.lte(0)) mult = mult.pow(0.8)
+        if (getBuyableAmount('m', 24).gte(1)) mult = mult.pow(buyableEffect('m', 24))
 
         if (player.infinity_broken == false && player.q.points.gte(1.794e308)) player.q.points = new Decimal(1.794e308), mult = mult.times(0)
-        //if (player.infinity_broken == false && player.q.redquarks.gte(1.794e308)) player.q.redquarks = new Decimal(1.794e308)
-        //if (player.infinity_broken == false && player.q.greenquarks.gte(1.794e308)) player.q.greenquarks = new Decimal(1.794e308)
-        //if (player.infinity_broken == false && player.q.bluequarks.gte(1.794e308)) player.q.bluequarks = new Decimal(1.794e308)
-        //if (player.infinity_broken == false && player.q.protons.gte(1.794e308)) player.q.protons = new Decimal(1.794e308)
-        //if (player.infinity_broken == false && player.q.neutrons.gte(1.794e308)) player.q.neutrons = new Decimal(1.794e308)
-       // if (player.infinity_broken == false && player.q.cyanquarks.gte(1.794e308)) player.q.cyanquarks = new Decimal(1.794e308)
-       // if (player.infinity_broken == false && player.q.magentaquarks.gte(1.794e308)) player.q.magentaquarks = new Decimal(1.794e308)
-       // if (player.infinity_broken == false && player.q.yellowquarks.gte(1.794e308)) player.q.yellowquarks = new Decimal(1.794e308)
-      //  if (player.infinity_broken == false && player.q.secondaryprotons.gte(1.794e308)) player.q.secondaryprotons = new Decimal(1.794e308)
-      //  if (player.infinity_broken == false && player.q.secondaryneutrons.gte(1.794e308)) player.q.secondaryneutrons = new Decimal(1.794e308)
-      //  if (player.infinity_broken == false && player.q.tertiaryprotons.gte(1.794e308)) player.q.tertiaryprotons = new Decimal(1.794e308)
-      //  if (player.infinity_broken == false && player.q.tertiaryneutrons.gte(1.794e308)) player.q.tertiaryneutrons = new Decimal(1.794e308)
         return mult
     },
     gainExp() {
@@ -604,7 +524,7 @@ addLayer("q", {
                 'background-color'() {if (player.infinity_broken == true && player.q.redquarks.gte(1e100) && player.q.greenquarks.gte(1e100) && player.q.bluequarks.gte(1e100) && player.q.cyanquarks.gte(1e80) && player.q.magentaquarks.gte(1e80) && player.q.yellowquarks.gte(1e80) && player.q.protons.gte(1e100) && player.q.neutrons.gte(1e100) && player.q.secondaryprotons.gte(1e80) && player.q.secondaryneutrons.gte(1e80) && !inChallenge('a', 14)) return "pink"
                   else if (player.q.redquarks.gte(1e100) && player.q.greenquarks.gte(1e100) && player.q.bluequarks.gte(1e100) && player.q.cyanquarks.gte(1e80) && player.q.magentaquarks.gte(1e80) && player.q.yellowquarks.gte(1e80) && player.q.protons.gte(1e100) && player.q.neutrons.gte(1e100) && player.q.secondaryprotons.gte(1e80) && player.q.secondaryneutrons.gte(1e80) && !inChallenge('a', 14) && !player.q.tertiaryprotons.gte(1.794e308) && !player.q.points.gte(1.794e308)) return "pink"},
             },
-            unlocked() {return (hasUpgrade('a', 35))}
+            unlocked() {return (hasUpgrade('a', 35) || hasMilestone('a', 11))}
         },
         27: {
             display() {return "Convert all your Quark sub-resources into Tertiary Neutrons (1.00e100 Primary and 1.00e80 Secondary)"},
@@ -616,12 +536,12 @@ addLayer("q", {
                 'background-color'() {if (player.infinity_broken == true && player.q.redquarks.gte(1e100) && player.q.greenquarks.gte(1e100) && player.q.bluequarks.gte(1e100) && player.q.cyanquarks.gte(1e80) && player.q.magentaquarks.gte(1e80) && player.q.yellowquarks.gte(1e80) && player.q.protons.gte(1e100) && player.q.neutrons.gte(1e100) && player.q.secondaryprotons.gte(1e80) && player.q.secondaryneutrons.gte(1e80) && !inChallenge('a', 14)) return "#7bff00"
                   else if (player.q.redquarks.gte(1e100) && player.q.greenquarks.gte(1e100) && player.q.bluequarks.gte(1e100) && player.q.cyanquarks.gte(1e80) && player.q.magentaquarks.gte(1e80) && player.q.yellowquarks.gte(1e80) && player.q.protons.gte(1e100) && player.q.neutrons.gte(1e100) && player.q.secondaryprotons.gte(1e80) && player.q.secondaryneutrons.gte(1e80) && !inChallenge('a', 14) && !player.q.tertiaryneutrons.gte(1.794e308) && !player.q.points.gte(1.794e308)) return "#7bff00"},
             },
-            unlocked() {return (hasAchievement('ach', 43))}
+            unlocked() {return (hasAchievement('ach', 43) || hasMilestone('a', 11))}
         },
     },
     upgrades: {
       11: {
-        title: "Understanding",
+        title: "01",
         description: "Power gain is multiplied based on your Quarks",
         cost() {if (inChallenge('a', 12)) return new Decimal(2e308)
           else return new Decimal(25)},
@@ -632,7 +552,7 @@ addLayer("q", {
       },
 
       12: {
-        title: "Hope",
+        title: "02",
         description: "Power gain is multiplied based on your power",
         cost() {if (inChallenge('a', 12)) return new Decimal(2e308)
           else return new Decimal(50)},
@@ -643,7 +563,7 @@ addLayer("q", {
       },
 
       13: {
-        title: "Trust",
+        title: "03",
         description: "Quark gain is multiplied based on your power",
         cost() {if (inChallenge('a', 12)) return new Decimal(2e308)
           else return new Decimal(200)},
@@ -654,7 +574,7 @@ addLayer("q", {
       },
 
       14: {
-        title: "Teamwork",
+        title: "04",
         description: "Quark gain is multiplied based on your Quarks",
         cost() {if (inChallenge('a', 12)) return new Decimal(2e308)
           else return new Decimal(450)},
@@ -665,7 +585,7 @@ addLayer("q", {
       },
 
       21: {
-        title: "Green Replication",
+        title: "05",
         description: "Green Quarks also add to power gain with a slightly weakened formula.",
         cost() {if (inChallenge('a', 12)) return new Decimal(2e308)
           else return new Decimal(700)},
@@ -673,7 +593,7 @@ addLayer("q", {
       },
 
       22: {
-        title: "Blue Replication",
+        title: "06",
         description: "Blue Quarks also add to power gain with a slightly weakened formula.",
         cost() {if (inChallenge('a', 12)) return new Decimal(2e308)
           else return new Decimal(700)},
@@ -681,7 +601,7 @@ addLayer("q", {
       },
 
       23: {
-        title: "Red Copy",
+        title: "07",
         description: "Red Quarks also multiply power gain with a slightly weakened formula.",
         cost() {if (inChallenge('a', 12)) return new Decimal(2e308)
           else return new Decimal(1000)},
@@ -689,7 +609,7 @@ addLayer("q", {
       },
 
       24: {
-        title: "Blue Copy",
+        title: "08",
         description: "Blue Quarks also multiply power gain with a slightly weakened formula.",
         cost() {if (inChallenge('a', 12)) return new Decimal(2e308)
           else return new Decimal(1000)},
@@ -697,7 +617,7 @@ addLayer("q", {
       },
 
       31: {
-        title: "Red Clone",
+        title: "09",
         description: "Red Quarks also multiply Quark gain with a slightly weakened formula.",
         cost() {if (inChallenge('a', 12)) return new Decimal(2e308)
           else return new Decimal(5000)},
@@ -705,7 +625,7 @@ addLayer("q", {
       },
 
       32: {
-        title: "Green Clone",
+        title: "10",
         description: "Green Quarks also multiply Quark gain with a slightly weakened formula.",
         cost() {if (inChallenge('a', 12)) return new Decimal(2e308)
           else return new Decimal(5000)},
@@ -713,7 +633,7 @@ addLayer("q", {
       },
 
       33: {
-        title: "i know if you looked for me i'd look you in the eye",
+        title: "11",
         description: "Quarks slightly boost the Proton multiplier.",
         cost() {if (inChallenge('a', 12)) return new Decimal(2e308)
           else return new Decimal(50000000)},
@@ -726,7 +646,7 @@ addLayer("q", {
       },
 
       34: {
-        title: "through it all",
+        title: "12",
         description: "Quarks slightly boost the Neutron multiplier.",
         cost() {if (inChallenge('a', 12)) return new Decimal(2e308)
           else return new Decimal(1e10)},
@@ -739,7 +659,7 @@ addLayer("q", {
       },
 
       41: {
-        title: "next to me, endlessly",
+        title: "13",
         description: "Unlock Cyan Quarks.",
         cost() {if (inChallenge('a', 12)) return new Decimal(2e308)
           else return new Decimal(1e21)},
@@ -747,7 +667,7 @@ addLayer("q", {
       },
 
       42: {
-        title: "don't you have everything?",
+        title: "14",
         description: "Unlock Magenta Quarks.",
         cost() {if (inChallenge('a', 12)) return new Decimal(2e308)
           else return new Decimal(1e22)},
@@ -755,7 +675,7 @@ addLayer("q", {
       },
 
       43: {
-        title: "still, it's not enough",
+        title: "15",
         description: "Unlock Yellow Quarks.",
         cost() {if (inChallenge('a', 12)) return new Decimal(2e308)
           else return new Decimal(1e23)},
@@ -763,7 +683,7 @@ addLayer("q", {
       },
 
       44: {
-        title: "i know now, i know it's not enough",
+        title: "16",
         description: "Unlock Secondary Protons and Neutrons.",
         cost() {if (inChallenge('a', 12)) return new Decimal(2e308)
           else return new Decimal(1e24)},
