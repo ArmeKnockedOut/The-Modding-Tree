@@ -31,6 +31,7 @@ let changelog = `<h1>Changelog:</h1><br><br><br>
 		  - Added 7 new Achievements.<br>
 		  - Added 4 new Infinity Milestones, 8 Upgrades and another Challenge.<br>
 		  - Added horizontal lines and resource displays to Quarks and Electrons.<br>
+		  - Quark Upgrades now have numbers as their names instead, just like all other Upgrades.<br>
 		  - Infinity Milestone 18 now only applies to the first row of Molecule buyables, also makes them not subtract your energy, and unlocks two more Infinity Challenges.<br>
 		  - Made the Molecule Proton boost a Decimal.<br>
 		  - Molecule Buyable Autobuyers now buy max.<br>
